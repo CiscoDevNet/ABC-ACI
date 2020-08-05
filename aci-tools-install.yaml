@@ -1,0 +1,64 @@
+---
+- hosts: localhost
+  gather_facts: no
+  vars:
+    gh_user: datacenter
+    datacenter_repos:
+      - acitoolkit
+    qsnyder_repos:
+      - arya
+      - webarya
+    cobra_eggs:
+      - https://d1nmyq4gcgsfi5.cloudfront.net/fileMedia/1f3d41ce-d154-44e3-74c1-d6cf3b525eaa/acicobra-4.2_3h-py2.py3-none-any.whl
+      - https://d1nmyq4gcgsfi5.cloudfront.net/fileMedia/b3b69aa3-891b-41ff-46db-a73b4b215860/acimodel-4.2_3h-py2.py3-none-any.whl
+    virtualenv: py3venv
+    dev-folder: aci-dev
+  
+  tasks:
+  - name: Create ACI code repository
+    file:
+      path: ~/{{ dev-folder }}
+      state: directory
+      mode: '0755'
+
+  - name: Clone acitoolkit repositories into ACI code repository folder
+    git:
+      repo: "https://github.com/datacenter/{{ item }}.git"
+      dest: ~/aci-dev/{{ item }}
+    with_items: "{{ datacenter_repos }}"
+
+  - name: (TEMPORARY) Clone modified Arya, WebArya repo to accomodate for fixes
+    git:
+      repo: "https://github.com/qsnyder/{{ item }}.git"
+      dest: ~/{{ dev-folder }}/{{ item }}
+    with_items: "{{ qsnyder_repos }}"
+
+  - name: Clone PyDME repository into code folder
+    git:
+      repo: "https://github.com/CiscoDevNet/pydme.git"
+      dest: ~/{{ dev_folder }}/pydme
+
+#  - name: Download the Cobra modules for ACI 4.2(3h)
+#    get_url:
+#      url: "{{ item }}"
+#      dest: /tmp/
+#    with_items: {{ cobra_eggs }}
+#
+#  - name: Install Cobra modules into virtualenv
+#    pip:
+#      name: file:///tmp/*.whl
+#      virtualenv: ~/{{ virtualenv }}
+
+  - name: Install ACI toolkit, Arya
+    shell: python setup.py install
+    args:
+      chdir: ~/{{ dev-folder }}/{{ item }}
+    with_items:
+      - acitoolkit
+      - arya
+      - pydme
+
+  - name: Install WebArya requirements
+    pip: 
+      requirements: ~/{{ dev-folder }}/webarya/requirements.txt
+      virtualenv: ~/{{ virtualenv }}
