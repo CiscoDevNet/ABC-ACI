@@ -1,0 +1,48 @@
+---
+#############################
+#  Playbook for ACI TENANTS #
+#############################
+
+- name: ACI Tenant Management
+  hosts: 
+    - apic
+  gather_facts: false
+  connection: local
+
+  tasks:
+  - name: Test that we have an ACI hostname, username, and password
+    fail:
+      msg: 'Please define the variables: aci_username and aci_password.'
+    when: apic_username is not defined or apic_password is not defined
+    vars:
+      login_info: &login_info
+        hostname: "{{ inventory_hostname }}"
+        username: "{{ apic_username }}"
+        password: "{{ apic_password }}"
+
+  - name: CONFIGURE TENANT
+    aci_tenant:
+      <<: *login_info
+      tenant: "{{ tenant_name }}"
+      description: "Tenant Created/Configured Using Ansible"
+      state: "{{ aci_state }}"
+      validate_certs: "{{ validate_certs }}"
+    when: aci_state == 'present'
+
+  - name: TENANT TASKS
+    include_tasks:
+      file: tenant_tasks.yml
+    when: aci_state == 'present'
+
+  - name: TENANT AP TASKS
+    include_tasks:
+      file: tenant_ap.yml
+    when: aci_state == 'present'
+
+  - name: DELETE TENANT
+    aci_ap:
+      <<: *login_info
+      ap: "{{ app_name }}"
+      state: "{{ aci_state }}"
+      validate_certs: "{{ validate_certs }}"
+    when: aci_state == 'absent'
