@@ -21,6 +21,9 @@
         state: present
         #warn: false
 
+    # Add the certifcate file to ACI
+    # The certificate was created with this command
+    # openssl req -new -newkey rsa:1024 -days 36500 -nodes -x509 -keyout ansible.key -out ansible.crt -subj '/CN=ansible/O=Company/C=US'
     - name: Add a user certificate
       cisco.aci.aci_aaa_user_certificate:
         host: "{{ inventory_hostname }}"
