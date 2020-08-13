@@ -1,0 +1,22 @@
+---
+  # ACI Tenant Query with user Certificate
+- name: Query ACI Tenant
+  hosts:
+    - apic
+  gather_facts: false
+  connection: local
+
+  tasks:
+    - name: Add a user
+      cisco.aci.aci_tenant:
+        host: "{{ inventory_hostname }}"
+        username: ansible
+        private_key: ansible.key
+        validate_certs: no
+        state: query
+      delegate_to: localhost
+      register: tenant_list
+
+    - name: Print tenant list
+      debug:
+        var: tenant_list

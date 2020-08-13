@@ -1,0 +1,64 @@
+---
+  # Manage an ACI user
+- name: Manage ACI user
+  hosts:
+    - apic
+  gather_facts: false
+  connection: local
+  ignore_errors: yes
+  tasks:
+    - name: Add a user
+      cisco.aci.aci_aaa_user:
+        host: "{{ inventory_hostname }}"
+        username: "{{ apic_username }}"
+        password: "{{ apic_password }}"
+        aaa_user: ansible
+        aaa_password: C1sco12345
+        expiration: never
+        expires: no
+        email: ansible@company.com
+        validate_certs: no
+        state: present
+        #warn: false
+
+    - name: Add a user certificate
+      cisco.aci.aci_aaa_user_certificate:
+        host: "{{ inventory_hostname }}"
+        username: "{{ apic_username }}"
+        password: "{{ apic_password }}"
+        aaa_user: ansible
+        certificate_name: ansible
+        certificate_data: "{{ lookup('file', 'ansible.crt') }}"
+        validate_certs: no
+        state: present
+
+    - name: Manage user privileges
+      cisco.aci.aci_rest:
+        host: "{{ inventory_hostname }}"
+        username: "{{ apic_username }}"
+        password: "{{ apic_password }}"
+        validate_certs: no
+        path: /api/node/mo/uni/userext/user-ansible/userdomain-all.json
+        method: post
+        content:
+          {
+            "aaaUserDomain":
+              {
+                "attributes":
+                  {
+                    "name": "all"
+                  },
+                  "children": [
+                    {
+                      "aaaUserRole":
+                        {
+                          "attributes":
+                            {
+                              "name": "admin",
+                              "privType": "writePriv"
+                            }
+                        }
+                    }
+                  ]
+              }
+          }
