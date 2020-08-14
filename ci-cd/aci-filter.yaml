@@ -1,0 +1,26 @@
+---
+#############################
+#  Playbook for ACI TENANTS #
+#############################
+
+- name: ACI Tenant Filter Management
+  hosts: 
+    - apic
+  gather_facts: false
+  connection: local
+
+  tasks:
+  - name: Manage HTTPS Filter
+    cisco.aci.aci_filter_entry:
+      hostname: "{{ inventory_hostname }}"
+      username: "{{ apic_username }}"
+      password: "{{ apic_password }}"
+      tenant: SnV
+      filter: http
+      entry: tcp-443
+      ether_type: ip
+      ip_protocol: tcp
+      dst_port_start: https
+      dst_port_end: https
+      state: present
+      validate_certs: false
