@@ -10,9 +10,9 @@
   connection: local
 
   tasks:
-  - name: Test that we have an ACI hostname, username, and password
+  - name: Test for ACI hostname, apic_username, and apic_password. Setup Login Anchor and Alias
     fail:
-      msg: 'Please define the variables: aci_username and aci_password.'
+      msg: 'Please define the variables: apic_username and apic_password.'
     when: apic_username is not defined or apic_password is not defined
     vars:
       login_info: &login_info
@@ -23,7 +23,7 @@
   - name: CONFIGURE TENANT
     aci_tenant:
       <<: *login_info
-      tenant: "{{ tenant_name }}"
+      tenant: "{{ tenant }}"
       description: "Tenant Created/Configured Using Ansible"
       state: "{{ aci_state }}"
       validate_certs: "{{ validate_certs }}"
@@ -31,18 +31,13 @@
 
   - name: TENANT TASKS
     include_tasks:
-      file: tenant_tasks.yml
-    when: aci_state == 'present'
-
-  - name: TENANT AP TASKS
-    include_tasks:
-      file: tenant_ap.yml
+      file: aci-tenant_tasks.yaml
     when: aci_state == 'present'
 
   - name: DELETE TENANT
-    aci_ap:
+    aci_tenant:
       <<: *login_info
-      ap: "{{ app_name }}"
+      tenant: "{{ tenant }}"
       state: "{{ aci_state }}"
       validate_certs: "{{ validate_certs }}"
     when: aci_state == 'absent'

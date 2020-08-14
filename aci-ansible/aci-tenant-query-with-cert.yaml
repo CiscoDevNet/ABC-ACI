@@ -7,7 +7,7 @@
   connection: local
 
   tasks:
-    - name: Add a user
+    - name: Get tenants from APIC(s)
       cisco.aci.aci_tenant:
         host: "{{ inventory_hostname }}"
         username: ansible
