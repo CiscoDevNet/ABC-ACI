@@ -1,7 +1,6 @@
 .DS_Store
 .vscode
 __pycache__
-Aardvark*
 pydme/
 acitoolkit/
 arya/

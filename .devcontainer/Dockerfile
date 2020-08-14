@@ -7,7 +7,7 @@ COPY requirements.txt .
 
 ENV info "ACI-Development v3.7.6: Python 3.7.6, Ansible 2.9.5, Openconnect, VIRLUtils, ACIToolkit, COBRA"
 
-RUN echo 'PS1="\[\e[36m\]\u\[\e[m\]\[\e[37m\]@\[\e[m\]\[\e[32m\]dnebase376\[\e[m\]:\[\e[33m\]\w\[\e[m\]\[\e[33m\]\\$\[\e[m\] "' >> /root/.bashrc 
+RUN echo 'PS1="\[\e[36m\]\u\[\e[m\]\[\e[37m\]@\[\e[m\]\[\e[32m\]aci-dev\[\e[m\]:\[\e[33m\]\w\[\e[m\]\[\e[33m\]\\$\[\e[m\] "' >> /root/.bashrc 
 
 RUN apt-get update && \
     apt-get install -y make curl bash git gcc musl-dev libffi-dev libxml2-dev libxslt-dev wget && \
