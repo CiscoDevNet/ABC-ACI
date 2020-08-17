@@ -10,7 +10,6 @@ from genie.harness.main import gRun
 def main():
     test_path = os.path.dirname(os.path.abspath(__file__))
     gRun(
-        trigger_datafile=test_path+'/trigger_datafile.yaml',
         subsection_datafile=test_path+'/subsection_datafile.yaml',
-        trigger_groups=And('filter'),
+        trigger_groups=And('aci'),
     )

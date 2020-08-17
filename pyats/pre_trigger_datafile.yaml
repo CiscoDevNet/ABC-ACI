@@ -1,0 +1,127 @@
+
+Pre_Snapshots:
+  groups: ["aci"]
+  source:
+    pkg: genie.libs.sdk
+    class: triggers.blitz.blitz.Blitz
+  test_sections:
+    - pre_snapshot_Tenant:
+        - api:
+            device: uut
+            function: apic_rest_get
+            arguments:
+              dn: /api/class/fvTenant.json
+            save:
+              - variable_name: pre_tenant
+        - api:
+            device: uut
+            function: save_dict_to_json_file
+            arguments:
+              data:
+                - "%VARIABLES{pre_tenant}"
+              filename: "pre_snapshots/tenant.json"
+    - pre_snapshot_Subnet:
+        - api:
+            device: uut
+            function: apic_rest_get
+            arguments:
+              dn: /api/class/fvSubnet.json
+            save:
+              - variable_name: pre_subnet
+        - api:
+            device: uut
+            function: save_dict_to_json_file
+            arguments:
+              data:
+                - "%VARIABLES{pre_subnet}"
+              filename: "pre_snapshots/subnet.json"
+    - pre_snapshot_BD:
+        - api:
+            device: uut
+            function: apic_rest_get
+            arguments:
+              dn: /api/class/fvBD.json
+            save:
+              - variable_name: pre_bd
+        - api:
+            device: uut
+            function: save_dict_to_json_file
+            arguments:
+              data:
+                - "%VARIABLES{pre_bd}"
+              filename: "pre_snapshots/bd.json"
+    - pre_snapshot_Ctx:
+        - api:
+            device: uut
+            function: apic_rest_get
+            arguments:
+              dn: /api/class/fvCtx.json
+            save:
+              - variable_name: pre_ctx
+        - api:
+            device: uut
+            function: save_dict_to_json_file
+            arguments:
+              data:
+                - "%VARIABLES{pre_ctx}"
+              filename: "pre_snapshots/ctx.json"
+    - pre_snapshot_Ap:
+        - api:
+            device: uut
+            function: apic_rest_get
+            arguments:
+              dn: /api/class/fvAp.json
+            save:
+              - variable_name: pre_ap
+        - api:
+            device: uut
+            function: save_dict_to_json_file
+            arguments:
+              data:
+                - "%VARIABLES{pre_ap}"
+              filename: "pre_snapshots/ap.json"
+    - pre_snapshot_AEPg:
+        - api:
+            device: uut
+            function: apic_rest_get
+            arguments:
+              dn: /api/class/fvAEPg.json
+            save:
+              - variable_name: pre_aepg
+        - api:
+            device: uut
+            function: save_dict_to_json_file
+            arguments:
+              data:
+                - "%VARIABLES{pre_aepg}"
+              filename: "pre_snapshots/aepg.json"
+    - pre_snapshot_BrCP:
+        - api:
+            device: uut
+            function: apic_rest_get
+            arguments:
+              dn: /api/class/vzBrCP.json
+            save:
+              - variable_name: pre_cp
+        - api:
+            device: uut
+            function: save_dict_to_json_file
+            arguments:
+              data:
+                - "%VARIABLES{pre_cp}"
+              filename: "pre_snapshots/cp.json"
+    - pre_snapshot_Filter:
+        - api:
+            device: uut
+            function: apic_rest_get
+            arguments:
+              dn: /api/class/vzFilter.json
+            save:
+              - variable_name: pre_filter
+        - api:
+            device: uut
+            function: save_dict_to_json_file
+            arguments:
+              data:
+                - "%VARIABLES{pre_filter}"
+              filename: "pre_snapshots/filter.json"
