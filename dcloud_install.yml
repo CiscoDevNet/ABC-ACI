@@ -1,0 +1,73 @@
+---
+- hosts: localhost
+  gather_facts: no
+  vars:
+    packages:
+      - python36
+      - python36-devel
+      - vim
+    repositories:
+      - { org: 'qsnyder', repo: 'arya' }
+      - { org: 'qsnyder', repo: 'webarya' }
+      - { org: 'datacenter', repo: 'acitoolkit' }
+      - { org: 'CiscoDevNet', repo: 'pydme' }
+    cobra_eggs:
+      - { url: 'https://d1nmyq4gcgsfi5.cloudfront.net/fileMedia/1f3d41ce-d154-44e3-74c1-d6cf3b525eaa/', file: 'acicobra-4.2_3h-py2.py3-none-any.whl' }
+      - { url: 'https://d1nmyq4gcgsfi5.cloudfront.net/fileMedia/b3b69aa3-891b-41ff-46db-a73b4b215860/', file: 'acimodel-4.2_3h-py2.py3-none-any.whl' }
+    virtualenv: py3venv
+    dev_folder: ~/bootcamp-aci
+
+  tasks:
+    - name: Create ACI code repository
+      file:
+        path: "{{ dev_folder }}"
+        state: directory
+        mode: '0755'
+
+    - name: Install packages via YUM
+      yum:
+        name: "{{ packages }}"
+        state: latest
+
+    - name: Install virtualenv module for Python3
+      pip:
+        name: virtualenv
+        executable: pip3.6
+
+    - name: Make virtualenv inside of development folder; install requirements
+      pip:
+        requirements: ~/requirements.txt
+        virtualenv: "{{ dev_folder }}/{{ virtualenv }}"
+        virtualenv_command: /usr/bin/python3.6 -m venv
+
+    - name: Clone code into directory
+      git:
+        repo: "https://github.com/{{ item.org }}/{{ item.repo }}.git"
+        dest: "{{ dev_folder }}/{{ item.repo }}"
+      with_items: "{{ repositories }}"
+  
+    - name: Download the Cobra modules for ACI 4.2(3h)
+      get_url:
+        url: "{{ item.url }}{{item.file}}"
+        dest: /tmp/
+      with_items: "{{ cobra_eggs }}"
+  
+    - name: Install Cobra modules into virtualenv
+      pip:
+        name: file:///tmp/{{ item.file }}
+        virtualenv: "{{ dev_folder }}/{{ virtualenv }}"
+      with_items: "{{ cobra_eggs }}"
+  
+    - name: Install ACI toolkit, Arya, pyDME
+      shell: source {{ dev_folder }}/{{ virtualenv }}/bin/activate && python setup.py install
+      args:
+        chdir: "{{ dev_folder }}/{{ item }}"
+      with_items:
+        - acitoolkit
+        - arya
+        - pydme
+  
+    - name: Install WebArya requirements
+      pip: 
+        requirements: "{{ dev_folder }}/webarya/requirements.txt"
+        virtualenv: "{{ dev_folder }}/{{ virtualenv }}"
