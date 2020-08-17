@@ -4,12 +4,8 @@ import hvac
 import os
 import argparse
 import json
+import log 
 
-logger = logging.getLogger('aci-login')
-"""Returns a requests.Response resulting from an ACI Login request
-
-Optional plotz says to frobnicate the bizbaz first.
-"""
 def aaa_login(host='apic', username='', password='', verify=True, timeout=10, session:requests.Session=None):
     if session == None:
         return requests.post(f'{host}/api/aaaLogin.json', verify=verify, timeout=timeout, json={
@@ -37,12 +33,7 @@ if __name__ == "__main__":
     parser.add_argument('--log', default="DEBUG")
     args = parser.parse_args()
 
-    logger.setLevel(args.log)
-    ch = logging.StreamHandler()
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    ch.setFormatter(formatter)
-    logger.addHandler(ch)
-
+    logger = log.default("aci-login", level=args.log, patterns=[os.getenv("VAULT_TOKEN")])
     client = hvac.Client(args.vault, os.getenv("VAULT_TOKEN"))
     data = client.read("kv-v1/aci/bootcamp")
     username = data["data"]["ACI_USERNAME"]
