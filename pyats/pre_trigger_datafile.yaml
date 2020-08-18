@@ -25,6 +25,8 @@ Pre_Snapshots:
                 - "%VARIABLES{pre_tenant}"
               filename: "pre_snapshots/tenant.json"
     - pre_snapshot_Subnet:
+        - sleep:
+            sleep_time: 20
         - api:
             device: uut
             function: apic_rest_get
@@ -32,6 +34,8 @@ Pre_Snapshots:
               dn: /api/class/fvSubnet.json
             save:
               - variable_name: pre_subnet
+        - sleep:
+            sleep_time: 20
         - api:
             device: uut
             function: save_dict_to_json_file
@@ -40,6 +44,8 @@ Pre_Snapshots:
                 - "%VARIABLES{pre_subnet}"
               filename: "pre_snapshots/subnet.json"
     - pre_snapshot_BD:
+        - sleep:
+            sleep_time: 20
         - api:
             device: uut
             function: apic_rest_get
@@ -47,6 +53,8 @@ Pre_Snapshots:
               dn: /api/class/fvBD.json
             save:
               - variable_name: pre_bd
+        - sleep:
+            sleep_time: 20
         - api:
             device: uut
             function: save_dict_to_json_file
@@ -54,6 +62,8 @@ Pre_Snapshots:
               data:
                 - "%VARIABLES{pre_bd}"
               filename: "pre_snapshots/bd.json"
+        - sleep:
+            sleep_time: 20
     - pre_snapshot_Ctx:
         - api:
             device: uut
@@ -62,6 +72,8 @@ Pre_Snapshots:
               dn: /api/class/fvCtx.json
             save:
               - variable_name: pre_ctx
+        - sleep:
+            sleep_time: 20
         - api:
             device: uut
             function: save_dict_to_json_file
@@ -69,7 +81,11 @@ Pre_Snapshots:
               data:
                 - "%VARIABLES{pre_ctx}"
               filename: "pre_snapshots/ctx.json"
+        - sleep:
+            sleep_time: 20
     - pre_snapshot_Ap:
+        - sleep:
+            sleep_time: 20
         - api:
             device: uut
             function: apic_rest_get
@@ -77,6 +93,8 @@ Pre_Snapshots:
               dn: /api/class/fvAp.json
             save:
               - variable_name: pre_ap
+        - sleep:
+            sleep_time: 20
         - api:
             device: uut
             function: save_dict_to_json_file
@@ -84,7 +102,11 @@ Pre_Snapshots:
               data:
                 - "%VARIABLES{pre_ap}"
               filename: "pre_snapshots/ap.json"
+        - sleep:
+            sleep_time: 20
     - pre_snapshot_AEPg:
+        - sleep:
+            sleep_time: 20
         - api:
             device: uut
             function: apic_rest_get
@@ -92,6 +114,8 @@ Pre_Snapshots:
               dn: /api/class/fvAEPg.json
             save:
               - variable_name: pre_aepg
+        - sleep:
+            sleep_time: 20
         - api:
             device: uut
             function: save_dict_to_json_file
@@ -99,7 +123,11 @@ Pre_Snapshots:
               data:
                 - "%VARIABLES{pre_aepg}"
               filename: "pre_snapshots/aepg.json"
+        - sleep:
+            sleep_time: 20
     - pre_snapshot_BrCP:
+        - sleep:
+            sleep_time: 20
         - api:
             device: uut
             function: apic_rest_get
@@ -107,6 +135,8 @@ Pre_Snapshots:
               dn: /api/class/vzBrCP.json
             save:
               - variable_name: pre_cp
+        - sleep:
+            sleep_time: 20
         - api:
             device: uut
             function: save_dict_to_json_file
@@ -115,6 +145,8 @@ Pre_Snapshots:
                 - "%VARIABLES{pre_cp}"
               filename: "pre_snapshots/cp.json"
     - pre_snapshot_Filter:
+        - sleep:
+            sleep_time: 20
         - api:
             device: uut
             function: apic_rest_get
@@ -122,6 +154,8 @@ Pre_Snapshots:
               dn: /api/class/vzFilter.json
             save:
               - variable_name: pre_filter
+        - sleep:
+            sleep_time: 20
         - api:
             device: uut
             function: save_dict_to_json_file
