@@ -3,12 +3,10 @@
 Install pyATS|Genie and Rest Connector.
 ```
 pip install 'pyats[full]' rest.connector
+pip install genie.libs.sdk --upgrade --pre
 
 git clone https://wwwin-github.cisco.com/DevNet/ABC-ACI.git
 cd ABC-ACI/pyats
-# uninstall genie.libs.sdk and install wheel in this repository
-pip uninstall genie.libs.sdk -y
-pip install genie.libs.sdk-20.7.2b2-py3-none-any.whl
 ```
 
 # Running
