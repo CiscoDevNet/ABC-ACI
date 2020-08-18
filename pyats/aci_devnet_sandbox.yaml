@@ -8,10 +8,10 @@ devices:
         via: rest
       rest:
         class: rest.connector.Rest
-        host: sandboxapicdc.cisco.com
-        ip: sandboxapicdc.cisco.com
+        host: 10.10.20.14
+        ip: 10.10.20.14
         port: 443
         credentials:
           rest:
             username: admin
-            password: ciscopsdt
+            password: C1sco12345
