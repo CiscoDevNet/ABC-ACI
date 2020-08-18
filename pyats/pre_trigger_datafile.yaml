@@ -6,6 +6,8 @@ Pre_Snapshots:
     class: triggers.blitz.blitz.Blitz
   test_sections:
     - pre_snapshot_Tenant:
+        - sleep: # ACTION
+            sleep_time: 20
         - api:
             device: uut
             function: apic_rest_get
@@ -21,6 +23,8 @@ Pre_Snapshots:
                 - "%VARIABLES{pre_tenant}"
               filename: "pre_snapshots/tenant.json"
     - pre_snapshot_Subnet:
+      - sleep: # ACTION
+          sleep_time: 20
         - api:
             device: uut
             function: apic_rest_get
