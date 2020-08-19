@@ -307,46 +307,46 @@ post_Snapshots:
             device: uut
             pre: "%VARIABLES{pre_snapshot_tenant}"
             post: "%VARIABLES{post_snapshot_tenant}"
-            fail_different: True
+            fail_different: False
     - snapshot_comparison_Subnet:
         - diff:
             device: uut
             pre: "%VARIABLES{pre_snapshot_subnet}"
             post: "%VARIABLES{post_snapshot_subnet}"
-            fail_different: True
+            fail_different: False
     - snapshot_comparison_BD:
         - diff:
             device: uut
             pre: "%VARIABLES{pre_snapshot_bd}"
             post: "%VARIABLES{post_snapshot_bd}"
-            fail_different: True
+            fail_different: False
     - snapshot_comparison_Ctx:
         - diff:
             device: uut
             pre: "%VARIABLES{pre_snapshot_ctx}"
             post: "%VARIABLES{post_snapshot_ctx}"
-            fail_different: True
+            fail_different: False
     - snapshot_comparison_Ap:
         - diff:
             device: uut
             pre: "%VARIABLES{pre_snapshot_ap}"
             post: "%VARIABLES{post_snapshot_ap}"
-            fail_different: True
+            fail_different: False
     - snapshot_comparison_AEPg:
         - diff:
             device: uut
             pre: "%VARIABLES{pre_snapshot_aepg}"
             post: "%VARIABLES{post_snapshot_aepg}"
-            fail_different: True
+            fail_different: False
     - snapshot_comparison_CP:
         - diff:
             device: uut
             pre: "%VARIABLES{pre_snapshot_cp}"
             post: "%VARIABLES{post_snapshot_cp}"
-            fail_different: True
+            fail_different: False
     - snapshot_comparison_Filter:
         - diff:
             device: uut
             pre: "%VARIABLES{pre_snapshot_filter}"
             post: "%VARIABLES{post_snapshot_filter}"
-            fail_different: True
+            fail_different: False
