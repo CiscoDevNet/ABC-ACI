@@ -6,8 +6,6 @@ post_Snapshots:
     class: triggers.blitz.blitz.Blitz
   test_sections:
     - post_snapshot_Tenant:
-        - sleep:
-            sleep_time: 2
         - api:
             device: uut
             function: apic_rest_get
@@ -15,8 +13,6 @@ post_Snapshots:
               dn: /api/class/fvTenant.json
             save:
               - variable_name: post_tenant
-        - sleep:
-            sleep_time: 2
         - api:
             device: uut
             function: save_dict_to_json_file
@@ -25,8 +21,6 @@ post_Snapshots:
                 - "%VARIABLES{post_tenant}"
               filename: "post_snapshots/tenant.json"
     - post_snapshot_Subnet:
-        - sleep:
-            sleep_time: 2
         - api:
             device: uut
             function: apic_rest_get
@@ -34,8 +28,6 @@ post_Snapshots:
               dn: /api/class/fvSubnet.json
             save:
               - variable_name: post_subnet
-        - sleep:
-            sleep_time: 2
         - api:
             device: uut
             function: save_dict_to_json_file
@@ -44,8 +36,6 @@ post_Snapshots:
                 - "%VARIABLES{post_subnet}"
               filename: "post_snapshots/subnet.json"
     - post_snapshot_BD:
-        - sleep:
-            sleep_time: 2
         - api:
             device: uut
             function: apic_rest_get
@@ -53,8 +43,6 @@ post_Snapshots:
               dn: /api/class/fvBD.json
             save:
               - variable_name: post_bd
-        - sleep:
-            sleep_time: 2
         - api:
             device: uut
             function: save_dict_to_json_file
@@ -63,8 +51,6 @@ post_Snapshots:
                 - "%VARIABLES{post_bd}"
               filename: "post_snapshots/bd.json"
     - post_snapshot_Ctx:
-        - sleep:
-            sleep_time: 2
         - api:
             device: uut
             function: apic_rest_get
@@ -72,8 +58,6 @@ post_Snapshots:
               dn: /api/class/fvCtx.json
             save:
               - variable_name: post_ctx
-        - sleep:
-            sleep_time: 2
         - api:
             device: uut
             function: save_dict_to_json_file
@@ -82,8 +66,6 @@ post_Snapshots:
                 - "%VARIABLES{post_ctx}"
               filename: "post_snapshots/ctx.json"
     - post_snapshot_Ap:
-        - sleep:
-            sleep_time: 2
         - api:
             device: uut
             function: apic_rest_get
@@ -91,8 +73,6 @@ post_Snapshots:
               dn: /api/class/fvAp.json
             save:
               - variable_name: post_ap
-        - sleep:
-            sleep_time: 2
         - api:
             device: uut
             function: save_dict_to_json_file
@@ -101,8 +81,6 @@ post_Snapshots:
                 - "%VARIABLES{post_ap}"
               filename: "post_snapshots/ap.json"
     - post_snapshot_AEPg:
-        - sleep:
-            sleep_time: 2
         - api:
             device: uut
             function: apic_rest_get
@@ -110,8 +88,6 @@ post_Snapshots:
               dn: /api/class/fvAEPg.json
             save:
               - variable_name: post_aepg
-        - sleep:
-            sleep_time: 2
         - api:
             device: uut
             function: save_dict_to_json_file
@@ -120,8 +96,6 @@ post_Snapshots:
                 - "%VARIABLES{post_aepg}"
               filename: "post_snapshots/aepg.json"
     - post_snapshot_BrCP:
-        - sleep:
-            sleep_time: 2
         - api:
             device: uut
             function: apic_rest_get
@@ -129,8 +103,6 @@ post_Snapshots:
               dn: /api/class/vzBrCP.json
             save:
               - variable_name: post_cp
-        - sleep:
-            sleep_time: 2
         - api:
             device: uut
             function: save_dict_to_json_file
@@ -139,8 +111,6 @@ post_Snapshots:
                 - "%VARIABLES{post_cp}"
               filename: "post_snapshots/cp.json"
     - post_snapshot_Filter:
-        - sleep:
-            sleep_time: 2
         - api:
             device: uut
             function: apic_rest_get
@@ -148,8 +118,6 @@ post_Snapshots:
               dn: /api/class/vzFilter.json
             save:
               - variable_name: post_filter
-        - sleep:
-            sleep_time: 2
         - api:
             device: uut
             function: save_dict_to_json_file
@@ -158,8 +126,6 @@ post_Snapshots:
                 - "%VARIABLES{post_filter}"
               filename: "post_snapshots/filter.json"
     - load_snapshots_for_both_pre_and_post:
-        - sleep:
-            sleep_time: 2
         - api:
             device: uut
             function: load_dict_from_json_file
@@ -167,8 +133,6 @@ post_Snapshots:
               filename: "pre_snapshots/tenant.json"
             save:
               - variable_name: pre_snapshot_tenant
-        - sleep:
-            sleep_time: 2
         - api:
             device: uut
             function: load_dict_from_json_file
@@ -176,8 +140,6 @@ post_Snapshots:
               filename: "post_snapshots/tenant.json"
             save:
               - variable_name: post_snapshot_tenant
-        - sleep:
-            sleep_time: 2
         - api:
             device: uut
             function: load_dict_from_json_file
@@ -185,8 +147,6 @@ post_Snapshots:
               filename: "pre_snapshots/subnet.json"
             save:
               - variable_name: pre_snapshot_subnet
-        - sleep:
-            sleep_time: 2
         - api:
             device: uut
             function: load_dict_from_json_file
@@ -194,8 +154,6 @@ post_Snapshots:
               filename: "post_snapshots/subnet.json"
             save:
               - variable_name: post_snapshot_subnet
-        - sleep:
-            sleep_time: 2
         - api:
             device: uut
             function: load_dict_from_json_file
@@ -203,8 +161,6 @@ post_Snapshots:
               filename: "pre_snapshots/bd.json"
             save:
               - variable_name: pre_snapshot_bd
-        - sleep:
-            sleep_time: 2
         - api:
             device: uut
             function: load_dict_from_json_file
@@ -212,8 +168,6 @@ post_Snapshots:
               filename: "post_snapshots/bd.json"
             save:
               - variable_name: post_snapshot_bd
-        - sleep:
-            sleep_time: 2
         - api:
             device: uut
             function: load_dict_from_json_file
@@ -221,8 +175,6 @@ post_Snapshots:
               filename: "pre_snapshots/ctx.json"
             save:
               - variable_name: pre_snapshot_ctx
-        - sleep:
-            sleep_time: 2
         - api:
             device: uut
             function: load_dict_from_json_file
@@ -230,8 +182,6 @@ post_Snapshots:
               filename: "post_snapshots/ctx.json"
             save:
               - variable_name: post_snapshot_ctx
-        - sleep:
-            sleep_time: 2
         - api:
             device: uut
             function: load_dict_from_json_file
@@ -239,8 +189,6 @@ post_Snapshots:
               filename: "pre_snapshots/ap.json"
             save:
               - variable_name: pre_snapshot_ap
-        - sleep:
-            sleep_time: 2
         - api:
             device: uut
             function: load_dict_from_json_file
@@ -248,8 +196,6 @@ post_Snapshots:
               filename: "post_snapshots/ap.json"
             save:
               - variable_name: post_snapshot_ap
-        - sleep:
-            sleep_time: 2
         - api:
             device: uut
             function: load_dict_from_json_file
@@ -257,8 +203,6 @@ post_Snapshots:
               filename: "pre_snapshots/aepg.json"
             save:
               - variable_name: pre_snapshot_aepg
-        - sleep:
-            sleep_time: 2
         - api:
             device: uut
             function: load_dict_from_json_file
@@ -266,8 +210,6 @@ post_Snapshots:
               filename: "post_snapshots/aepg.json"
             save:
               - variable_name: post_snapshot_aepg
-        - sleep:
-            sleep_time: 2
         - api:
             device: uut
             function: load_dict_from_json_file
@@ -275,8 +217,6 @@ post_Snapshots:
               filename: "pre_snapshots/cp.json"
             save:
               - variable_name: pre_snapshot_cp
-        - sleep:
-            sleep_time: 2
         - api:
             device: uut
             function: load_dict_from_json_file
@@ -284,8 +224,6 @@ post_Snapshots:
               filename: "post_snapshots/cp.json"
             save:
               - variable_name: post_snapshot_cp
-        - sleep:
-            sleep_time: 2
         - api:
             device: uut
             function: load_dict_from_json_file
@@ -293,8 +231,6 @@ post_Snapshots:
               filename: "pre_snapshots/filter.json"
             save:
               - variable_name: pre_snapshot_filter
-        - sleep:
-            sleep_time: 2
         - api:
             device: uut
             function: load_dict_from_json_file
