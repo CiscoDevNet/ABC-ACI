@@ -13,7 +13,7 @@
   tasks:
   - name: Create ACI code repository
     file:
-      path: "{{ dev-folder }}"
+      path: "{{ dev_folder }}"
       state: directory
       mode: '0755'
 
@@ -21,12 +21,12 @@
     git:
       repo: "https://github.com/{{ item.org }}/{{ item.repo }}.git"
       dest: "{{ dev_folder }}/{{ item.repo }}"
-      with_items: "{{ repositories }}"
+    with_items: "{{ repositories }}"
 
   - name: Install ACI toolkit, Arya
     shell: python setup.py install
     args:
-      chdir: "{{ dev-folder }}/{{ item }}"
+      chdir: "{{ dev_folder }}/{{ item }}"
     with_items:
       - acitoolkit
       - arya
@@ -34,5 +34,5 @@
 
   - name: Install WebArya requirements
     pip: 
-      requirements: "{{ dev-folder }}/webarya/requirements.txt"
+      requirements: "{{ dev_folder }}/webarya/requirements.txt"
       virtualenv: "{{ virtualenv }}"
