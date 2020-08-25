@@ -19,7 +19,6 @@
         email: ansible@company.com
         validate_certs: no
         state: present
-        #warn: false
 
     # Add the certifcate file to ACI
     # The certificate was created with this command

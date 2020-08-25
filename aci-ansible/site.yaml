@@ -20,6 +20,10 @@
         username: "{{ apic_username }}"
         password: "{{ apic_password }}"
 
+  - name: Include Tenant vars
+    include_vars:
+      file: "{{ app_name }}.yaml"
+
   - name: CONFIGURE TENANT
     aci_tenant:
       <<: *login_info
