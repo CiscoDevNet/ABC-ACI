@@ -8,7 +8,7 @@
       - { org: 'datacenter', repo: 'acitoolkit' }
       - { org: 'CiscoDevNet', repo: 'pydme' }
     virtualenv: py3venv
-    dev-folder: ~/bootcamp-aci
+    dev_folder: ~/bootcamp-aci
   
   tasks:
   - name: Create ACI code repository
