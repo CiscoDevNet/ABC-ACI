@@ -7,7 +7,7 @@
       - { org: 'qsnyder', repo: 'webarya' }
       - { org: 'datacenter', repo: 'acitoolkit' }
       - { org: 'CiscoDevNet', repo: 'pydme' }
-    virtualenv: py3venv
+    virtualenv: ~/py3venv
     dev_folder: ~/bootcamp-aci
   
   tasks:
