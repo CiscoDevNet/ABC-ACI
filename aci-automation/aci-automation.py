@@ -63,12 +63,12 @@ if __name__ == "__main__":
     env_file = os.path.abspath(args.env_file)
     inventory_file = os.path.abspath(args.inventory_file)
     
-    tenant_info = dict()
-    # action =  None
+
 
     for filename in glob.iglob(path + f'/{args.tenants_dir}/**', recursive=True):
+        logger.debug("processing file/folder %s", filename)
+        tenant_info = dict()
         environments = []
-        # action_key = None
         if not os.path.isdir(filename):
             logger.debug("processing file " + filename)
             with open(filename) as f:
@@ -85,17 +85,19 @@ if __name__ == "__main__":
                     tenant_info[action] = environments
                 else:
                     tenant_info[action] = tenant_info[action] + environments
-    with open(env_file, 'w') as f:
-        logger.debug("writing env_file=%s", env_file)
-        f.write(yaml.dump(tenant_info))
 
-    for filename in glob.iglob(path + f'/{args.actions_dir}/**', recursive=True):
-        if not os.path.isdir(filename):
-            normalize_action_name = os.path.basename(filename).replace(".yml", "").replace("-", "_")
-        
-            logger.debug("processing action=%s file=%s", normalize_action_name, filename)
-            cmd = ['ansible-playbook', '-i', f'{inventory_file}', f'{filename}', "--extra-vars", f'@{env_file}']
-        
-            logger.debug("running cmd='%s'", ' '.join(cmd))
-            for path in execute(cmd):
-                print(path, end="")
+            # run this for each tenant_info                    
+            with open(env_file, 'w') as f:
+                logger.debug("writing env_file=%s", env_file)
+                f.write(yaml.dump(tenant_info))
+            for actionfile in glob.iglob(path + f'/{args.actions_dir}/**', recursive=True):
+                if os.path.isfile(actionfile):
+                    normalize_action_name = os.path.basename(actionfile).replace(".yml", "").replace("-", "_")
+                    if normalize_action_name in tenant_info:
+                        logger.debug("processing action=%s file=%s", normalize_action_name, actionfile)
+                        cmd = ['ansible-playbook', '-i', f'{inventory_file}', f'{actionfile}', "--extra-vars", f'@{env_file}']
+                        logger.debug("running cmd='%s'", ' '.join(cmd))
+                        for cmd_line_result in execute(cmd):
+                            print(cmd_line_result, end="")
+                    else:
+                        logger.debug("skipping action=%s file=%s", normalize_action_name, actionfile)
