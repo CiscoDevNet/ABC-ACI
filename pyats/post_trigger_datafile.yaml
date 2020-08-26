@@ -158,7 +158,7 @@ post_Snapshots:
             device: uut
             function: apic_rest_get
             arguments:
-              dn: /api/class/vzFilter.json?query-target=children
+              dn: /api/class/vzFilter.json
             save:
               - variable_name: post_filter
 
