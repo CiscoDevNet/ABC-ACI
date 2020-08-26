@@ -1,0 +1,18 @@
+---
+
+version: '1.2'
+
+#######################################
+#  Filter Entries for the SnV Tenant  #
+#######################################    
+action: aci_filter_entry
+items:
+    - name: http filter
+      filter: http
+      tenant: SnV
+      entry: tcp-443
+      ether_type: ip
+      ip_protocol: tcp
+      dst_port_start: https
+      dst_port_end: https
+      state: present
