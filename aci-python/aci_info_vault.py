@@ -4,8 +4,7 @@ import hvac
 import os
 import argparse
 from argparse import ArgumentParser
-import json
-import log 
+import json 
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
