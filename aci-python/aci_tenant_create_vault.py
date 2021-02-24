@@ -62,5 +62,5 @@ if __name__ == "__main__":
             })
 
         print("tenant create response code=%s", tenant_response.status_code)
-    except requests.exceptions.InvalidURL as e
+    except requests.exceptions.InvalidURL as e:
         print ("Missing Credentials")
