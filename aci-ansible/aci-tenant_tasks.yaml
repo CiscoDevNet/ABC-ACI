@@ -1,132 +1,145 @@
 ---
-- name: Test for ACI hostname, apic_username, and apic_password. Setup Login Anchor and Alias
-  fail:
-    msg: 'Please define the variables: apic_username and apic_password.'
-  when: apic_username is not defined or apic_password is not defined
+- name: Tenant Tasks
+  hosts:
+    - apic
+  gather_facts: false
+  connection: local
   vars:
     login_info: &login_info
       hostname: "{{ inventory_hostname }}"
       username: "{{ apic_username }}"
       password: "{{ apic_password }}"
+    
 
-- name: ENSURE TENANT VRF EXISTS
-  cisco.aci.aci_vrf:
-    <<: *login_info
-    tenant: "{{ tenant }}"
-    vrf: "{{ vrf }}"
-    description: "VRF Created/Configured Using Ansible"
-    state: "{{ aci_state }}"
-    validate_certs: "{{ validate_certs }}"
+  tasks:
+  
+  - name: ENSURE TENANT EXISTS
+    cisco.aci.aci_tenant:
+      <<: *login_info
+      tenant: "{{ tenant }}"
+      description: "Tenant Created/Configured Using Ansible"
+      state: "{{ aci_state }}"
+      validate_certs: "{{ validate_certs }}"
+  
 
-- name: ENSURE TENANT BRIDGE DOMAIN EXISTS
-  cisco.aci.aci_bd:
-    <<: *login_info
-    tenant: "{{ tenant }}"
-    bd: "{{ item }}"
-    vrf: "{{ vrf }}"
-    description: "{{ bd_description }} for {{ item }}"
-    state: "{{ aci_state }}"
-    validate_certs: "{{ validate_certs }}"
-  loop: "{{ bds }}"
+  - name: ENSURE TENANT VRF EXISTS
+    cisco.aci.aci_vrf:
+      <<: *login_info
+      tenant: "{{ tenant }}"
+      vrf: "{{ vrf }}"
+      description: "VRF Created/Configured Using Ansible"
+      state: "{{ aci_state }}"
+      validate_certs: "{{ validate_certs }}"
 
-- name: ENSURE TENANT SUBNET EXISTS
-  cisco.aci.aci_bd_subnet:
-    <<: *login_info
-    tenant: "{{ tenant }}"
-    bd: "{{ item.bd }}"
-    gateway: "{{ item.bd_gateway }}"
-    mask: "{{ item.bd_mask }}"
-    scope: "{{ item.bd_scope }}"
-    description: "{{ bd_subnet_description }} for {{ item.bd }}"
-    state: "{{ aci_state }}"
-    validate_certs: "{{ validate_certs }}"
-  loop: "{{ bd_subnets }}"
+  - name: ENSURE TENANT BRIDGE DOMAIN EXISTS
+    cisco.aci.aci_bd:
+      <<: *login_info
+      tenant: "{{ tenant }}"
+      bd: "{{ item }}"
+      vrf: "{{ vrf }}"
+      description: "{{ bd_description }} for {{ item }}"
+      state: "{{ aci_state }}"
+      validate_certs: "{{ validate_certs }}"
+    loop: "{{ bds }}"
 
-- name: ENSURE TENANT FILTERS EXIST
-  cisco.aci.aci_filter:
-    <<: *login_info
-    tenant: "{{ tenant }}"
-    filter: "{{ item }}"
-    description: "{{ filter_description }} for {{ item }}"
-    state: "{{ aci_state }}"
-    validate_certs: "{{ validate_certs }}"
-  loop: "{{ filters }}"
+  - name: ENSURE TENANT SUBNET EXISTS
+    cisco.aci.aci_bd_subnet:
+      <<: *login_info
+      tenant: "{{ tenant }}"
+      bd: "{{ item.bd }}"
+      gateway: "{{ item.bd_gateway }}"
+      mask: "{{ item.bd_mask }}"
+      scope: "{{ item.bd_scope }}"
+      description: "{{ bd_subnet_description }} for {{ item.bd }}"
+      state: "{{ aci_state }}"
+      validate_certs: "{{ validate_certs }}"
+    loop: "{{ bd_subnets }}"
 
-- name: ENSURE FILTERS HAVE FILTER ENTRIES
-  cisco.aci.aci_filter_entry:
-    <<: *login_info
-    tenant: "{{ tenant }}"
-    filter: "{{ item.filter }}"
-    entry: "{{ item.entry }}"
-    ether_type: "{{ filter_entry_ether_type }}"
-    ip_protocol: "{{ filter_entry_ip_protocol }}"
-    dst_port_start: "{{ item.port }}"
-    dst_port_end: "{{ item.port }}"
-    state: "{{ aci_state }}"
-    validate_certs: "{{ validate_certs }}"
-  loop: "{{ filter_entries }}"
+  - name: ENSURE TENANT FILTERS EXIST
+    cisco.aci.aci_filter:
+      <<: *login_info
+      tenant: "{{ tenant }}"
+      filter: "{{ item }}"
+      description: "{{ filter_description }} for {{ item }}"
+      state: "{{ aci_state }}"
+      validate_certs: "{{ validate_certs }}"
+    loop: "{{ filters }}"
 
-- name: ENSURE TENANT CONTRACTS EXIST
-  cisco.aci.aci_contract:
-    <<: *login_info
-    tenant: "{{ tenant }}"
-    contract: "{{ item }}"
-    scope: "{{ contract_scope }}"
-    description: "{{ contract_description }} for {{ item }}"
-    state: "{{ aci_state }}"
-    validate_certs: "{{ validate_certs }}"
-  loop: "{{ contracts }}"
+  - name: ENSURE FILTERS HAVE FILTER ENTRIES
+    cisco.aci.aci_filter_entry:
+      <<: *login_info
+      tenant: "{{ tenant }}"
+      filter: "{{ item.filter }}"
+      entry: "{{ item.entry }}"
+      ether_type: "{{ filter_entry_ether_type }}"
+      ip_protocol: "{{ filter_entry_ip_protocol }}"
+      dst_port_start: "{{ item.port }}"
+      dst_port_end: "{{ item.port }}"
+      state: "{{ aci_state }}"
+      validate_certs: "{{ validate_certs }}"
+    loop: "{{ filter_entries }}"
 
-- name: ENSURE CONTRACTS HAVE CONTRACT SUBJECTS
-  cisco.aci.aci_contract_subject:
-    <<: *login_info
-    tenant: "{{ tenant }}"
-    contract: "{{ item.contract }}"
-    subject: "{{ item.subject }}"
-    state: "{{ aci_state }}"
-    validate_certs: "{{ validate_certs }}"
-  loop: "{{ contract_subjects }}"
+  - name: ENSURE TENANT CONTRACTS EXIST
+    cisco.aci.aci_contract:
+      <<: *login_info
+      tenant: "{{ tenant }}"
+      contract: "{{ item }}"
+      scope: "{{ contract_scope }}"
+      description: "{{ contract_description }} for {{ item }}"
+      state: "{{ aci_state }}"
+      validate_certs: "{{ validate_certs }}"
+    loop: "{{ contracts }}"
 
-- name: ENSURE CONTRACTS SUBJECTS ARE ASSOCIATED WITH FILTERS
-  cisco.aci.aci_contract_subject_to_filter:
-    <<: *login_info
-    tenant: "{{ tenant }}"
-    contract: "{{ item.contract }}"
-    subject: "{{ item.subject }}"
-    filter: "{{ item.filter }}"
-    state: "{{ aci_state }}"
-    validate_certs: "{{ validate_certs }}"
-  loop: "{{contracts_to_filters}}"
+  - name: ENSURE CONTRACTS HAVE CONTRACT SUBJECTS
+    cisco.aci.aci_contract_subject:
+      <<: *login_info
+      tenant: "{{ tenant }}"
+      contract: "{{ item.contract }}"
+      subject: "{{ item.subject }}"
+      state: "{{ aci_state }}"
+      validate_certs: "{{ validate_certs }}"
+    loop: "{{ contract_subjects }}"
 
-- name: ENSURE APPLICATION PROFILE EXISTS
-  cisco.aci.aci_ap:
-    <<: *login_info
-    tenant: "{{ tenant }}"
-    ap: "{{ ap_name }}"
-    description: "{{ ap_description }}"
-    state: "{{ aci_state }}"
-    validate_certs: "{{ validate_certs }}"
+  - name: ENSURE CONTRACTS SUBJECTS ARE ASSOCIATED WITH FILTERS
+    cisco.aci.aci_contract_subject_to_filter:
+      <<: *login_info
+      tenant: "{{ tenant }}"
+      contract: "{{ item.contract }}"
+      subject: "{{ item.subject }}"
+      filter: "{{ item.filter }}"
+      state: "{{ aci_state }}"
+      validate_certs: "{{ validate_certs }}"
+    loop: "{{contracts_to_filters}}"
 
-- name: ENSURE EPG EXISTS
-  cisco.aci.aci_epg:
-    <<: *login_info
-    tenant: "{{ tenant }}"
-    ap: "{{ ap_name }}"
-    epg: "{{ item.epg }}"
-    description: "{{ epg_description }} for {{ item.epg }}"
-    bd: "{{ item.bd }}"
-    state: "{{ aci_state }}"
-    validate_certs: "{{ validate_certs }}"
-  loop: "{{ epgs }}"
+  - name: ENSURE APPLICATION PROFILE EXISTS
+    cisco.aci.aci_ap:
+      <<: *login_info
+      tenant: "{{ tenant }}"
+      ap: "{{ ap_name }}"
+      description: "{{ ap_description }}"
+      state: "{{ aci_state }}"
+      validate_certs: "{{ validate_certs }}"
 
-- name: ENSURE CONTRACT TO EPG BINDING EXISTS
-  cisco.aci.aci_epg_to_contract:
-    <<: *login_info
-    tenant: "{{ tenant }}"
-    ap: "{{ ap_name }}"
-    epg: "{{ item.epg }}"
-    contract: "{{ item.contract }}"
-    contract_type: "{{ item.contract_type }}"
-    state: "{{ aci_state }}"
-    validate_certs: "{{ validate_certs }}"
-  loop: "{{ epg_to_contracts }}"
+  - name: ENSURE EPG EXISTS
+    cisco.aci.aci_epg:
+      <<: *login_info
+      tenant: "{{ tenant }}"
+      ap: "{{ ap_name }}"
+      epg: "{{ item.epg }}"
+      description: "{{ epg_description }} for {{ item.epg }}"
+      bd: "{{ item.bd }}"
+      state: "{{ aci_state }}"
+      validate_certs: "{{ validate_certs }}"
+    loop: "{{ epgs }}"
+
+  - name: ENSURE CONTRACT TO EPG BINDING EXISTS
+    cisco.aci.aci_epg_to_contract:
+      <<: *login_info
+      tenant: "{{ tenant }}"
+      ap: "{{ ap_name }}"
+      epg: "{{ item.epg }}"
+      contract: "{{ item.contract }}"
+      contract_type: "{{ item.contract_type }}"
+      state: "{{ aci_state }}"
+      validate_certs: "{{ validate_certs }}"
+    loop: "{{ epg_to_contracts }}"
