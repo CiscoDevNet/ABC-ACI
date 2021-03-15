@@ -14,25 +14,14 @@
         password: "{{ apic_password }}"
         aaa_user: ansible
         aaa_password: C1sco12345
+        certificate_name: ansible
         expiration: never
         expires: no
         email: ansible@company.com
         validate_certs: no
         state: present
 
-    # Add the certifcate file to ACI
-    # The certificate was created with this command
-    # openssl req -new -newkey rsa:1024 -days 36500 -nodes -x509 -keyout ansible.key -out ansible.crt -subj '/CN=ansible/O=Company/C=US'
-    - name: Add a user certificate
-      cisco.aci.aci_aaa_user_certificate:
-        host: "{{ inventory_hostname }}"
-        username: "{{ apic_username }}"
-        password: "{{ apic_password }}"
-        aaa_user: ansible
-        certificate_name: ansible
-        certificate_data: "{{ lookup('file', 'ansible.crt') }}"
-        validate_certs: no
-        state: present
+    
 
     - name: Manage user privileges
       cisco.aci.aci_rest:
@@ -64,3 +53,19 @@
                   ]
               }
           }
+# Add the certifcate file to ACI
+    # The certificate was created with this command
+    # openssl req -new -newkey rsa:1024 -days 36500 -nodes -x509 -keyout ansible.key -out ansible.crt -subj '/CN=ansible/O=Company/C=US'
+    - name: Add a user certificate
+      aci_aaa_user_certificate:
+        host: "{{ inventory_hostname }}"
+        username: "{{ apic_username }}"
+        password: "{{ apic_password }}"
+        aaa_user: ansible
+        certificate_name: ansible
+        certificate_data: "{{ lookup('file', 'ansible.crt') }}"
+        certificate: "{{ lookup('file', 'ansible.crt') }}"
+        validate_certs: no
+        state: present
+
+   
