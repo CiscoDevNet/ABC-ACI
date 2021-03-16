@@ -1,0 +1,345 @@
+---
+- name: Create New Tenant
+  hosts: apic
+  connection: local
+  gather_facts: no
+ 
+  tasks:
+  
+  - name: Load Variables
+    include_vars:
+      file: tenants.yml
+      name: input
+     
+
+  - name: Add a new Tenant
+    aci_tenant:
+        hostname: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        tenant: '{{ item.new_tenant }}'
+        validate_certs: "{{item.validate_certs}}"
+        state: "{{ item.state }}"
+        description: "tenant created by ansible"
+    loop: "{{ input.raw_data }}"
+   
+    
+
+  - name: Create VRF
+    aci_vrf:
+      hostname: "{{inventory_hostname}}"
+      username: "{{username}}"
+      password: "{{password}}"
+      description: "vrf created by ansible"
+      tenant: '{{ item.new_tenant }}'
+      validate_certs: "{{item.validate_certs}}"
+      state: "{{ item.state }}"
+      vrf_name: '{{ item.new_vrf }}'
+      state: "{{ item.state }}"
+    loop: "{{ input.raw_data }}"
+
+  - name: Creating BD
+    aci_bd:
+       hostname: "{{inventory_hostname}}"
+       username: "{{username}}"
+       password: "{{password}}"
+       description: "bridge domain created by ansible"
+       validate_certs: "{{item.validate_certs}}"
+       tenant: '{{ item.new_tenant }}'
+       vrf_name: '{{ item.new_vrf }}'
+       bd: '{{ item.new_bd }}'
+       state: "{{ item.state }}"
+    loop: "{{ input.raw_data }}"
+
+  - name: Create BD Subnet
+    aci_bd_subnet:
+       hostname: "{{inventory_hostname}}"
+       username: "{{username}}"
+       password: "{{password}}"
+       description: "subnet created by ansible"
+       validate_certs: "{{item.validate_certs}}"
+       tenant: '{{ item.new_tenant }}'
+       bd: '{{ item.new_bd }}'
+       gateway: '{{ item.new_subnet }}'
+       route_profile_l3_out: '{{ item.common_l3 }}'
+       mask: 24
+       state: "{{ item.state }}"
+    loop: "{{ input.raw_data }}"
+
+  - name: Create AP
+    aci_ap:
+       hostname: "{{inventory_hostname}}"
+       username: "{{username}}"
+       password: "{{password}}"
+       description: "application profile created by ansible"
+       validate_certs: "{{item.validate_certs}}"
+       tenant: '{{ item.new_tenant }}'
+       app_profile: '{{ item.app_profile }}'
+       state: "{{ item.state }}"
+    loop: "{{ input.raw_data }}"
+
+  - name: Create web_epg
+    aci_epg:
+         hostname: "{{inventory_hostname}}"
+         username: "{{username}}"
+         password: "{{password}}"
+         validate_certs: "{{item.validate_certs}}"
+         tenant: '{{ item.new_tenant }}'
+         ap: '{{ item.app_profile }}'
+         epg: '{{ item.new_epg }}'
+         bd: '{{ item.new_bd }}'
+         state: "{{ item.state }}"
+    loop: "{{ input.raw_data }}"
+
+  - name: Create app_epg
+    aci_epg:
+        hostname: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        validate_certs: "{{item.validate_certs}}"
+        tenant: '{{ item.new_tenant }}'
+        ap: '{{ item.app_profile }}'
+        epg: '{{ item.second_epg }}'
+        bd: '{{ item.new_bd }}' 
+        state: "{{ item.state }}"
+    loop: "{{ input.raw_data }}"
+
+  
+  - name: Add a new physical domain to EPG binding
+    aci_epg_to_domain:
+        hostname: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        validate_certs: "{{item.validate_certs}}"
+        tenant: '{{ item.new_tenant }}'
+        ap: '{{ item.app_profile }}'
+        epg: '{{ item.new_epg }}'
+        domain: phys
+        domain_type: phys
+        state: "{{ item.state }}"
+
+    loop: "{{ input.raw_data }}"
+
+  
+
+  - name: Add a new physical domain to EPG binding
+    aci_epg_to_domain:
+        hostname: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        validate_certs: "{{item.validate_certs}}"
+        tenant: '{{ item.new_tenant }}'
+        ap: '{{ item.app_profile }}'
+        epg: '{{ item.second_epg }}'
+        domain: phys
+        domain_type: phys
+        state: "{{ item.state }}"
+    loop: "{{ input.raw_data }}"
+
+
+  - name: Create Filter
+    aci_filter:
+      hostname: "{{inventory_hostname}}"
+      username: "{{username}}"
+      password: "{{password}}"
+      validate_certs: "{{item.validate_certs}}"
+      tenant: '{{ item.new_tenant }}'
+      filter: filter1
+      state: "{{ item.state }}"
+    loop: "{{ input.raw_data }}"
+
+  - name: Create Filter Entry
+    aci_filter_entry:
+      hostname: "{{inventory_hostname}}"
+      username: "{{username}}"
+      password: "{{password}}"
+      validate_certs: "{{item.validate_certs}}"
+      tenant: '{{ item.new_tenant }}'
+      filter: filter1
+      filter_entry: filter_entry1
+      state: "{{ item.state }}"
+    loop: "{{ input.raw_data }}"
+
+  - name: Create Tenant Contract
+    aci_contract:
+          hostname: "{{inventory_hostname}}"
+          username: "{{username}}"
+          password: "{{password}}"
+          validate_certs: "{{item.validate_certs}}"
+          tenant: '{{ item.new_tenant }}'
+          contract: '{{ item.new_contract }}'
+          scope: tenant
+          state: "{{ item.state }}"
+    loop: "{{ input.raw_data }}"
+
+
+  - name: Create Contract Subject
+    aci_contract_subject:
+        hostname: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        validate_certs: "{{item.validate_certs}}"
+        tenant: '{{ item.new_tenant }}'
+        contract: '{{ item.new_contract }}'
+        contract_subject: subject1
+        reverse_filter: yes
+        state: "{{ item.state }}"
+    loop: "{{ input.raw_data }}"
+
+  - name: Bind Contract Subject to filter
+    aci_contract_subject_to_filter:
+        hostname: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        validate_certs: "{{item.validate_certs}}"
+        tenant: '{{ item.new_tenant }}'
+        contract: '{{ item.new_contract }}'
+        contract_subject: subject1
+        filter: filter1
+        state: "{{ item.state }}"
+    loop: "{{ input.raw_data }}"
+
+  
+  - name: Add a new contract to EPG binding Provider
+    aci_epg_to_contract:
+        hostname: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        validate_certs: "{{item.validate_certs}}"
+        tenant: '{{ item.new_tenant }}'
+        ap: '{{ item.app_profile }}'
+        epg: '{{ item.new_epg }}'
+        contract: '{{ item.new_contract }}'
+        contract_type: provider
+        state: "{{ item.state }}"
+    loop: "{{ input.raw_data }}"
+
+  - name: Add a new contract to EPG binding Consumer
+    aci_epg_to_contract:
+        hostname: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        validate_certs: "{{item.validate_certs}}"
+        tenant: '{{ item.new_tenant }}'
+        ap: '{{ item.app_profile }}'
+        epg: '{{ item.second_epg }}'
+        contract: '{{ item.new_contract }}'
+        contract_type: consumer
+        state: "{{ item.state }}"
+    loop: "{{ input.raw_data }}"
+
+
+  - name: Add a new L3Out
+    aci_l3out:
+        hostname: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        validate_certs: "{{item.validate_certs}}"
+        tenant: '{{ item.new_tenant }}'
+        name: '{{ item.common_l3 }}'
+        description: L3Out for Common tenant
+        domain: l3dom_prod
+        vrf_name: '{{ item.new_vrf }}'
+        l3protocol: ospf
+        route_control: export
+        state: "{{ item.state }}"
+
+    loop: "{{ input.raw_data }}"
+
+ 
+
+  - name: Associate L3outfile
+    aci_bd_to_l3out:
+        hostname: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        validate_certs: "{{item.validate_certs}}"
+        tenant: '{{ item.new_tenant }}'
+        bd: '{{ item.new_bd }}'
+        l3out: '{{ item.common_l3 }}'
+        state: "{{ item.state }}"
+    loop: "{{ input.raw_data }}"
+
+
+  - name: Ext Net
+    aci_rest:
+            hostname: "{{inventory_hostname}}"
+            username: "{{username}}"
+            password: "{{password}}"
+            validate_certs: "{{item.validate_certs}}"
+            path: /api/node/mo/uni/tn-{{item.new_tenant}}/out-common-l3-ospf/instP-EXT.json
+            method: post
+            content: {
+                  "l3extInstP": {
+                      "attributes": {
+                          "dn": "uni/tn-{{ item.new_tenant }}/out-common-l3-ospf/instP-EXT",
+                          "name": "EXT",
+                          "rn": "instP-EXT",
+                          "status": "created,modified"
+                      },
+                      "children": [
+                          {
+                              "l3extSubnet": {
+                                  "attributes": {
+                                      "dn": "uni/tn-{{ item.new_tenant }}/out-common-l3-ospf/instP-EXT/extsubnet-[0.0.0.0/0]",
+                                      "ip": "0.0.0.0/0",
+                                      "aggregate": "",
+                                      "rn": "extsubnet-[0.0.0.0/0]",
+                                      "status": "created,modified"
+                                  },
+                                  "children": []
+                        }
+                      }
+                    ]
+                  }
+                }
+    loop: "{{ input.raw_data }}"
+
+ 
+
+  - name: Contract for L3 Out Provider
+    aci_epg_to_contract:
+        hostname: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        validate_certs: "{{item.validate_certs}}"
+        tenant: '{{ item.new_tenant }}'
+        ap: '{{ item.app_profile }}'
+        epg: '{{ item.new_epg }}'
+        contract: l3out-contract-global
+        contract_type: provider
+        state: "{{ item.state }}"
+    loop: "{{ input.raw_data }}"
+
+  - name: Contract for L3 Out Provider
+    aci_epg_to_contract:
+        hostname: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        validate_certs: "{{item.validate_certs}}"
+        tenant: '{{ item.new_tenant }}'
+        ap: '{{ item.app_profile }}'
+        epg: '{{ item.new_epg }}'
+        contract: l3out-contract-global
+        contract_type: consumer
+        state: "{{ item.state }}"
+    loop: "{{ input.raw_data }}"
+
+  - name: Ext Net Contract
+    aci_rest:
+           hostname: "{{inventory_hostname}}"
+           username: "{{username}}"
+           password: "{{password}}"
+           validate_certs: "{{item.validate_certs}}"
+           path: /api/node/mo/uni/tn-{{ item.new_tenant}}/out-common-l3-ospf/instP-EXT.json
+           method: post
+           content: {
+                "fvRsProv": {
+                    "attributes": {
+                        "tnVzBrCPName": "l3out-contract-global",
+                        "status": "created,modified"
+                    },
+                    "children": []
+                }
+            }
+    loop: "{{ input.raw_data }}"
