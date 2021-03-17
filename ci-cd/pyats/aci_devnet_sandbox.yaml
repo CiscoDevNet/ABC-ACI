@@ -1,0 +1,17 @@
+devices:
+  APIC:
+    os: apic
+    alias: uut
+    type: apic
+    connections:
+      defaults:
+        via: rest
+      rest:
+        class: rest.connector.Rest
+        host: 10.10.20.14
+        ip: 10.10.20.14
+        port: 443
+        credentials:
+          rest:
+            username: admin
+            password: C1sco12345
