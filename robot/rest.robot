@@ -7,10 +7,6 @@ Basic Auth Example
     Output          response
     Integer         response status                 200
 
-Get Tenants 
-    GET            /api/class/fvTenant.json
-    Output          response
-    Integer         response status                 200
 
 
 
