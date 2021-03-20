@@ -6,7 +6,7 @@ default:
 
 stages:
   - pyats-pre-snapshot
-  - deploy-OSPF
+  - deploy-ACI
   - pyats-post-snapshot
   
 pyats-pre-snapshot:
@@ -18,8 +18,8 @@ pyats-pre-snapshot:
       when: always
 
 deploy-OSPF:
-  stage: deploy-OSPF
-  script: ansible-playbook -i hosts actions/configure-ospf/configure-ospf.yml
+  stage: deploy-ACI
+  script: ansible-playbook -i hosts.yaml create_tenants.yml
 
 pyats-post-snapshot:
   stage: pyats-post-snapshot
