@@ -11,24 +11,28 @@ stages:
   
 pyats-pre-snapshot:
   stage: pyats-pre-snapshot
-  script: cd pyats && pyats run job job.py --testbed-file devnet_sandbox.yaml --trigger-datafile pre_trigger_datafile.yaml --html-logs pre_snapshots
+  script: 
+    - pip install 'pyats[full]' rest.connector
+    - cd pyats && pyats run job job.py --testbed-file aci_devnet_sandbox.yaml --trigger-datafile pre_trigger_datafile.yaml --html-logs pre_snapshots
   artifacts:
       paths:
       - pyats/pre_snapshots/TaskLog.job.html
       when: always
 
-deploy-OSPF:
+deploy-ACI:
   stage: deploy-ACI
   script: ansible-playbook -i hosts.yaml create_tenants.yml
 
 pyats-post-snapshot:
   stage: pyats-post-snapshot
   script: 
-    - cd pyats && pyats run job job.py --testbed-file devnet_sandbox.yaml --trigger-datafile post_trigger_datafile.yaml --html-logs 
-    - pyats diff post_snapshots/post_ospf_dist-sw01.json pre_snapshots/pre_ospf_dist-sw01.json --output ospfdiff/
-    - pyats diff post_snapshots/post_ospf_dist-sw02.json pre_snapshots/pre_ospf_dist-sw02.json --output ospfdiff/
-    - cat ospfdiff/diff_post_ospf_dist-sw01.json  
-    - cat ospfdiff/diff_post_ospf_dist-sw02.json 
+    - pip install 'pyats[full]' rest.connector
+    - cd pyats && pyats run job job.py --testbed-file aci_devnet_sandbox.yaml --trigger-datafile post_trigger_datafile.yaml --html-logs post_snapshots
+    - pyats diff post_snapshots/tenant.json pre_snapshots/tenant.json --output acidiff/
+    - pyats diff post_snapshots/ctx.json pre_snapshots/ctx.json --output acidiff/
+    - cat acidiff/diff_tenant.json
+    - cat acidiff/diff_ctx.json
+    
 
   artifacts:
       paths:
