@@ -1,0 +1,36 @@
+default:
+  image: 'priel/devnet-nxos-bootcamp-runner:0.1.0'
+  before_script:
+    - export ANSIBLE_HOST_KEY_CHECKING=False
+
+
+stages:
+  - pyats-pre-snapshot
+  - deploy-OSPF
+  - pyats-post-snapshot
+  
+pyats-pre-snapshot:
+  stage: pyats-pre-snapshot
+  script: cd pyats && pyats run job job.py --testbed-file devnet_sandbox.yaml --trigger-datafile pre_trigger_datafile.yaml --html-logs pre_snapshots
+  artifacts:
+      paths:
+      - pyats/pre_snapshots/TaskLog.job.html
+      when: always
+
+deploy-OSPF:
+  stage: deploy-OSPF
+  script: ansible-playbook -i hosts actions/configure-ospf/configure-ospf.yml
+
+pyats-post-snapshot:
+  stage: pyats-post-snapshot
+  script: 
+    - cd pyats && pyats run job job.py --testbed-file devnet_sandbox.yaml --trigger-datafile post_trigger_datafile.yaml --html-logs 
+    - pyats diff post_snapshots/post_ospf_dist-sw01.json pre_snapshots/pre_ospf_dist-sw01.json --output ospfdiff/
+    - pyats diff post_snapshots/post_ospf_dist-sw02.json pre_snapshots/pre_ospf_dist-sw02.json --output ospfdiff/
+    - cat ospfdiff/diff_post_ospf_dist-sw01.json  
+    - cat ospfdiff/diff_post_ospf_dist-sw02.json 
+
+  artifacts:
+      paths:
+      - pyats/post_snapshots/TaskLog.job.html
+      when: always
