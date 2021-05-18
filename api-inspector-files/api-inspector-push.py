@@ -13,11 +13,11 @@ import json
 
 requests.packages.urllib3.disable_warnings()
 
-BASE_URL = "https://10.10.5.26/api/"
+BASE_URL = "https://10.10.20.14/api/"
 
 def fabric_login():
     URI = "aaaLogin.json"
-    PAYLOAD = {"aaaUser":{"attributes":{"name":"admin","pwd":"C!sco12345"}}}
+    PAYLOAD = {"aaaUser":{"attributes":{"name":"admin","pwd":"C1sco12345"}}}
 
     RESPONSE = requests.post(BASE_URL + URI, data=json.dumps(PAYLOAD), verify=False)
 
