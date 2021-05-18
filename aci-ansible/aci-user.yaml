@@ -7,6 +7,8 @@
   connection: local
   ignore_errors: yes
   tasks:
+    - name: Login
+      include_vars: creds.yaml
     - name: Add a user
       cisco.aci.aci_aaa_user:
         host: "{{ inventory_hostname }}"
@@ -66,6 +68,4 @@
         certificate_data: "{{ lookup('file', 'ansible.crt') }}"
         certificate: "{{ lookup('file', 'ansible.crt') }}"
         validate_certs: no
-        state: present
-
-   
+        state: present   
