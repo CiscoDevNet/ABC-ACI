@@ -5,6 +5,8 @@
   gather_facts: false
   connection: local
   tasks:
+    - name: Login
+      include_vars: creds.yaml
     - name: Get tenants from APIC(s)
       cisco.aci.aci_rest:
         host: "{{ inventory_hostname }}"
