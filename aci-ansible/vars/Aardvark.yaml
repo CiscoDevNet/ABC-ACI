@@ -1,5 +1,5 @@
 validate_certs: no
-aci_state: absent
+aci_state: present
 
 tenant: Aardvark
 vrf: Aardvark-VRF
