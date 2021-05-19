@@ -11,7 +11,7 @@
 
   tasks:
   - name: Login
-    include_vars: /workspaces/ABC-ACI/aci-automation/env.yml
+    include_vars: env.yml
   - name: Manage HTTPS Filter
     loop: "{{ aci_filter_entry }}"
     
