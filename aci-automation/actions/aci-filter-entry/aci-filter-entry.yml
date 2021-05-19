@@ -10,6 +10,8 @@
   connection: local
 
   tasks:
+  - name: Login
+    include_vars: /workspaces/ABC-ACI/aci-automation/env.yml
   - name: Manage HTTPS Filter
     loop: "{{ aci_filter_entry }}"
     
