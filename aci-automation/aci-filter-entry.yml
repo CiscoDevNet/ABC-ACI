@@ -1,0 +1,25 @@
+- name: ACI Tenant Filter Management
+  hosts: 
+    - apic
+  gather_facts: false
+  connection: local
+
+  tasks:
+  - name: Login
+    include_vars: env.yml
+  - name: Manage HTTPS Filter
+    loop: "{{ aci_filter_entry }}"
+    
+    cisco.aci.aci_filter_entry:
+      hostname: "{{ inventory_hostname }}"
+      username: "{{ apic_username }}"
+      password: "{{ apic_password }}"
+      tenant: "{{ item.apic_tenant }}"
+      filter: "{{ item.apic_filter }}"
+      entry: "{{ item.apic_entry }}"
+      ether_type: "{{ item.apic_ether_type }}"
+      ip_protocol: "{{ item.apic_ip_protocol }}"
+      dst_port_start: "{{ item.apic_dst_port_start }}"
+      dst_port_end: "{{ item.apic_dst_port_end }}"
+      state: "{{ item.apic_state }}"
+      validate_certs: false
