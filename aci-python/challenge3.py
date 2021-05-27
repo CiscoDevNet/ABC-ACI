@@ -60,7 +60,7 @@ def main():
             #TO DO: add JSON payload/attributes to configure new VRF named Secondary
         }
     }
-    path = "/api/mo/uni/tn-ACI-Python/ctx-ACI-Python_VRF.json"
+    path = "/api/mo/uni/tn-ACI-Python/ctx-[TO DO new vrf].json"
 
     rsp = post_request(APIC_HOST, cookies, path, json.dumps(vrf))
 
