@@ -12,7 +12,9 @@
     
 
   tasks:
-  
+  - name: Login
+    include_vars: vars/Aardvark.yaml
+
   - name: ENSURE TENANT EXISTS
     cisco.aci.aci_tenant:
       <<: *login_info
