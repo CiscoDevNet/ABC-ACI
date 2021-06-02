@@ -50,9 +50,6 @@ def get_cookies(apic):
     print("\n[OK] Authentication successful!")
     return authenticate.cookies
 
-
-def main():
-    cookies = get_cookies(APIC_HOST)
 def main():
     cookies = get_cookies(APIC_HOST)
 # Create new security domain
