@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "710a1006-db22-47b5-8ef0-cc63931ab514",
+		"_postman_id": "6e03e2ce-48bc-4d73-96b6-e5369e0d1806",
 		"name": "DevCX-ACI-ABC",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -31,8 +31,7 @@
 					},
 					"response": []
 				}
-			],
-			"protocolProfileBehavior": {}
+			]
 		},
 		{
 			"name": "02.Tenants",
@@ -385,8 +384,7 @@
 					},
 					"response": []
 				}
-			],
-			"protocolProfileBehavior": {}
+			]
 		},
 		{
 			"name": "03.Bridge-domain",
@@ -472,8 +470,7 @@
 					},
 					"response": []
 				}
-			],
-			"protocolProfileBehavior": {}
+			]
 		},
 		{
 			"name": "04.APIC-Interfaces",
@@ -541,8 +538,7 @@
 					},
 					"response": []
 				}
-			],
-			"protocolProfileBehavior": {}
+			]
 		},
 		{
 			"name": "05.Fabric",
@@ -607,8 +603,7 @@
 					},
 					"response": []
 				}
-			],
-			"protocolProfileBehavior": {}
+			]
 		},
 		{
 			"name": "06.Health",
@@ -834,7 +829,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{apic_ip}}/api/node/mo/topology/pod-1/node-101/sys/lldp/inst/if-[eth1/37].json",
+							"raw": "https://{{apic_ip}}/api/node/mo/topology/pod-1/node-101/sys/lldp/inst/if-[eth1/41].json",
 							"protocol": "https",
 							"host": [
 								"{{apic_ip}}"
@@ -850,14 +845,13 @@
 								"lldp",
 								"inst",
 								"if-[eth1",
-								"37].json"
+								"41].json"
 							]
 						}
 					},
 					"response": []
 				}
-			],
-			"protocolProfileBehavior": {}
+			]
 		},
 		{
 			"name": "07.Fabric-access-policies",
@@ -1401,9 +1395,7 @@
 					},
 					"response": []
 				}
-			],
-			"protocolProfileBehavior": {}
+			]
 		}
-	],
-	"protocolProfileBehavior": {}
+	]
 }
