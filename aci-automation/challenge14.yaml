@@ -231,7 +231,7 @@
 
 
   - name: Ext Net
-   cisco.aci.aci_rest:
+    cisco.aci.aci_rest:
             <<: *login_info
             validate_certs: "{{item.validate_certs}}"
             path: /api/node/mo/uni/tn-{{item.new_tenant}}/out-common-l3-ospf/instP-EXT.json
