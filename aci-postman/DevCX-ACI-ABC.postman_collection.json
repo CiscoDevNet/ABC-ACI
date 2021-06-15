@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "6e03e2ce-48bc-4d73-96b6-e5369e0d1806",
-		"name": "DevCX-ACI-ABC",
+		"_postman_id": "badb7d71-3d10-471d-9fbe-be659a81772b",
+		"name": "DevCX-ACI-ABC Copy 2",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -829,7 +829,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{apic_ip}}/api/node/mo/topology/pod-1/node-101/sys/lldp/inst/if-[eth1/41].json",
+							"raw": "https://{{apic_ip}}/api/node/mo/topology/pod-1/node-101/sys/lldp/inst/if-[eth1/41].json?query-target=subtree",
 							"protocol": "https",
 							"host": [
 								"{{apic_ip}}"
@@ -846,6 +846,12 @@
 								"inst",
 								"if-[eth1",
 								"41].json"
+							],
+							"query": [
+								{
+									"key": "query-target",
+									"value": "subtree"
+								}
 							]
 						}
 					},
