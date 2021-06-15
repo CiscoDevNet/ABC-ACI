@@ -40,7 +40,7 @@ def configure_tenant(header):
         print("Tenant not configured. Something went wrong")
 
 def configure_bd(header):
-    BD_PAYLOAD = BD_PAYLOAD = #TO DO add modified JSON Payload from the API Inspector
+    BD_PAYLOAD =  #TO DO add modified JSON Payload from the API Inspector
 
     URI = "node/mo/uni/tn-Aardvark-1/BD-api_inspector.json"
 
