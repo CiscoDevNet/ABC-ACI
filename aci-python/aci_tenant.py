@@ -52,7 +52,7 @@ def get_cookies(apic):
 
 def main():
     cookies = get_cookies(APIC_HOST)
-# Create new security domain
+# Creating a New Tenant
     tenant = {
         "fvTenant": {
             "attributes": {"name": "ACI-Python"}
