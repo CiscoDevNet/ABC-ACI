@@ -12,7 +12,7 @@
     
 
   tasks:
-  - name: Login
+  - name: Vars
     include_vars: vars/Aardvark.yaml
 
   - name: ENSURE TENANT EXISTS
