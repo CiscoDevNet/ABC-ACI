@@ -1,6 +1,7 @@
 validate_certs: no
-aci_state: present
-
+aci_state: absent
+apic_username: admin
+apic_password: C1sco12345
 tenant: Aardvark
 vrf: Aardvark-VRF
 vrf_description: VRF Created Using Ansible
