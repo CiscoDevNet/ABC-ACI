@@ -28,7 +28,7 @@ def fabric_login():
     return HEADER
 
 def configure_tenant(header):
-    TENANT_PAYLOAD = {"fvTenant":{"attributes":{"dn":"uni/tn-Aardvark-1","name":"Aardvark-1","rn":"tn-Aardvark-1","status":"created,modified"},"children":[{"fvCtx":{"attributes":{"dn":"uni/tn-Aardvark-1/ctx-api_inspector","name":"api_inspector","rn":"ctx-api_inspector","status":"created,modified"},"children":[]}}]}}
+    TENANT_PAYLOAD = {"fvTenant":{"attributes":{"dn":"uni/tn-Aardvark-1","name":"Aardvark-1","rn":"tn-Aardvark-1","status":"created,modified"},"children":[{"fvCtx":{"attributes":{"dn":"uni/tn-Aardvark-1/ctx-Aardvark-1","name":"Aardvark-1","rn":"ctx-Aardvark-1","status":"created,modified"},"children":[]}}]}}
     URI = "node/mo/uni/tn-Aardvark-1.json"
 
     RESPONSE = requests.post(BASE_URL + URI, headers=header, data=json.dumps(TENANT_PAYLOAD), verify=False)
@@ -40,7 +40,8 @@ def configure_tenant(header):
         print("Tenant not configured. Something went wrong")
 
 def configure_bd(header):
-    BD_PAYLOAD =  #TO DO add modified JSON Payload from the API Inspector
+                  
+    BD_PAYLOAD = #TO DO add modified JSON Payload from the API Inspector
 
     URI = "node/mo/uni/tn-Aardvark-1/BD-api_inspector.json"
 
