@@ -280,10 +280,10 @@ vzRsSubjFiltAtt4 = cobra.model.vz.RsSubjFiltAtt(vzSubj4, tnVzFilterName=u'sql_se
 vzSubj5 = cobra.model.vz.Subj(vzBrCP3, revFltPorts=u'yes', name=u'sql-browser', prio=u'unspecified', descr=u'', consMatchT=u'AtleastOne', provMatchT=u'AtleastOne')
 vzRsSubjFiltAtt5 = cobra.model.vz.RsSubjFiltAtt(vzSubj5, tnVzFilterName=u'sql_browser')
 
-print("Setting up Heroes Tenant")
+print("Setting up TODO Tenant")
 
 # build the heroes tenant
-fvTenant = cobra.model.fv.Tenant(polUni, ownerKey=u'', name=u'Heroes', descr=u'', ownerTag=u'')
+fvTenant = cobra.model.fv.Tenant(polUni, ownerKey=u'', name=u'TODO', descr=u'', ownerTag=u'')
 fvCtx = cobra.model.fv.Ctx(fvTenant, ownerKey=u'', name=u'Heroes_Only', descr=u'', knwMcastAct=u'permit', pcEnfDir=u'ingress', ownerTag=u'', pcEnfPref=u'enforced')
 fvRsCtxToExtRouteTagPol = cobra.model.fv.RsCtxToExtRouteTagPol(fvCtx, tnL3extRouteTagPolName=u'')
 fvRsBgpCtxPol = cobra.model.fv.RsBgpCtxPol(fvCtx, tnBgpCtxPolName=u'')
