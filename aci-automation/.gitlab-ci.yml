@@ -1,7 +1,7 @@
 default:
   before_script:
     - export ANSIBLE_HOST_KEY_CHECKING=False
-    - pip install rest.connector
+    - pip install rest.connector==20.7
     
 
 
