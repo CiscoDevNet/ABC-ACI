@@ -1,4 +1,0 @@
-raw_data:
-- {state: present, validate_certs: no, app_profile: Aardvark-7-AP, common_l3: common-l3-ospf, l3out_contract_global: l3out_contract_global,
-  new_bd: Aardvark-bd-7, new_contract: web-to-app1, new_epg: web1-epg, new_subnet: 10.10.30.1,
-  new_tenant: Aardvark-7, new_vrf: Aardvark-7, second_epg: app1-epg, vlan1: '10', vlan2: '11'}
