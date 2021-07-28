@@ -18,7 +18,7 @@ create_gitlab_token () {
       --data-urlencode "authenticity_token=${csrf_token}"
 
   # send curl GET request to personal access token page to get auth token
-  body_header=$(curl -L --silent -H 'user-agent: curl' -b /tmp/cookies.txt -i "${gitlab_host}/profile/personal_access_tokens" -s)
+  body_header=$(curl -L --silent -H 'user-agent: curl' -b /tmp/cookies.txt -i "${gitlab_host}/profile/-/personal_access_tokens" -s)
   csrf_token=$(echo $body_header | perl -ne 'print "$1\n" if /authenticity_token"[[:blank:]]value="(.+?)"/' | sed -n 1p)
 
   # curl POST request to send the "generate personal access token form"
