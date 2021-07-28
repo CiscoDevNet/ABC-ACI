@@ -23,7 +23,7 @@ create_gitlab_token () {
 
   # curl POST request to send the "generate personal access token form"
   # the response will be a redirect, so we have to follow using `-L`
-  body_header=$(curl --silent -L -b /tmp/cookies.txt "${gitlab_host}/profile/personal_access_tokens" \
+  body_header=$(curl --silent -L -b /tmp/cookies.txt "${gitlab_host}/profile/-/personal_access_tokens" \
       --data-urlencode "authenticity_token=${csrf_token}" \
       --data 'personal_access_token[name]=golab-generated&personal_access_token[expires_at]=&personal_access_token[scopes][]=api')
 
