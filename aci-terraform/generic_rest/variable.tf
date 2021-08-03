@@ -9,7 +9,7 @@ variable "user" {
 }
 variable "tenant" {
     type    = string
-    default = "terraform-tenant"
+    default = "abc-tenant"
 }
 variable "l3out" {
     type    = object({
