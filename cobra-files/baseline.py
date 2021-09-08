@@ -65,11 +65,4 @@ except Exception as e:
     print("Error running startup_script.")
     print(e)
 
-# Run main() from create_snv_apps
-import create_snv_apps
 
-try:
-    create_snv_apps.main()
-except Exception as e:
-    print("Error creating apps.")
-    print(e)
