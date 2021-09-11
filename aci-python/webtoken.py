@@ -55,7 +55,7 @@ def main():
 # Change Web Token Timeout
     web = {
         "pkiWebTokenData": {
-            "attributes":{"dn":"uni/userext/pkiext/webtokendata","webtokenTimeoutSeconds":"9600"},"children":[]}}
+            "attributes":{"dn":"uni/userext/pkiext/webtokendata","webtokenTimeoutSeconds":"300"},"children":[]}}
     
     path = "/api/node/mo/uni/userext/pkiext/webtokendata.json"
     rsp = post_request(APIC_HOST, cookies, path, json.dumps(web))
