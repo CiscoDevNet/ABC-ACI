@@ -13,7 +13,7 @@ def TODO(apic, cookies, uri):
     print("\n-----------------------------------------------------------------")
     print("\nExecuting API Call: GET")
     print("\nURL: {}".format(url))
-
+tree
     req = requests.get(url, cookies=cookies, verify=False)
     print("\nSTATUS CODE: {}".format(req.status_code))
     print("\nRESPONSE: {}".format(req.text))
@@ -67,7 +67,7 @@ def TODO():
     vrf = {
         "fvCtx": {
             "attributes": {
-                "dn": "uni/tn-Discovery3/",
+                "dn": "uni/tn-Discovery3/TODO",
                 "name": "Discovery3_VRF",
                 "rn": "Discovery3_VRF",
                 "status": "created,modified",
