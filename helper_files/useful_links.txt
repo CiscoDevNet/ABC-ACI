@@ -1,0 +1,29 @@
+Cisco DevNet Sandboxes
+https://developer.cisco.com/site/sandbox/
+
+Cisco DevNet ABC-ACI repository on GitHub:
+https://github.com/CiscoDevNet/ABC-ACI
+
+APIC Management Information Model documentation
+https://developer.cisco.com/site/apic-mim-ref-api/
+
+Cisco APIC REST API Configuration Guide, Release 4.2(x)
+https://www.cisco.com/c/en/us/td/docs/switches/datacenter/aci/apic/sw/4-x/rest-api-config/Cisco-APIC-REST-API-Configuration-Guide-42x/using-the-rest-api-42x.html
+
+Requests Python library
+https://docs.python-requests.org/
+
+Ansible Galaxy Cisco ACI Collection
+https://galaxy.ansible.com/cisco/aci
+
+Ansible Cisco ACI Collection Index (Ansible ACI module documentation)
+https://docs.ansible.com/ansible/latest/collections/cisco/aci/index.html#plugins-in-cisco-aci
+
+Ansible Cisco ACI Scenario Guide
+https://docs.ansible.com/ansible/latest/scenario_guides/guide_aci.html
+
+acitoolkit documentation
+https://acitoolkit.readthedocs.io/en/latest/
+
+Cobra documentation
+https://cobra.readthedocs.io/en/latest/index.html
