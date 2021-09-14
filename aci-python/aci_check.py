@@ -16,7 +16,8 @@ def get_request(apic, cookies, uri):
 
     req = requests.get(url, cookies=cookies, verify=False)
     print("\nSTATUS CODE: {}".format(req.status_code))
-    TODO
+    print("\nBODY: {}".format(payload))
+
     return req
 
 
@@ -53,8 +54,10 @@ def main():
     cookies = get_cookies(APIC_HOST)
 
     # Verify Tenants
-    
-   TODO
+    TODO
+    rsp = get_request(APIC_HOST, cookies, path)
+    TODO
+   
 
 if __name__ == "__main__":
     main()
