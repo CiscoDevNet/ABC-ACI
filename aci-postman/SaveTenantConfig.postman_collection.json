@@ -1,0 +1,60 @@
+{
+	"info": {
+		"_postman_id": "680f271f-58e7-4692-9252-88585ee99697",
+		"name": "SaveTenantConfig",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authenticate",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"aaaUser\" : {\n    \"attributes\" : {\n      \"name\" : \"{{apic_username}}\",\n      \"pwd\" : \"{{apic_password}}\"\n    }\n  }\n}\n"
+				},
+				"url": {
+					"raw": "https://{{apic_ip}}/api/aaaLogin.json",
+					"protocol": "https",
+					"host": [
+						"{{apic_ip}}"
+					],
+					"path": [
+						"api",
+						"aaaLogin.json"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TenantConfig",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{apic_ip}}/api/node/mo/uni/tn-Aardvark-1.json?rsp-subtree=full",
+					"protocol": "https",
+					"host": [
+						"{{apic_ip}}"
+					],
+					"path": [
+						"api",
+						"node",
+						"mo",
+						"uni",
+						"tn-Aardvark-1.json"
+					],
+					"query": [
+						{
+							"key": "rsp-subtree",
+							"value": "full"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
