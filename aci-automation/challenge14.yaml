@@ -18,7 +18,7 @@
      
 
   - name: Add a new Tenant
-    [To Do tenant module]:
+    TODO:
         <<: *login_info
         tenant: '{{ item.new_tenant }}'
         validate_certs: "{{item.validate_certs}}"
@@ -29,7 +29,7 @@
     
 
   - name: Create VRF
-    [To Do VRF module]:
+    TODO:
       <<: *login_info
       description: "vrf created by ansible"
       tenant: '{{ item.new_tenant }}'
@@ -40,7 +40,7 @@
     loop: "{{ input.raw_data }}"
 
   - name: Creating BD
-    [To Do BD module]:
+    TODO:
        <<: *login_info
        description: "bridge domain created by ansible"
        validate_certs: "{{item.validate_certs}}"
@@ -64,7 +64,7 @@
     loop: "{{ input.raw_data }}"
 
   - name: Create AP
-    [To Do AP Module]:
+    TODO:
        <<: *login_info
        description: "application profile created by ansible"
        validate_certs: "{{item.validate_certs}}"
@@ -74,7 +74,7 @@
     loop: "{{ input.raw_data }}"
 
   - name: Create web_epg
-    [To Do EPG module]:
+    TODO:
          <<: *login_info
          validate_certs: "{{item.validate_certs}}"
          tenant: '{{ item.new_tenant }}'
@@ -125,7 +125,7 @@
 
 
   - name: Create Filter
-    [To Do Filter Module]:
+    TODO:
       <<: *login_info
       validate_certs: "{{item.validate_certs}}"
       tenant: '{{ item.new_tenant }}'
