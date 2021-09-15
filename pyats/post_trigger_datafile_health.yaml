@@ -3,16 +3,16 @@ post_Snapshots:
   groups: ["aci"]
   source:
     pkg: genie.libs.sdk
-    class: triggers.blitz.blitz.Blitz
+    class: TODO
   test_sections:
     - post_snapshot_Health:
         - sleep: 
             sleep_time: 2
         - api:
             device: uut
-            function: apic_rest_get
+            function: TODO
             arguments:
-              dn: /api/class/healthInst.json
+              dn: /api/TODO/healthInst.json
             save:
               - variable_name: post_health
 
@@ -20,9 +20,8 @@ post_Snapshots:
             sleep_time: 2
         - api:
             device: uut
-            function: save_dict_to_json_file
-            arguments:
+            arguments: TODO
               data:
-                - "%VARIABLES{post_health}"
+                - "%VARIABLES{TODO}"
               filename: "post_snapshots/post-health.json"
-    
+        
