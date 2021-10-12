@@ -60,7 +60,7 @@ def main():
             "attributes": {
                 "dn": "uni/tn-ACI-Python/ctx-ACI-Python_VRF",
                 "name": "ACI-Python_VRF",
-                "rn": "ACI-Python_VRF",
+                "rn": "ctx-ACI-Python_VRF",
                 "status": "created",
             }
         }
