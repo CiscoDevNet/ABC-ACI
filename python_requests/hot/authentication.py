@@ -16,8 +16,7 @@ Token to be used when sending API calls against Cisco APIC.
 def get_token():
     '''Return a Cisco APIC authentication token'''
     
-    # TODO: Replace "pass" with the code to retrieve authentication token
-    pass
+    # TODO: Code to retrieve authentication token
 
 if __name__ == "__main__":
     token_cookie = get_token()
