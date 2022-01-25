@@ -10,7 +10,7 @@ Token to be used when sending API calls against Cisco APIC.
 # Import required libraries
 import <TODO>
 import <TODO>
-import urllib3
+#import <TODO>
 
 # Disable unverified HTTPS request warnings
 #<TODO>
@@ -22,7 +22,7 @@ def get_token():
 
     payload = <TODO>
 
-    response = requests.request(<TODO>, url, data=payload, verify=True)
+    response = requests.request(<TODO>, url, data=payload)
 
     # Print the status code with the URL for information purpose
     print(f"<Status code {<TODO>} for {url}>")

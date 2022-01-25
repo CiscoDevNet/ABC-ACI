@@ -7,15 +7,16 @@ Token to be used when sending API calls against Cisco APIC.
   instructions
 '''
 
+# Import required libraries
 # TODO: Add imports
 
-# TODO: Add line to disable unverified HTTPS request warnings
+# Disable unverified HTTPS request warnings
+#<TODO>
 
 def get_token():
     '''Return a Cisco APIC authentication token'''
     
     # TODO: Replace "pass" with the code to retrieve authentication token
-    
     pass
 
 if __name__ == "__main__":
