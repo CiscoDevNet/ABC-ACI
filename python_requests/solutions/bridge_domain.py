@@ -32,9 +32,8 @@ def get_bridge_domains(cookie):
 
     response_dict = response.json()
 
-    bridge_domain_list = response_dict["imdata"]
-    print("List of the ACI bridge domains:")
-    for bridge_domain in bridge_domain_list:
+    # Print out the Bridge Domains
+    for bridge_domain in response_dict["imdata"]:
         print(bridge_domain["fvBD"]["attributes"]["name"])
 
 def create_bridge_domain(cookie, tenant, bd_name, subnet):
@@ -51,7 +50,7 @@ def create_bridge_domain(cookie, tenant, bd_name, subnet):
                 {
                     "fvSubnet": {
                         "attributes": {
-                            "ip":subnet
+                            "ip": subnet
                         }
                     }
                 }

@@ -26,31 +26,29 @@ urllib3.disable_warnings()
 def get_bridge_domains(cookie):
     '''Prints out all the ACI bridge domains'''
 
-    url = <TODO>
+    url = "https://apic/api/class/<TODO>.json"
 
     response = requests.request(<TODO>, url, <TODO>, verify=False)
 
     # Print the status code with the URL for information purpose
     print(f"<Status code {<TODO>} for {url}>")
 
-    response_dict = response.<TODO>
+    #response_dict = response.<TODO>
 
-    #bridge_domain_list = response_dict["<TODO>"]
-    #print("List of the ACI bridge domains:")
-    #for bridge_domain in bridge_domain_list:
-    #    print(<TODO>)
+    # Print out the Bridge Domains
+    # <TODO>
 
 def create_bridge_domain(cookie, tenant, bd_name, subnet):
     '''Creates a new ACI bridge domain'''
 
-    # url = f"https://apic/api/mo/uni/tn-{<TODO>}.json"
+    #url = f"https://apic/api/mo/uni/tn-{<TODO>}.json"
 
-    # payload = <TODO>
+    #payload = <TODO>
 
-    # response = requests.request(<TODO>, url, cookies=cookie, data=payload, verify=False)
+    #response = requests.request(<TODO>, url, cookies=cookie, data=payload, verify=False)
 
     # Print the status code with the URL for information purpose
-    # print(f"<Status code {response.status_code} for creating {bd_name} at {url}>")
+    #print(f"<Status code {<TODO>} for creating {bd_name} at {url}>")
 
 # The following if statement is True when this file is executed directly.
 if __name__ == "__main__":

@@ -31,7 +31,7 @@ def get_bridge_domains(cookie):
 def create_bridge_domain(cookie, tenant, bd_name, subnet):
     '''Creates a new ACI bridge domain'''
 
-    # TODO: Code to create a new bridgedomain
+    # TODO: Code to create a new bridge domain
 
 # The following if statement is True when this file is executed directly.
 if __name__ == "__main__":

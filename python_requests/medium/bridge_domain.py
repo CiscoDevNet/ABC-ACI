@@ -33,24 +33,22 @@ def get_bridge_domains(cookie):
     # Print the status code with the URL for information purpose
     <TODO>
 
-    response_dict = <TODO>
+    #response_dict = <TODO>
 
-    #bridge_domain_list = <TODO>
-    #print("List of the ACI bridge domains:")
-    #for bridge_domain in bridge_domain_list:
-    #    <TODO>
+    # Print out the Bridge Domains
+    # <TODO>
 
 def create_bridge_domain(cookie, tenant, bd_name, subnet):
     '''Creates a new ACI bridge domain'''
 
-    # url = <TODO>
+    #url = <TODO>
 
-    # payload = <TODO>
+    #payload = <TODO>
 
-    # response = <TODO>
+    #response = <TODO>
 
     # Print the status code with the URL for information purpose
-    # <TODO>
+    #<TODO>
 
 # The following if statement is True when this file is executed directly.
 if __name__ == "__main__":
