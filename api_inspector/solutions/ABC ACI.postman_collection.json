@@ -1,0 +1,194 @@
+{
+	"info": {
+		"_postman_id": "a2c7ff01-e4a6-486a-b939-9525b6806140",
+		"name": "ABC ACI",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"aaaUser\": {\n    \"attributes\": {\n      \"name\": \"{{username}}\",\n      \"pwd\": \"{{password}}\"\n    }\n  }\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{host}}/api/aaaLogin.json",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"aaaLogin.json"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Tenants",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{host}}/api/node/class/fvTenant.json?rsp-prop-include=config-only&query-target-filter=and(wcard(fvTenant.name,\"m\"))",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"node",
+						"class",
+						"fvTenant.json"
+					],
+					"query": [
+						{
+							"key": "rsp-prop-include",
+							"value": "config-only"
+						},
+						{
+							"key": "query-target-filter",
+							"value": "and(wcard(fvTenant.name,\"m\"))"
+						},
+						{
+							"key": "",
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Specific Tenant",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{host}}/api/node/mo/uni/tn-Sales.json",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"node",
+						"mo",
+						"uni",
+						"tn-Sales.json"
+					],
+					"query": [
+						{
+							"key": "query-target",
+							"value": "children",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Tenant with VRF",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"fvTenant\": {\n        \"attributes\": {\n            \"name\": \"Sales_postman\"\n        },\n        \"children\": [{\n            \"fvCtx\": {\n                \"attributes\": {\n                    \"name\": \"Presales_VRF\"\n                }\n            }\n        }]\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{host}}/api/node/mo/uni.json",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"node",
+						"mo",
+						"uni.json"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create BD with Subnet",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"fvBD\": {\n    \"attributes\": {\n      \"name\": \"Presales_BD\"\n    },\n    \"children\": [{\n      \"fvSubnet\": {\n        \"attributes\": {\n          \"ip\": \"10.0.1.254/24\"\n        }\n      }\n    }]\n  }\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{host}}/api/node/mo/uni/tn-Sales.json",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"node",
+						"mo",
+						"uni",
+						"tn-Sales.json"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create AP with two EPGs",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"fvAp\": {\n        \"attributes\": {\n            \"name\": \"eCommerce\",\n            \"status\": \"created,modified\"\n        },\n        \"children\": [\n            {\n                \"fvAEPg\": {\n                    \"attributes\": {\n                        \"name\": \"App_EPG\",\n                        \"status\": \"created,modified\"\n                    },\n                    \"children\": [\n                        {\n                            \"fvRsBd\": {\n                                \"attributes\": {\n                                    \"tnFvBDName\": \"Presales_BD\",\n                                    \"status\": \"created,modified\"\n                                },\n                            }\n                        }\n                    ]\n                }\n            },\n            {\n                \"fvAEPg\": {\n                    \"attributes\": {\n                        \"name\": \"Web_EPG\",\n                        \"status\": \"created,modified\"\n                    },\n                    \"children\": [\n                        {\n                            \"fvRsBd\": {\n                                \"attributes\": {\n                                    \"tnFvBDName\": \"Presales_BD\",\n                                    \"status\": \"created,modified\"\n                                },\n                            }\n                        }\n                    ]\n                }\n            }\n        ]\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{host}}/api/node/mo/uni/tn-Sales.json",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"node",
+						"mo",
+						"uni",
+						"tn-Sales.json"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
