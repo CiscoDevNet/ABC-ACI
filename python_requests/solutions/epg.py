@@ -26,11 +26,14 @@ def get_epgs(cookie):
     url = "https://apic/api/class/fvAEPg.json"
 
     response = requests.request("GET", url, cookies=cookie, verify=False)
+
+    # Print the status code with the URL for information purpose
     print(f"<Status code {response.status_code} for {url}>")
 
-    epg_list = response.json()["imdata"]
-    print("List of the ACI endpoint groups:")
-    for epg in epg_list:
+    response_dict = response.json()
+
+    # Print out the EPGs
+    for epg in response_dict["imdata"]:
         print(epg["fvAEPg"]["attributes"]["name"])
 
 def create_epg(cookie, tenant_name, bd_name, ap_name, epg_name):
@@ -58,8 +61,11 @@ def create_epg(cookie, tenant_name, bd_name, ap_name, epg_name):
     })
 
     response = requests.request("POST", url, cookies=cookie, data=payload, verify=False)
+
+    # Print the status code with the URL for information purpose
     print(f"<Status code {response.status_code} for creating {epg_name} at {url}>")
 
+# The following if statement is True when this file is executed directly.
 if __name__ == "__main__":
     TENANT_NAME = "Sales"
     BD_NAME = "DB_BD"

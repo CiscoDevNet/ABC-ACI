@@ -2,8 +2,8 @@
 
 This script, once completed, allows the user to create their own bridge
 endpoint group under a selected application profile and linked to a selected
-bridge domain. Note that authentication token is needed for the API calls, for 
-which the script imports the get_token function from authentication module 
+bridge domain. Note that authentication token is needed for the API calls, for
+which the script imports the get_token function from authentication module
 (authentication.py).
 
 - SPICE LEVEL: HOT
