@@ -105,7 +105,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"fvTenant\": {\n        \"attributes\": {\n            \"name\": \"Sales_postman\"\n        },\n        \"children\": [{\n            \"fvCtx\": {\n                \"attributes\": {\n                    \"name\": \"Presales_VRF\"\n                }\n            }\n        }]\n    }\n}",
+					"raw": "{\n    \"fvTenant\": {\n        \"attributes\": {\n            \"name\": \"Sales\"\n        },\n        \"children\": [{\n            \"fvCtx\": {\n                \"attributes\": {\n                    \"name\": \"Presales_VRF\"\n                }\n            }\n        }]\n    }\n}",
 					"options": {
 						"raw": {
 							"language": "json"
