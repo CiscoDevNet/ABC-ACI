@@ -1,0 +1,14 @@
+devices:
+  APIC:
+    os: apic #must be set to select the rest connector plugin to use
+    type: apic
+    connections:
+      defaults:
+        via: rest
+      rest:
+        class: rest.connector.Rest
+        ip: apic
+        credentials:
+          rest:
+            username: admin
+            password: C1sco12345
