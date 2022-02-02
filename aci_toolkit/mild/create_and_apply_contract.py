@@ -5,6 +5,11 @@ SOLUTION FILE
 This script, once completed, allows the user to create a contract and apply
 it to a consumer and provider EPGs. For the credentials and URL a separate
 credentials.py file is used.
+
+- SPICE LEVEL: MILD
+- TASK: Replace the <TODO> with correct code based on the lab guide
+  instructions
+
 '''
 import acitoolkit.acitoolkit as ACI
 
@@ -15,41 +20,41 @@ def create_and_apply_contract():
     args = creds.get()
     session = ACI.Session(args.url, args.login, args.password)
 
-    resp = session.login()
+    resp = session.<TODO>
     if not resp.ok:
         print('Could not login to APIC')
 
 
-    tenant = ACI.Tenant('Sales')
-    app = ACI.AppProfile('eCommerce', tenant)
-    web_epg = ACI.EPG('Web_EPG', app)
-    app_epg = ACI.EPG('App_EPG', app)
+    tenant = ACI.<TODO>('Sales')
+    app = ACI.<TODO>('eCommerce', tenant)
+    web_epg = ACI.<TODO>('Web_EPG', app)
+    app_epg = ACI.<TODO>('App_EPG', app)
 
     # Create the contract and filters to permit only HTTP and HTTPS
-    contract = ACI.Contract('WebServices', tenant)
+    contract = ACI.<TODO>(<TODO>, tenant)
     http_entry = ACI.FilterEntry('TCP80',
-                            dFromPort='80',
-                            dToPort='80',
-                            etherT='ip',
-                            prot='tcp',
+                            dFromPort=<TODO>,
+                            dToPort=<TODO>,
+                            etherT=<TODO>,
+                            prot=<TODO>,
                             sFromPort='unspecified',
                             sToPort='unspecified',
                             parent=contract)
     https_entry = ACI.FilterEntry('TCP443',
-                            dFromPort='443',
-                            dToPort='443',
-                            etherT='ip',
-                            prot='tcp',
+                            dFromPort=<TODO>,
+                            dToPort=<TODO>,
+                            etherT=<TODO>,
+                            prot=<TODO>,
                             sFromPort='unspecified',
                             sToPort='unspecified',
                             parent=contract)
 
     # Provide and consume the Contract
-    app_epg.provide(contract)
-    web_epg.consume(contract)
-    
+    app_epg.<TODO>(contract)
+    web_epg.<TODO>(contract)
+
     # Push the changes to APIC
-    resp = session.push_to_apic(tenant.get_url(),
+    resp = session.<TODO>(tenant.get_url(),
                                 tenant.get_json())
 
     if not resp.ok:
