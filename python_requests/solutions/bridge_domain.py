@@ -1,4 +1,4 @@
-'''Python Requests Excercise - Getting and creating a bridge domain
+'''Python Requests Exercise - Getting and creating a bridge domain
 
 SOLUTION FILE
 

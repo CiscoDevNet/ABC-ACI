@@ -1,4 +1,4 @@
-'''Python Requests Excercise - Getting and creating a bridge domain
+'''Python Requests Exercise - Getting and creating a bridge domain
 
 This script, once completed, allows the user to retrieve all the bridge
 domains that currently exist on the APIC. This script will also allow the
