@@ -1,0 +1,6 @@
+---
+all:
+  hosts:
+    apic:
+      ansible_host: # <TODO> Add the APIC host or IP
+      ansible_connection: # <TODO> Set the connection method

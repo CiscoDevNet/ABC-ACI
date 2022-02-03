@@ -1,0 +1,22 @@
+# Data for our ACI Tenant
+---
+tenant:
+  name: Development
+  description: Development applications
+
+bridge_domain:
+  name: development
+  description: Dev BD
+
+vrf:
+  name: dev_app_vrf
+  description: Development application isolation
+
+applications:
+  - name: Phoenix
+    description: Phoenix application
+    app_epg:
+      - name: web_servers
+        description: Phoenix Web servers
+      - name: app_servers
+        description: Phoenix App servers

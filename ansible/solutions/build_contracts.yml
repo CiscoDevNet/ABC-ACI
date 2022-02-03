@@ -1,0 +1,61 @@
+# Tasks used to build filters, filter entries, contracts, and associate
+# EPGs to contracts
+---
+
+- name: Create filters
+  cisco.aci.aci_filter:
+    filter: "{{ current_filter.name }}"
+    description: "{{ current_filter.description }}"
+    tenant: "{{ current_filter.tenant | default(new_tenant_name) }}"
+  loop: "{{ filters }}"
+  loop_control:
+    loop_var: current_filter
+
+- name: Create filter entries for contracts
+  cisco.aci.aci_filter_entry:
+    tenant: "{{ new_tenant_name }}"
+    filter: "{{ entry.target_filter }}"
+    entry: "{{ entry.name }}"
+    description: "{{ entry.description | default(omit) }}"
+    arp_flag: "{{ entry.arp_flag | default('unspecified') }}"
+    dst_port: "{{ entry.dest_port | default(omit) }}"
+    dst_port_start: "{{ entry.dest_port_start | default(omit) }}"
+    dst_port_end: "{{ entry.dest_port_end | default(omit) }}"
+    ether_type: "{{ entry.eth_type | default('unspecified') }}"
+    icmp6_msg_type: "{{ entry.icmp6_msg_type | default('unspecified') }}"
+    icmp_msg_type: "{{ entry.icmp.msg_type | default('unspecified') }}"
+    ip_protocol: "{{ entry.ip_proto | default('unspecified') }}"
+    stateful: "{{ entry.is_stateful | default('no') }}"
+  loop: "{{ filter_entries }}"
+  loop_control:
+    loop_var: entry
+    label: "{{ entry.name }}"
+
+- name: Build contracts
+  cisco.aci.aci_contract:
+    tenant: "{{ new_tenant_name }}"
+    description: "{{ item.description | default(omit) }}"
+    contract: "{{ item.name }}"
+  loop: "{{ contracts }}"
+
+- name: Create contract subjects for filters
+  cisco.aci.aci_contract_subject:
+    description: "{{ item.description | default(omit) }}"
+    contract: "{{ item.name }}"
+    subject: "{{ item.subject }}"
+  loop: "{{ contracts }}"
+
+- name: Add filters to contract subjects
+  cisco.aci.aci_contract_subject_to_filter:
+    subject: "{{ item.subject }}"
+    contract: "{{ item.name }}"
+    filter: "{{ item.filter }}"
+  loop: "{{ contracts }}"
+
+- name: Associate EPGs with contracts
+  cisco.aci.aci_epg_to_contract:
+    ap: "{{ item.0.app_profile }}"
+    contract: "{{ item.0.name }}"
+    epg: "{{ item.1.name }}"
+    contract_type: "{{ item.1.direction }}"
+  loop: "{{ contracts | subelements('epg', skip_missing=True) }}"

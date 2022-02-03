@@ -1,0 +1,6 @@
+---
+all:
+  hosts:
+    # <TODO> Define the apic
+      # <TODO> Define the hostname used for the connection
+      # <TODO> Define the connection method

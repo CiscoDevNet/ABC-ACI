@@ -1,0 +1,3 @@
+# Ignore collections and roles downloaded from Ansible Galaxy
+ansible_collections/
+roles/
