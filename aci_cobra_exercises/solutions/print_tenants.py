@@ -40,6 +40,7 @@ def print_tenants(url, username, password):
     # print(tenant_dn)
     print(tenant_dn.name)
 
+    # Logout
     mo_dir.logout()
 
 # The following if statement is True when this file is executed directly.

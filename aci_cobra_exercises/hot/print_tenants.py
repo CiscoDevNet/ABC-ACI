@@ -1,7 +1,5 @@
 '''Python Cobra SDK Exercise - Printing out tenant information
 
-SOLUTION FILE
-
 This script, once completed, allows the user to print out tenant names.
 In the script you get to include both querying a class and an MO with
 DN.
