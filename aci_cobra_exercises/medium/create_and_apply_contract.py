@@ -1,9 +1,12 @@
 '''Python Cobra SDK Exercise - Creating and applying a contract
 
-SOLUTION FILE
-
 This script, once completed, allows the user to create a new filter,
 subject, and contract, and apply it to a consumer and provider EPG.
+
+- SPICE LEVEL: MEDIUM
+- TASK: Replace the <TODO> with correct code based on the lab guide
+  instructions
+
 '''
 
 
@@ -11,7 +14,7 @@ subject, and contract, and apply it to a consumer and provider EPG.
 import cobra.mit.access
 import cobra.mit.request
 import cobra.mit.session
-from cobra.model import fv, pol, vz
+from cobra.model import <TODO>, <TODO>, <TODO>
 from cobra.internal.codec.jsoncodec import toJSONStr
 
 import urllib3
@@ -22,44 +25,43 @@ urllib3.disable_warnings()
 def create_filter(tenant):
     '''Creates filter, contract, and subject and applies to two EPGs'''
 
-    ftp_filter = vz.Filter(tenant, name='FTP_Fltr')
-    filter_entry = vz.Entry(ftp_filter, name='TCP21', dFromPort='21',
-                            dToPort='21', etherT='ip', prot='tcp')
+    ftp_filter = <TODO>(tenant, <TODO>)
+    filter_entry = <TODO>(<TODO>)
     return ftp_filter
 
 def create_contract(tenant, vzfilter):
     '''Creates filter, contract, and subject and applies to two EPGs'''
 
-    contract = vz.BrCP(tenant, name='FileServices_Ct')
-    subject = vz.Subj(contract, name='FileServices_Subj')
-    subject_filter = vz.RsSubjFiltAtt(subject, action='permit', tnVzFilterName=vzfilter.name)
+    contract = <TODO>(tenant, <TODO>)
+    subject = <TODO>(<TODO>, <TODO>)
+    subject_filter = <TODO>(<TODO>, <TODO>, <TODO>)
 
     return contract
 
 def apply_contract(contract, epg_provider, epg_consumer):
     '''Creates filter, contract, and subject and applies to two EPGs'''
 
-    fv.RsProv(epg_provider, tnVzBrCPName=contract.name) #provider
-    fv.RsCons(epg_consumer, tnVzBrCPName=contract.name) #consumer
+    <TODO>(<TODO>, tnVzBrCPName=<TODO>) #provider
+    <TODO>(<TODO>, tnVzBrCPName=<TODO>) #consumer
 
 def commit_changes_to_apic(url, username, password, pol_uni):
     '''Take in the changes of Policy Universe (pol_uni) and send to APIC'''
 
     # log into an APIC and create a directory object
-    session = cobra.mit.session.LoginSession(url, username, password)
-    mo_dir = cobra.mit.access.MoDirectory(session)
-    mo_dir.login()
+    session = cobra.mit.session.<TODO>
+    mo_dir = cobra.mit.access.<TODO>
+    mo_dir.<TODO> #add the method to login
 
     # Print the review of polUni JSON that will be sent to APIC
-    print(f"JSON to be sent:\n {toJSONStr(pol_uni)}\n")
+    <TODO>
 
     # commit the pol_uni changes to APIC
-    c = cobra.mit.request.ConfigRequest()
-    c.addMo(pol_uni)
-    response = mo_dir.commit(c)
+    c = cobra.mit.request.<TODO> # Create a ConfigRequest
+    c.<TODO>
+    response = <TODO>(c) # Commit the changes to APIC
 
     # Print the status code for information purpose
-    print(f"<Status code {response.status_code}>")
+    <TODO>
 
     # Logout from the session
     mo_dir.logout()
@@ -68,21 +70,19 @@ def commit_changes_to_apic(url, username, password, pol_uni):
 if __name__ == "__main__":
 
     # URL and credentials information:
-    URL = "https://apic"
-    USERNAME = "admin"
-    PASSWORD = "C1sco12345"
+    URL = <TODO>
+    USERNAME = <TODO>
+    PASSWORD = <TODO>
 
     # the top level object on which operations will be made
     POL_UNI = pol.Uni('')
-    TENANT = fv.Tenant(POL_UNI, 'Sales')
-    APP_PROFILE = fv.Ap(TENANT, 'eCommerce')
-    EPG_PROVIDER = fv.AEPg(APP_PROFILE, 'DB_EPG')
-    EPG_CONSUMER = fv.AEPg(APP_PROFILE, 'App_EPG')
-
-    print(toJSONStr(POL_UNI))
+    TENANT = fv.Tenant(<TODO>)
+    APP_PROFILE = fv.<TODO>(<TODO>)
+    EPG_PROVIDER = fv.<TODO>(<TODO>)
+    EPG_CONSUMER = fv.<TODO>(<TODO>)
     
     # Call the functions to make changes and send the result to APIC
-    ftp_filter = create_filter(TENANT)
-    contract = create_contract(TENANT, ftp_filter)
-    apply_contract(contract, EPG_PROVIDER, EPG_CONSUMER)
-    commit_changes_to_apic(URL, USERNAME,PASSWORD, POL_UNI)
+    # ftp_filter = create_filter(TENANT)
+    # contract = create_contract(TENANT, ftp_filter)
+    # apply_contract(contract, EPG_PROVIDER, EPG_CONSUMER)
+    # commit_changes_to_apic(URL, USERNAME,PASSWORD, POL_UNI)
