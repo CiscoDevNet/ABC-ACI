@@ -24,37 +24,40 @@ urllib3.disable_warnings()
 
 def create_filter(tenant):
     '''Creates filter, contract, and subject and applies to two EPGs'''
-
+"""
     ftp_filter = vz.<TODO>(tenant, name='FTP_Fltr')
     filter_entry = vz.<TODO>(ftp_filter, name='TCP21', dFromPort='21',
                             dToPort=<TODO>, etherT=<TODO>, prot=<TODO>)
     return ftp_filter
+"""
 
 def create_contract(tenant, vzfilter):
     '''Creates filter, contract, and subject and applies to two EPGs'''
-
+"""
     contract = vz.<TODO>(tenant, name=<TODO>)
     subject = vz.<TODO>(contract, name=<TODO>)
     subject_filter = vz.<TODO>(subject, action='permit', tnVzFilterName=vzfilter.<TODO>)
 
     return contract
+"""
 
 def apply_contract(contract, epg_provider, epg_consumer):
     '''Creates filter, contract, and subject and applies to two EPGs'''
-
+"""
     fv.<TODO>(epg_provider, tnVzBrCPName=<TODO>) #provider
     fv.<TODO>(epg_consumer, tnVzBrCPName=<TODO>) #consumer
+"""
 
 def commit_changes_to_apic(url, username, password, pol_uni):
     '''Take in the changes of Policy Universe (pol_uni) and send to APIC'''
-
+"""
     # log into an APIC and create a directory object
     session = cobra.mit.session.<TODO>(url, username, password)
     mo_dir = cobra.mit.access.<TODO>(session)
     mo_dir.<TODO>() #add the method to login
 
     # Print the review of polUni JSON that will be sent to APIC
-    print(f"JSON to be sent:\n {<TODO>(pol_uni)}\n")
+    print(f'JSON to be sent:\n {<TODO>(pol_uni)}\n')
 
     # commit the pol_uni changes to APIC
     c = cobra.mit.request.<TODO>() # Create a ConfigRequest
@@ -62,11 +65,11 @@ def commit_changes_to_apic(url, username, password, pol_uni):
     response = mo_dir.<TODO>(c) # Commit the changes to APIC
 
     # Print the status code for information purpose
-    print(f"<Status code {response.<TODO>}>")
+    print(f'<Status code {response.<TODO>}>')
 
     # Logout from the session
     mo_dir.logout()
-
+"""
 # The following if statement is True when this file is executed directly.
 if __name__ == "__main__":
 

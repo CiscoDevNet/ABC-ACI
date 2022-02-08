@@ -51,7 +51,7 @@ def commit_changes_to_apic(url, username, password, pol_uni):
     mo_dir.login()
 
     # Print the review of polUni JSON that will be sent to APIC
-    print(f"JSON to be sent:\n {toJSONStr(pol_uni)}\n")
+    print(f'JSON to be sent:\n {toJSONStr(pol_uni)}\n')
 
     # commit the pol_uni changes to APIC
     c = cobra.mit.request.ConfigRequest()
@@ -59,7 +59,7 @@ def commit_changes_to_apic(url, username, password, pol_uni):
     response = mo_dir.commit(c)
 
     # Print the status code for information purpose
-    print(f"<Status code {response.status_code}>")
+    print(f'<Status code {response.status_code}>')
 
     # Logout from the session
     mo_dir.logout()

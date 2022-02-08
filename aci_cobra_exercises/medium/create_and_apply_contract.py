@@ -24,29 +24,32 @@ urllib3.disable_warnings()
 
 def create_filter(tenant):
     '''Creates filter, contract, and subject and applies to two EPGs'''
-
+"""
     ftp_filter = <TODO>(tenant, <TODO>)
     filter_entry = <TODO>(<TODO>)
     return ftp_filter
+"""
 
 def create_contract(tenant, vzfilter):
     '''Creates filter, contract, and subject and applies to two EPGs'''
-
+"""
     contract = <TODO>(tenant, <TODO>)
     subject = <TODO>(<TODO>, <TODO>)
     subject_filter = <TODO>(<TODO>, <TODO>, <TODO>)
 
     return contract
+"""
 
 def apply_contract(contract, epg_provider, epg_consumer):
     '''Creates filter, contract, and subject and applies to two EPGs'''
-
+"""
     <TODO>(<TODO>, tnVzBrCPName=<TODO>) #provider
     <TODO>(<TODO>, tnVzBrCPName=<TODO>) #consumer
+"""
 
 def commit_changes_to_apic(url, username, password, pol_uni):
     '''Take in the changes of Policy Universe (pol_uni) and send to APIC'''
-
+"""
     # log into an APIC and create a directory object
     session = cobra.mit.session.<TODO>
     mo_dir = cobra.mit.access.<TODO>
@@ -65,6 +68,7 @@ def commit_changes_to_apic(url, username, password, pol_uni):
 
     # Logout from the session
     mo_dir.logout()
+"""
 
 # The following if statement is True when this file is executed directly.
 if __name__ == "__main__":

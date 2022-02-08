@@ -24,26 +24,29 @@ urllib3.disable_warnings()
 
 def create_filter(tenant):
     '''Creates filter, contract, and subject and applies to two EPGs'''
+"""
+    <TODO>: Create and return an ftp_filter with one entry
 
-    # <TODO>: Create and return an ftp_filter with one entry
-
-    #return ftp_filter
+    return ftp_filter
+"""
 
 def create_contract(tenant, vzfilter):
     '''Creates filter, contract, and subject and applies to two EPGs'''
+"""
+    <TODO>: Create and return contract with one subject linked to the vzfilter
 
-    # <TODO>: Create and return contract with one subject linked to the vzfilter
-
-    # return contract
+    return contract
+"""
 
 def apply_contract(contract, epg_provider, epg_consumer):
     '''Creates filter, contract, and subject and applies to two EPGs'''
-
-    # <TODO>: apply the provided and consumed contract
+"""
+    <TODO>: apply the provided and consumed contract
+"""
 
 def commit_changes_to_apic(url, username, password, pol_uni):
     '''Take in the changes of Policy Universe (pol_uni) and send to APIC'''
-
+"""
     # log into an APIC and create a directory object
     session = # <TODO>: LoginSession object
     mo_dir = # <TODO>: MoDirectory object
@@ -62,7 +65,7 @@ def commit_changes_to_apic(url, username, password, pol_uni):
 
     # Logout from the session
     mo_dir.logout()
-
+"""
 # The following if statement is True when this file is executed directly.
 if __name__ == "__main__":
 
