@@ -1,6 +1,6 @@
 devices:
   APIC:
-    os: apic #must be set to select the rest connector plugin to use
+    os: apic  # must be set to select the rest connector plugin to use
     type: apic
     connections:
       defaults:

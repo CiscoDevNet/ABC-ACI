@@ -1,0 +1,14 @@
+devices:
+  APIC:
+    os: <TODO>  # must be set to select the rest connector plugin to use
+    type: apic
+    connections:
+      defaults:
+        via: rest
+      rest:
+        class: rest.connector.<TODO>
+        ip: <TODO>
+        credentials:
+          rest:
+            username: <TODO>
+            password: <TODO>
