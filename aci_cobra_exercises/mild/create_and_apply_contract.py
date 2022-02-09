@@ -56,7 +56,7 @@ def commit_changes_to_apic(url, username, password, pol_uni):
     mo_dir = cobra.mit.access.<TODO>(session)
     mo_dir.<TODO>() #add the method to login
 
-    # Print the review of polUni JSON that will be sent to APIC
+    # Print the preview of polUni JSON that will be sent to APIC
     print(f'JSON to be sent:\n {<TODO>(pol_uni)}\n')
 
     # commit the pol_uni changes to APIC
