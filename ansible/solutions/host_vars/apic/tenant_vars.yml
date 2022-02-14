@@ -1,22 +1,65 @@
-# Data for our ACI Tenant
 ---
-tenant:
+tenant_info:
   name: Development
-  description: Development applications
+  bd_name: dev_hosts
+  vrf_name: dev
+  subnets:
+    - 192.168.16.1/24
+    - 192.168.17.1/24
+  applications:
+    - name: my_custom_app
+      description: Development custom application
+      app_epg:
+        - name: web_servers
+          description: Custom application web servers
+        - name: app_servers
+          description: Custom application app servers
 
-bridge_domain:
-  name: development
-  description: Dev BD
-
-vrf:
-  name: dev_app_vrf
-  description: Development application isolation
-
-applications:
-  - name: Phoenix
-    description: Phoenix application
-    app_epg:
-      - name: web_servers
-        description: Phoenix Web servers
-      - name: app_servers
-        description: Phoenix App servers
+  contract_info:
+    filters:
+      - name: app1
+        description: App server filter
+        filter_entries:
+          - name: tcp_8443
+            target_filter: app
+            description: App server port
+            eth_type: ip
+            ip_proto: tcp
+            dest_port: 80
+          - name: udp_19703
+            target_filter: app
+            description: App server streaming data
+            eth_type: ip
+            ip_proto: udp
+            dest_port: 19703
+      - name: web
+        description: Web server filter
+        filter_entries:
+          - name: tcp_443
+            target_filter: web
+            description: HTTPS
+            eth_type: ip
+            ip_proto: tcp
+            dest_port: https
+          - name: tcp_80
+            target_filter: web
+            description: HTTP
+            eth_type: ip
+            ip_proto: tcp
+            dest_port: 80
+    contracts:
+      - name: web
+        app_profile: my_custom_app
+        description: Web server contract
+        subject: dev_web
+        filter: web
+      - name: app
+        app_profile: my_custom_app
+        description: App server contract
+        subject: dev_app
+        filter: app
+        contract_to_epg:
+          - epg_name: app_servers
+            direction: provider
+          - epg_name: web_servers
+            direction: consumer
