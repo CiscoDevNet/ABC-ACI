@@ -1,18 +1,18 @@
 ---
 tenant_info:
-  name: Development
-  bd_name: dev_hosts
+  name:  # <TODO> Set tenant name
+  bd_name:  # <TODO> Set bridge domain name
   vrf_name: dev
   subnets:
     - 192.168.16.1/24
     - 192.168.17.1/24
   applications:
-    - name: my_custom_app
+    - name:  # <TODO> Set application profile name
       description: Development custom application
       app_epg:
-        - name: web_servers
+        - name:  # <TODO> Set name of web server EPG
           description: Custom application web servers
-        - name: app_servers
+        - name:  # <TODO> Set name of app server EPG
           description: Custom application app servers
 
   contract_info:
@@ -60,6 +60,6 @@ tenant_info:
         filter: app
         contract_to_epg:
           - epg_name: app_servers
-            direction: provider
+            direction:  # <TODO> Set provider or consumer state for this EPG
           - epg_name: web_servers
-            direction: consumer
+            direction:  # <TODO> Set provider or consumer state for this EPG
