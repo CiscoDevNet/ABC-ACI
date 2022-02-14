@@ -1,0 +1,36 @@
+---
+
+- name: Build contracts
+  cisco.aci.aci_contract:
+    tenant: "{{ tenant_info.name }}"
+    description: "{{ current_contract.description | default(omit) }}"
+    contract: "{{ current_contract.name }}"
+    state: "{{ global_object_state }}"
+
+- name: Create contract subjects for filters
+  cisco.aci.aci_contract_subject:
+    tenant: "{{ tenant_info.name }}"
+    description: "{{ item.description | default(omit) }}"
+    contract: "{{ current_contract.name }}"
+    subject: "{{ current_contract.subject }}"
+    state: "{{ global_object_state }}"
+
+- name: Add filters to contract subjects
+  cisco.aci.aci_contract_subject_to_filter:
+    tenant: "{{ tenant_info.name }}"
+    subject: "{{ current_contract.subject }}"
+    contract: "{{ current_contract.name }}"
+    filter: "{{ current_contract.filter }}"
+    state: "{{ global_object_state }}"
+
+- name: Associate EPGs with contracts
+  cisco.aci.aci_epg_to_contract:
+    tenant: "{{ tenant_info.name }}"
+    ap: "{{ current_contract.app_profile }}"
+    contract: "{{ current_contract.name }}"
+    epg: "{{ item.epg_name }}"
+    contract_type: "{{ item.direction }}"
+    state: "{{ global_object_state }}"
+  loop: "{{ current_contract.contract_to_epg | default([]) }}"
+  when:
+    - item.epg_name is defined
