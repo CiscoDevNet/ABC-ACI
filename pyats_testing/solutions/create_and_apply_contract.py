@@ -9,46 +9,46 @@ called.
 '''
 
 # import the topology module
-import json
 from pyats import topology
 
 def create_filter(apic, tenant):
     '''Creates a new filter'''
 
-    url = f'api/mo/uni/tn-{tenant}.json'
-    with open("json_payload/create_filter_payload.json", "r", encoding="utf-8") as json_file:
+    url = f"api/mo/uni/tn-{tenant}.json"
+    payload_file = "json_payload/create_filter_payload.json"
+    with open(payload_file, "r", encoding="utf-8") as json_file:
         payload=json_file.read()
     output = apic.rest.post(url, payload)
     print(output)
 
-def create_contract(apic, tenant, filter_name):
+def create_contract(apic, tenant):
     '''creates a new contract'''
 
-    url = f'api/mo/uni/tn-{tenant}.json'
-    with open("json_payload/create_contract_payload.json", "r", encoding="utf-8") as json_file:
-        payload=json.loads(json_file.read())
-        payload["vzBrCP"]["children"][0]["vzSubj"]["children"][0]["vzRsSubjFiltAtt"]["attributes"]["tnVzFilterName"] = filter_name
-    output = apic.rest.post(url, json.dumps(payload))
+    url = f"api/mo/uni/tn-{tenant}.json"
+    payload_file = "json_payload/create_contract_payload.json"
+    with open(payload_file, "r", encoding="utf-8") as json_file:
+        payload=json_file.read()
+    output = apic.rest.post(url, payload)
     print(output)
 
-def apply_provided_contract(apic, tenant, ap, epg, contract):
+def apply_provided_contract(apic, tenant, ap, epg):
     '''Applies a contract to the provided EPG'''
 
-    url = f'api/mo/uni/tn-{tenant}/ap-{ap}/epg-{epg}.json'
-    with open("json_payload/apply_provided_contract_payload.json", "r", encoding="utf-8") as json_file:
-        payload=json.loads(json_file.read())
-        payload["fvRsProv"]["attributes"]["tnVzBrCPName"] = contract
-    output = apic.rest.post(url, json.dumps(payload))
+    url = f"api/mo/uni/tn-{tenant}/ap-{ap}/epg-{epg}.json"
+    payload_file = "json_payload/apply_provided_contract_payload.json"
+    with open(payload_file, "r", encoding="utf-8") as json_file:
+        payload=json_file.read()
+    output = apic.rest.post(url, payload)
     print(output)
 
-def apply_consumed_contract(apic, tenant, ap, epg, contract):
+def apply_consumed_contract(apic, tenant, ap, epg):
     '''Applies a contract to the consumer EPG'''
 
-    url = f'api/mo/uni/tn-{tenant}/ap-{ap}/epg-{epg}.json'
-    with open("json_payload/apply_consumed_contract_payload.json", "r", encoding="utf-8") as json_file:
-        payload=json.loads(json_file.read())
-        payload["fvRsCons"]["attributes"]["tnVzBrCPName"] = contract
-    output = apic.rest.post(url, json.dumps(payload))
+    url = f"api/mo/uni/tn-{tenant}/ap-{ap}/epg-{epg}.json"
+    payload_file = "json_payload/apply_consumed_contract_payload.json"
+    with open(payload_file, "r", encoding="utf-8") as json_file:
+        payload=json_file.read()
+    output = apic.rest.post(url, payload)
     print(output)
 
 # The following if statement is True when this file is executed directly.
@@ -58,8 +58,6 @@ if __name__ == "__main__":
     AP = "eCommerce"
     EPG1 = "App_EPG"
     EPG2 = "Web_EPG"
-    CONTRACT = "BasicServices_Ct"
-    FILTER = "Basic_Fltr"
 
     # load the above testbed file containing REST device
     testbed = topology.loader.load(TESTBED_FILE)
@@ -70,9 +68,9 @@ if __name__ == "__main__":
 
     # Send API calls
     create_filter(my_apic, TENANT)
-    create_contract(my_apic, TENANT, FILTER)
-    apply_provided_contract(my_apic, TENANT, AP, EPG1, CONTRACT)
-    apply_consumed_contract(my_apic, TENANT, AP, EPG2, CONTRACT)
+    create_contract(my_apic, TENANT)
+    apply_provided_contract(my_apic, TENANT, AP, EPG1)
+    apply_consumed_contract(my_apic, TENANT, AP, EPG2)
 
     #Disconnect
     my_apic.disconnect()
