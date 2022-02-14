@@ -1,0 +1,64 @@
+# variables
+vars:
+    directory: pre_snapshots
+
+# Name of the testcase
+Pre_snapshot:
+    # Location of the blitz trigger
+    source:
+        pkg: genie.libs.sdk
+        class: triggers.blitz.blitz.Blitz
+
+    # Field containing all the Testcase sections
+    test_sections:
+        - snapshot_vzBrCP:
+              - api:
+                    device: APIC
+                    function: apic_rest_get
+                    arguments:
+                        dn: /api/class/vzBrCP.json
+                        rsp_subtree: full
+                        rsp_subtree_class: vzSubj
+                    save:
+                        - variable_name: pre_vzBrCP
+              - api:
+                    device: APIC
+                    function: save_dict_to_json_file
+                    arguments:
+                        data:
+                            - "%VARIABLES{pre_vzBrCP}"
+                        filename: "%{vars.directory}/vzBrCP.json"
+        - snapshot_vzFilter:
+              - api:
+                    device: APIC
+                    function: apic_rest_get
+                    arguments:
+                        dn: /api/class/vzFilter.json
+                        rsp_subtree: full
+                        rsp_subtree_class: vzEntry
+                    save:
+                        - variable_name: pre_vzFilter
+              - api:
+                    device: APIC
+                    function: save_dict_to_json_file
+                    arguments:
+                        data:
+                            - "%VARIABLES{pre_vzFilter}"
+                        filename: "%{vars.directory}/vzFilter.json"
+        - snapshot_fvAEPg:
+              - api:
+                    device: APIC
+                    function: apic_rest_get
+                    arguments:
+                        dn: /api/class/fvAEPg.json
+                        rsp_subtree: full
+                        rsp_subtree_class: fvRsCons,fvRsProv
+                    save:
+                        - variable_name: pre_fvAEPg
+              - api:
+                    device: APIC
+                    function: save_dict_to_json_file
+                    arguments:
+                        data:
+                            - "%VARIABLES{pre_fvAEPg}"
+                        filename: "%{vars.directory}/fvAEPg.json"

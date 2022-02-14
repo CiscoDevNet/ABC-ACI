@@ -1,0 +1,56 @@
+# variables
+vars:
+    directory: <TODO>
+
+# Name of the testcase
+Pre_snapshot:
+    # Location of the blitz trigger
+    source:
+        pkg: genie.libs.sdk
+        class: triggers.blitz.blitz.<TODO>
+
+    # Field containing all the Testcase sections
+    test_sections:
+        - snapshot_vzBrCP:
+              - api:
+                    device: <TODO>
+                    function: <TODO>
+                    arguments:
+                        dn: /api/class/<TODO>
+                    save:
+                        - variable_name: vzBrCP
+              - api:
+                    device: <TODO>
+                    function: <TODO>
+                    arguments:
+                        data:
+                            - "%VARIABLES{vzBrCP}"
+                        filename: "%{vars.directory}/vzBrCP.json"
+        # - snapshot_vzFilter:
+        #       - api:
+        #             device: <TODO>
+        #             function: <TODO>
+        #             arguments:
+        #                 dn: <TODO>
+        #             save:
+        #                 - variable_name: vzFilter
+        #       - api:
+        #             device: <TODO>
+        #             function: <TODO>
+        #             arguments:
+        #                 data:
+        #                     - "%VARIABLES{vzFilter}"
+        #                 filename: "%{vars.directory}/vzFilter.json"
+        # - snapshot_fvAEPg:
+        #       - api:
+        #             device: <TODO>
+        #             function: <TODO>
+        #             arguments:
+        #                 <TODO>
+        #             save:
+        #                 - variable_name: <TODO>
+        #       - api:
+        #             device: <TODO>
+        #             function: <TODO>
+        #             arguments:
+        #                 <TODO>
