@@ -4,8 +4,3 @@ all:
     apic:
       ansible_host: apic
       ansible_connection: local
-    environment:
-      ACI_HOST: "{{ ansible_host }}"
-      ACI_USERNAME: "{{ ansible_user }}"
-      ACI_PASSWORD: "{{ ansible_password }}"
-      ACI_VALIDATE_CERTS: false
