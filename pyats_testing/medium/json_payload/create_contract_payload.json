@@ -1,0 +1,28 @@
+{
+    "vzBrCP": {
+        "attributes": {
+            "name": "BasicServices_Ct",
+            "status": "created,modified"
+        },
+        "children": [
+            {
+                "vzSubj": {
+                    "attributes": {
+                        "name": "BasicServices_Subj",
+                        "status": "created,modified"
+                    },
+                    "children": [
+                        {
+                            "vzRsSubjFiltAtt": {
+                                "attributes": {
+                                    "status": "created,modified",
+                                    "tnVzFilterName": "Basic_Fltr"
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

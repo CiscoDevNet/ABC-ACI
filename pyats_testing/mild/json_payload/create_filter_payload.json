@@ -1,0 +1,33 @@
+{
+    "vzFilter": {
+        "attributes": {
+            "name": "Basic_Fltr",
+            "status": "created,modified"
+        },
+        "children": [
+            {
+                "vzEntry": {
+                    "attributes": {
+                        "name": "ICMP",
+                        "etherT": "ip",
+                        "prot": "icmp",
+                        "status": "created,modified"
+                    }
+                }
+            },
+            {
+                "vzEntry": {
+                    "attributes": {
+                        "name": "TCP22",
+                        "etherT": "ip",
+                        "prot": "tcp",
+                        "dFromPort": "22",
+                        "dToPort": "22",
+                        "stateful": "true",
+                        "status": "created,modified"
+                    }
+                }
+            }
+        ]
+    }
+}
