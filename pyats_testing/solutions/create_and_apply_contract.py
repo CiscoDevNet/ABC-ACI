@@ -19,7 +19,6 @@ def create_filter(apic, tenant):
     with open(payload_file, "r", encoding="utf-8") as json_file:
         payload=json_file.read()
     output = apic.rest.post(url, payload)
-    print(output)
 
 def create_contract(apic, tenant):
     '''creates a new contract'''
@@ -29,7 +28,6 @@ def create_contract(apic, tenant):
     with open(payload_file, "r", encoding="utf-8") as json_file:
         payload=json_file.read()
     output = apic.rest.post(url, payload)
-    print(output)
 
 def apply_provided_contract(apic, tenant, ap, epg):
     '''Applies a contract to the provided EPG'''
@@ -39,7 +37,6 @@ def apply_provided_contract(apic, tenant, ap, epg):
     with open(payload_file, "r", encoding="utf-8") as json_file:
         payload=json_file.read()
     output = apic.rest.post(url, payload)
-    print(output)
 
 def apply_consumed_contract(apic, tenant, ap, epg):
     '''Applies a contract to the consumer EPG'''
@@ -49,7 +46,6 @@ def apply_consumed_contract(apic, tenant, ap, epg):
     with open(payload_file, "r", encoding="utf-8") as json_file:
         payload=json_file.read()
     output = apic.rest.post(url, payload)
-    print(output)
 
 # The following if statement is True when this file is executed directly.
 if __name__ == "__main__":
