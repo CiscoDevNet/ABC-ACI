@@ -20,13 +20,13 @@ Pre_snapshot:
                         rsp_subtree: full
                         rsp_subtree_class: vzSubj
                     save:
-                        - variable_name: pre_vzBrCP
+                        - variable_name: vzBrCP
               - api:
                     device: APIC
                     function: save_dict_to_json_file
                     arguments:
                         data:
-                            - "%VARIABLES{pre_vzBrCP}"
+                            - "%VARIABLES{vzBrCP}"
                         filename: "%{vars.directory}/vzBrCP.json"
         - snapshot_vzFilter:
               - api:
@@ -37,13 +37,13 @@ Pre_snapshot:
                         rsp_subtree: full
                         rsp_subtree_class: vzEntry
                     save:
-                        - variable_name: pre_vzFilter
+                        - variable_name: vzFilter
               - api:
                     device: APIC
                     function: save_dict_to_json_file
                     arguments:
                         data:
-                            - "%VARIABLES{pre_vzFilter}"
+                            - "%VARIABLES{vzFilter}"
                         filename: "%{vars.directory}/vzFilter.json"
         - snapshot_fvAEPg:
               - api:
@@ -54,11 +54,11 @@ Pre_snapshot:
                         rsp_subtree: full
                         rsp_subtree_class: fvRsCons,fvRsProv
                     save:
-                        - variable_name: pre_fvAEPg
+                        - variable_name: fvAEPg
               - api:
                     device: APIC
                     function: save_dict_to_json_file
                     arguments:
                         data:
-                            - "%VARIABLES{pre_fvAEPg}"
+                            - "%VARIABLES{fvAEPg}"
                         filename: "%{vars.directory}/fvAEPg.json"
