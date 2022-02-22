@@ -74,56 +74,6 @@ pipeline{
     }
 }
 
-// pipeline {
-    // agent none
-    // stages {
-        // stage('Test container') {
-            // agent {
-                // docker {
-                    // image 'ciscotestautomation/pyats:latest-full'
-                    // args '-u root:root -t --entrypoint='
-                // }
-            // }
-            // steps {
-                // sh 'echo $PATH'
-                // sh 'env'
-                // sh '/pyats/bin/pyats version check'
-            // }
-        // }
-    // }
-// }
-
-
-
-// pipeline {
-    // agent { dockerfile true }
-    // stages {
-        // stage('Test') {
-            // steps {
-                // sh '/opt/py3venv/bin/pyats version check'
-            // }
-        // }
-    // }
-// }
-
-
-
-// More command
-// pipeline {
-  // agent {
-    // docker {
-        // image 'python:3.8-slim'
-    // }
-  // }
-  // stages {
-    // stage('Test') {
-        // steps {
-            // sh 'python -V'
-        // }
-    // }
-  // }
-// }
-
 // node() {
 //     stage('Checkout') { checkout <your-scm-config> }
 //
@@ -142,18 +92,3 @@ pipeline{
 //     }
 // }
 //
-//
-// ##### another example to notify gitlab
-// pipeline {
-//     agent any
-//
-//     stages {
-//        stage('gitlab') {
-//           steps {
-//              echo 'Notify GitLab'
-//              updateGitlabCommitStatus name: 'build', state: 'pending'
-//              updateGitlabCommitStatus name: 'build', state: 'success'
-//           }
-//        }
-//     }
-//  }
