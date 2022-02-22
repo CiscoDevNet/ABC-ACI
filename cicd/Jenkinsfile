@@ -12,14 +12,14 @@ pipeline{
         }
     }
     stages {
-        stage('Clone') {
+        stage('Get code from repository') {
             steps {
                 checkout scm
             }
         }
 //              updateGitlabCommitStatus name: 'build', state: 'pending'
 //              updateGitlabCommitStatus name: 'build', state: 'success'
-        stage('Build in docker') {
+        stage('Build container for testing') {
              // agent { dockerfile true }
                 // docker {
                     //image 'ciscotestautomation/pyats:latest-full'
@@ -37,12 +37,12 @@ pipeline{
                 sh 'pyats version check'
             }
         }
-        stage('Pre snapshot') {
+        stage('Snapshot of APIC before configuration change') {
             steps {
                 sh 'cd pyats ; pyats run job pre_change_job.py --testbed-file testbed.yaml --html-logs pre_snapshots'
             }
         }
-        stage('Post snapshot') {
+        stage('Snapshot of APIC after configuration change') {
             steps {
                 sh 'cd pyats ; pyats run job post_change_job.py --testbed-file testbed.yaml --html-logs post_snapshots'
             }
@@ -59,7 +59,8 @@ pipeline{
         }
         success{
             updateGitlabCommitStatus name: 'build', state: 'success'
-            archiveArtifacts artifacts : 'pyats/pre_snapshots/*', 'pyats/post_snapshots/*'
+            archiveArtifacts artifacts : 'pyats/pre_snapshots/*'
+            archiveArtifacts artifacts : 'pyats/post_snapshots/*'
             // archiveArtifacts artifacts : 'pyats/post_snapshots/*'
             // archiveArtifacts artifacts : '*.jpg'
         }

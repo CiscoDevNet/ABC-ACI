@@ -19,10 +19,22 @@ except FileExistsError:
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--after',
+                        dest='after',
+                        action='store_true')
+    parser.set_defaults(after=False)
+    args, unknown = parser.parse_known_args()
+
     test_path = os.path.dirname(__file__)
+    if args.after:
+        test_sections = And("post_change_snapshot")
+    else:
+        test_sections = And("pre_change_snapshot")
+
     gRun(
         trigger_datafile=os.path.join(test_path, 'trigger_snapshot.yaml'),
         subsection_datafile=os.path.join(test_path, 'subsection_datafile.yaml'),
         trigger_groups=And('aci'),
-        trigger_uids=And("pre_change_snapshot")
+        trigger_uids=test_sections
     )
