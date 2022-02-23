@@ -39,12 +39,23 @@ pipeline{
         }
         stage('Snapshot of APIC before configuration change') {
             steps {
-                sh 'cd pyats ; pyats run job pre_change_job.py --testbed-file testbed.yaml --html-logs pre_snapshots'
+                dir('pyats') {
+                    sh 'pyats run job job.py --testbed-file testbed.yaml --html-logs pre_snapshots'
+                }
             }
         }
         stage('Snapshot of APIC after configuration change') {
             steps {
-                sh 'cd pyats ; pyats run job post_change_job.py --testbed-file testbed.yaml --html-logs post_snapshots'
+                dir('pyats') {
+                    sh 'pyats run job job.py --testbed-file testbed.yaml --html-logs post_snapshots --after'
+                }
+            }
+        }
+        stage('Create diff of pre-change and post-change snapshots')
+            steps {
+                dir('pyats') {
+                    sh 'pyats diff pre_snapshots/tenant.json post_snapshots/tenant.json --output snapshot_diff/'
+                }
             }
         }
 //         stage('test code'){
@@ -59,10 +70,7 @@ pipeline{
         }
         success{
             updateGitlabCommitStatus name: 'build', state: 'success'
-            archiveArtifacts artifacts : 'pyats/pre_snapshots/*'
-            archiveArtifacts artifacts : 'pyats/post_snapshots/*'
-            // archiveArtifacts artifacts : 'pyats/post_snapshots/*'
-            // archiveArtifacts artifacts : '*.jpg'
+            archiveArtifacts artifacts : 'pyats/snapshot_diff/*'
         }
         unsuccessful{
             updateGitlabCommitStatus name: 'build', state: 'failed'
