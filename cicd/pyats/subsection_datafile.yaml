@@ -1,9 +1,9 @@
 ---
 setup:
-    sections:
-      connect:
-        method: genie.harness.commons.connect
-    order: ['connect']
+  sections:
+    connect:
+      method: genie.harness.commons.connect
+  order: ['connect']
 
 cleanup:
-    order: []
+  order: []

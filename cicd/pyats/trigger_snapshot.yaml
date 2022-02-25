@@ -1,454 +1,90 @@
 ---
-#vars:
-#  tenant: Development
-#  snapshot_type: post
-
 vars:
-  tenant: Development
+  snapshot_filename: tenant.json
 
-pre_change_snapshot:
-  groups: ["aci"]
+tenant_snapshot:
+  groups:
+    - aci
   source:
     pkg: genie.libs.sdk
     class: triggers.blitz.blitz.Blitz
   test_sections:
-    - tenant_pre_snapshot:
+    - Take snapshot of tenants:
         - sleep:
             sleep_time: 2
         - api:
             device: uut
             function: apic_rest_get
             arguments:
+              #
+              # Query the fvTenant class:
               dn: /api/class/fvTenant.json
-#              dn: /api/node/mo/uni/tn-Operations.json
-              query_target: children
+              #
+              # Obtain the full subtree from the fvTenant class:
+              query_target: subtree
+              #
+              # Only respond with configurable attributes
+              rsp_prop_include: config-only
+              #
+              # Return the following classes:
+              # fvTenant (Tenants)
+              # fvBD (Bridge Domains)
+              # fvCtx (VRFs)
+              # fvSubnet (Subnets)
+              # vzBrCP (Contracts)
+              # vzFilter (Filters)
+              # fvAp (Application Profiles)
+              # fvAEPg (Application EPGs)
+              target_subtree_class: >-
+                fvTenant,fvBD,fvCtx,fvSubnet,vzBrCP,vzFilter,fvAp,fvAEPg
             save:
-              - variable_name: pre_tenant
+              - variable_name: testscript.apic_tenant_snapshot
 
-        - sleep:
-            sleep_time: 2
-        - api:
-            device: uut
-            function: save_dict_to_json_file
-            arguments:
-              data:
-                - "%VARIABLES{pre_tenant}"
-              filename: "pre_snapshots/tenant.json"
-
-post_change_snapshot:
-  groups: ["aci"]
+save_snapshot:
+  groups:
+    - aci
   source:
     pkg: genie.libs.sdk
     class: triggers.blitz.blitz.Blitz
   test_sections:
-    - tenant_post_snapshot:
-        - sleep:
-            sleep_time: 2
-        - api:
-            device: uut
-            function: apic_rest_get
-            arguments:
-              dn: /api/class/fvTenant.json
-#              dn: /api/node/mo/uni/tn-Operations.json
-              query_target: children
-            save:
-              - variable_name: post_tenant
-
-        - sleep:
-            sleep_time: 2
+    - Save APIC snapshot:
         - api:
             device: uut
             function: save_dict_to_json_file
             arguments:
               data:
-                - "%VARIABLES{post_tenant}"
-              filename: "post_snapshots/tenant.json"
+                - "%VARIABLES{testscript.apic_tenant_snapshot}"
+              filename: "%ENV{snapshot_path}/%{vars.snapshot_filename}"
 
-    - load_snapshots_for_both_pre_and_post:
 
-        - sleep:
-            sleep_time: 2
+compare_snapshots:
+  groups:
+    - aci
+  source:
+    pkg: genie.libs.sdk
+    class: triggers.blitz.blitz.Blitz
+  test_sections:
+    - Read pre-change snapshot file:
         - api:
             device: uut
             function: load_dict_from_json_file
             arguments:
-              filename: "pre_snapshots/tenant.json"
+              filename: "%ENV{pre_snapshot_path}/%{vars.snapshot_filename}"
             save:
               - variable_name: pre_snapshot_tenant
 
-        - sleep:
-            sleep_time: 2
+    - Read post-change snapshot file:
         - api:
             device: uut
             function: load_dict_from_json_file
             arguments:
-              filename: "post_snapshots/tenant.json"
+              filename: "%ENV{post_snapshot_path}/%{vars.snapshot_filename}"
             save:
               - variable_name: post_snapshot_tenant
 
-    - snapshot_comparison_Tenant:
+    - Compare pre-change snapshot to post-change snapshot:
         - diff:
             device: uut
             pre: "%VARIABLES{pre_snapshot_tenant}"
             post: "%VARIABLES{post_snapshot_tenant}"
-            fail_different: False
-
-
-#    - post_snapshot_Subnet:
-#        - sleep:
-#            sleep_time: 2
-#        - api:
-#            device: uut
-#            function: apic_rest_get
-#            arguments:
-#              dn: /api/class/fvSubnet.json
-#            save:
-#              - variable_name: post_subnet
-#
-#        - sleep:
-#            sleep_time: 2
-#        - api:
-#            device: uut
-#            function: save_dict_to_json_file
-#            arguments:
-#              data:
-#                - "%VARIABLES{post_subnet}"
-#              filename: "post_snapshots/subnet.json"
-#    - post_snapshot_BD:
-#
-#        - sleep:
-#            sleep_time: 2
-#        - api:
-#            device: uut
-#            function: apic_rest_get
-#            arguments:
-#              dn: /api/class/fvBD.json
-#            save:
-#              - variable_name: post_bd
-#
-#        - sleep:
-#            sleep_time: 2
-#        - api:
-#            device: uut
-#            function: save_dict_to_json_file
-#            arguments:
-#              data:
-#                - "%VARIABLES{post_bd}"
-#              filename: "post_snapshots/bd.json"
-#    - post_snapshot_Ctx:
-#
-#        - sleep:
-#            sleep_time: 2
-#        - api:
-#            device: uut
-#            function: apic_rest_get
-#            arguments:
-#              dn: /api/class/fvCtx.json
-#            save:
-#              - variable_name: post_ctx
-#
-#        - sleep:
-#            sleep_time: 2
-#        - api:
-#            device: uut
-#            function: save_dict_to_json_file
-#            arguments:
-#              data:
-#                - "%VARIABLES{post_ctx}"
-#              filename: "post_snapshots/ctx.json"
-#    - post_snapshot_Ap:
-#
-#        - sleep:
-#            sleep_time: 2
-#        - api:
-#            device: uut
-#            function: apic_rest_get
-#            arguments:
-#              dn: /api/class/fvAp.json
-#            save:
-#              - variable_name: post_ap
-#
-#        - sleep:
-#            sleep_time: 2
-#        - api:
-#            device: uut
-#            function: save_dict_to_json_file
-#            arguments:
-#              data:
-#                - "%VARIABLES{post_ap}"
-#              filename: "post_snapshots/ap.json"
-#    - post_snapshot_AEPg:
-#
-#        - sleep:
-#            sleep_time: 2
-#        - api:
-#            device: uut
-#            function: apic_rest_get
-#            arguments:
-#              dn: /api/class/fvAEPg.json
-#            save:
-#              - variable_name: post_aepg
-#
-#        - sleep:
-#            sleep_time: 2
-#        - api:
-#            device: uut
-#            function: save_dict_to_json_file
-#            arguments:
-#              data:
-#                - "%VARIABLES{post_aepg}"
-#              filename: "post_snapshots/aepg.json"
-#    - post_snapshot_BrCP:
-#
-#        - sleep:
-#            sleep_time: 2
-#        - api:
-#            device: uut
-#            function: apic_rest_get
-#            arguments:
-#              dn: /api/class/vzBrCP.json
-#            save:
-#              - variable_name: post_cp
-#
-#        - sleep:
-#            sleep_time: 2
-#        - api:
-#            device: uut
-#            function: save_dict_to_json_file
-#            arguments:
-#              data:
-#                - "%VARIABLES{post_cp}"
-#              filename: "post_snapshots/cp.json"
-#    - post_snapshot_Filter:
-#
-#        - sleep:
-#            sleep_time: 2
-#        - api:
-#            device: uut
-#            function: apic_rest_get
-#            arguments:
-#              dn: /api/class/vzFilter.json
-#            save:
-#              - variable_name: post_filter
-#
-#        - sleep:
-#            sleep_time: 2
-#        - api:
-#            device: uut
-#            function: save_dict_to_json_file
-#            arguments:
-#              data:
-#                - "%VARIABLES{post_filter}"
-#              filename: "post_snapshots/filter.json"
-#    - load_snapshots_for_both_pre_and_post:
-#
-#        - sleep:
-#            sleep_time: 2
-#        - api:
-#            device: uut
-#            function: load_dict_from_json_file
-#            arguments:
-#              filename: "pre_snapshots/tenant.json"
-#            save:
-#              - variable_name: pre_snapshot_tenant
-#
-#        - sleep:
-#            sleep_time: 2
-#        - api:
-#            device: uut
-#            function: load_dict_from_json_file
-#            arguments:
-#              filename: "post_snapshots/tenant.json"
-#            save:
-#              - variable_name: post_snapshot_tenant
-#
-#        - sleep:
-#            sleep_time: 2
-#        - api:
-#            device: uut
-#            function: load_dict_from_json_file
-#            arguments:
-#              filename: "pre_snapshots/subnet.json"
-#            save:
-#              - variable_name: pre_snapshot_subnet
-#
-#        - sleep:
-#            sleep_time: 2
-#        - api:
-#            device: uut
-#            function: load_dict_from_json_file
-#            arguments:
-#              filename: "post_snapshots/subnet.json"
-#            save:
-#              - variable_name: post_snapshot_subnet
-#
-#        - sleep:
-#            sleep_time: 2
-#        - api:
-#            device: uut
-#            function: load_dict_from_json_file
-#            arguments:
-#              filename: "pre_snapshots/bd.json"
-#            save:
-#              - variable_name: pre_snapshot_bd
-#
-#        - sleep:
-#            sleep_time: 2
-#        - api:
-#            device: uut
-#            function: load_dict_from_json_file
-#            arguments:
-#              filename: "post_snapshots/bd.json"
-#            save:
-#              - variable_name: post_snapshot_bd
-#
-#        - sleep:
-#            sleep_time: 2
-#        - api:
-#            device: uut
-#            function: load_dict_from_json_file
-#            arguments:
-#              filename: "pre_snapshots/ctx.json"
-#            save:
-#              - variable_name: pre_snapshot_ctx
-#
-#        - sleep:
-#            sleep_time: 2
-#        - api:
-#            device: uut
-#            function: load_dict_from_json_file
-#            arguments:
-#              filename: "post_snapshots/ctx.json"
-#            save:
-#              - variable_name: post_snapshot_ctx
-#
-#        - sleep:
-#            sleep_time: 2
-#        - api:
-#            device: uut
-#            function: load_dict_from_json_file
-#            arguments:
-#              filename: "pre_snapshots/ap.json"
-#            save:
-#              - variable_name: pre_snapshot_ap
-#
-#        - sleep:
-#            sleep_time: 2
-#        - api:
-#            device: uut
-#            function: load_dict_from_json_file
-#            arguments:
-#              filename: "post_snapshots/ap.json"
-#            save:
-#              - variable_name: post_snapshot_ap
-#
-#        - sleep:
-#            sleep_time: 2
-#        - api:
-#            device: uut
-#            function: load_dict_from_json_file
-#            arguments:
-#              filename: "pre_snapshots/aepg.json"
-#            save:
-#              - variable_name: pre_snapshot_aepg
-#
-#        - sleep:
-#            sleep_time: 2
-#        - api:
-#            device: uut
-#            function: load_dict_from_json_file
-#            arguments:
-#              filename: "post_snapshots/aepg.json"
-#            save:
-#              - variable_name: post_snapshot_aepg
-#
-#        - sleep:
-#            sleep_time: 2
-#        - api:
-#            device: uut
-#            function: load_dict_from_json_file
-#            arguments:
-#              filename: "pre_snapshots/cp.json"
-#            save:
-#              - variable_name: pre_snapshot_cp
-#
-#        - sleep:
-#            sleep_time: 2
-#        - api:
-#            device: uut
-#            function: load_dict_from_json_file
-#            arguments:
-#              filename: "post_snapshots/cp.json"
-#            save:
-#              - variable_name: post_snapshot_cp
-#        - sleep:
-#            sleep_time: 2
-#        - api:
-#            device: uut
-#            function: load_dict_from_json_file
-#            arguments:
-#              filename: "pre_snapshots/filter.json"
-#            save:
-#              - variable_name: pre_snapshot_filter
-#        - sleep:
-#            sleep_time: 2
-#        - api:
-#            device: uut
-#            function: load_dict_from_json_file
-#            arguments:
-#              filename: "post_snapshots/filter.json"
-#            save:
-#              - variable_name: post_snapshot_filter
-
-
-#    - snapshot_comparison_Tenant:
-#        - diff:
-#            device: uut
-#            pre: "%VARIABLES{pre_snapshot_tenant}"
-#            post: "%VARIABLES{post_snapshot_tenant}"
-#            fail_different: False
-
-
-
-#    - snapshot_comparison_Subnet:
-#        - diff:
-#            device: uut
-#            pre: "%VARIABLES{pre_snapshot_subnet}"
-#            post: "%VARIABLES{post_snapshot_subnet}"
-#            fail_different: False
-#    - snapshot_comparison_BD:
-#        - diff:
-#            device: uut
-#            pre: "%VARIABLES{pre_snapshot_bd}"
-#            post: "%VARIABLES{post_snapshot_bd}"
-#            fail_different: False
-#    - snapshot_comparison_Ctx:
-#        - diff:
-#            device: uut
-#            pre: "%VARIABLES{pre_snapshot_ctx}"
-#            post: "%VARIABLES{post_snapshot_ctx}"
-#            fail_different: False
-#    - snapshot_comparison_Ap:
-#        - diff:
-#            device: uut
-#            pre: "%VARIABLES{pre_snapshot_ap}"
-#            post: "%VARIABLES{post_snapshot_ap}"
-#            fail_different: False
-#    - snapshot_comparison_AEPg:
-#        - diff:
-#            device: uut
-#            pre: "%VARIABLES{pre_snapshot_aepg}"
-#            post: "%VARIABLES{post_snapshot_aepg}"
-#            fail_different: False
-#    - snapshot_comparison_CP:
-#        - diff:
-#            device: uut
-#            pre: "%VARIABLES{pre_snapshot_cp}"
-#            post: "%VARIABLES{post_snapshot_cp}"
-#            fail_different: False
-#    - snapshot_comparison_Filter:
-#        - diff:
-#            device: uut
-#            pre: "%VARIABLES{pre_snapshot_filter}"
-#            post: "%VARIABLES{post_snapshot_filter}"
-#            fail_different: False
+            fail_different: false
