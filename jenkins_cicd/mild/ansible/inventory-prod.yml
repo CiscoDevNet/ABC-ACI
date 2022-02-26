@@ -1,0 +1,6 @@
+---
+all:
+  hosts:
+    apic:
+      ansible_host: apic
+      ansible_connection: local
