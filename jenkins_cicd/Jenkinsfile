@@ -1,0 +1,149 @@
+def ANSIBLE_VAULT_FILE = 'secrets.txt'
+def APIC_HOST = 'apic'
+def APIC_IP = '10.10.20.14'
+def DOCKER_ARGS = "--add-host ${APIC_HOST}:${APIC_IP}"
+
+pipeline{
+    agent any
+
+    options {
+        // Required for initial workspace cleanup - do not immediately
+        // grab code from the repository when launched.
+        skipDefaultCheckout(true)
+    }
+
+    stages {
+        stage('Prepare workspace and pull code') {
+            steps {
+                echo "Updating GitLab commit status..."
+                updateGitlabCommitStatus(name: 'build', state: 'pending')
+
+                echo "Cleaning workspace files..."
+                cleanWs()
+
+                echo "Checking project out from GitLab..."
+                checkout scm
+            }
+        }
+        stage('Pre-change APIC snapshot') {
+            agent {
+                docker {
+                    image 'jenkins-runner-pyats'
+                    args "${DOCKER_ARGS}"
+                    reuseNode true
+                }
+            }
+            steps {
+                echo "Updating GitLab commit status..."
+                updateGitlabCommitStatus(name: 'build', state: 'running')
+
+                dir('pyats') {
+                    echo "Taking pre-change snapshot of APIC..."
+                    sh 'pyats run job job.py --testbed-file testbed.yaml --html-logs pre_snapshots --no-archive'
+                }
+            }
+        }
+        stage('Ansible') {
+            agent {
+                docker {
+                    image 'jenkins-runner-ansible'
+                    args "${DOCKER_ARGS}"
+                    reuseNode true
+                }
+            }
+            environment {
+                ANSIBLE_ASK_VAULT_PASS = 'false'
+                ANSIBLE_VAULT_PASSWORD_FILE = "${ANSIBLE_VAULT_FILE}"
+            }
+            stages {
+                stage('Build') {
+                    steps {
+                        dir('ansible-testing') {
+                            script {
+                                if (fileExists('requirements.yml')) {
+                                    echo "Installing Ansible roles and modules..."
+                                    sh "ansible-galaxy install -r requirements.yml"
+                                }
+                                if (fileExists('requirements.txt')) {
+                                    echo "Installing additional Python packages..."
+                                    sh "pip install -r requirements.txt"
+                                }
+                            }
+                        }
+                    }
+                }
+                stage('Test') {
+                    steps {
+                        dir('ansible-testing') {
+                            echo "Creating Ansible vault secret file..."
+                            withCredentials([string(credentialsId: 'ANSIBLE_VAULT_PASSWORD', variable: 'VAULT_CREDS')]) {
+                                writeFile (file: ANSIBLE_VAULT_FILE, text: env.VAULT_CREDS)
+                            }
+
+                            echo "Linting Ansible playbook..."
+                            sh "ansible-lint main.yml"
+
+                            echo "Running Ansible playbook in check mode..."
+                            sh "ansible-playbook --check main.yml"
+                        }
+                    }
+                }
+                stage('Deploy') {
+                    steps {
+                        timeout(time: 10, unit: 'MINUTES') {
+                            input(message: "All tests successful.  Proceed with deployment?")
+                        }
+                        dir('ansible-testing') {
+                            echo "Running Ansible playbook..."
+                            sh "ansible-playbook main.yml"
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Post-change APIC snapshot and generate diff') {
+            agent {
+                docker {
+                    image 'jenkins-runner-pyats'
+                    args "${DOCKER_ARGS}"
+                    reuseNode true
+                }
+            }
+            steps {
+                dir('pyats') {
+                    echo "Taking post-change snapshot of APIC..."
+                    sh 'pyats run job job.py --testbed-file testbed.yaml --html-logs post_snapshots --after --no-archive'
+
+                    echo "Generating diff of pre-change and post-change APIC snapshots..."
+                    sh 'pyats diff pre_snapshots/tenant.json post_snapshots/tenant.json --output snapshot_diff/'
+                }
+            }
+        }
+    }
+    post {
+        always{
+            echo "Job execution complete."
+        }
+        success {
+            echo "Updating GitLab commit status..."
+            updateGitlabCommitStatus(name: 'build', state: 'success')
+            echo "Archiving artifacts..."
+            archiveArtifacts(artifacts : 'pyats/snapshot_diff/*.json', allowEmptyArchive: true)
+        }
+        unsuccessful {
+            echo "Updating GitLab commit status..."
+            updateGitlabCommitStatus(name: 'build', state: 'failed')
+            echo "Job execution status is failed, please check error logs"
+        }
+        cleanup {
+            // Cleanup workspace
+            echo "Performing post-job cleanup..."
+            cleanWs(cleanWhenNotBuilt: false,
+                    cleanWhenFailure: false,
+                    deleteDirs: true,
+                    disableDeferredWipeout: true,
+                    notFailBuild: true)
+        }
+    }
+}

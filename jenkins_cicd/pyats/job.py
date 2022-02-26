@@ -57,7 +57,7 @@ def main():
     os.environ["snapshot_path"] = pre_snapshot_path
 
     # Default test sections - these will run every time
-    test_sections = ["tenant_snapshot", "save_snapshot"]
+    test_sections = ["tenant_snapshot"]
 
     if args.after:
         # If the --after flag has been added, include the 'compare_snapshots'

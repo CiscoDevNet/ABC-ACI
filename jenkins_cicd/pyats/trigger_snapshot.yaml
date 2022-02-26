@@ -10,8 +10,6 @@ tenant_snapshot:
     class: triggers.blitz.blitz.Blitz
   test_sections:
     - Take snapshot of tenants:
-        - sleep:
-            sleep_time: 2
         - api:
             device: uut
             function: apic_rest_get
@@ -40,13 +38,6 @@ tenant_snapshot:
             save:
               - variable_name: testscript.apic_tenant_snapshot
 
-save_snapshot:
-  groups:
-    - aci
-  source:
-    pkg: genie.libs.sdk
-    class: triggers.blitz.blitz.Blitz
-  test_sections:
     - Save APIC snapshot:
         - api:
             device: uut
@@ -55,7 +46,6 @@ save_snapshot:
               data:
                 - "%VARIABLES{testscript.apic_tenant_snapshot}"
               filename: "%ENV{snapshot_path}/%{vars.snapshot_filename}"
-
 
 compare_snapshots:
   groups:
