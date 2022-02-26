@@ -1,4 +1,7 @@
-// Variable definitions.  Any variable here may be used in the Jenkinsfile
+//
+// BEGIN Variable definitions
+// Any variable here may be used in the Jenkinsfile using the syntax
+// ${VARIABLE_NAME}
 //
 // Define the name of the Ansible playbook to run
 def ANSIBLE_PLAYBOOK = 'main.yml'
@@ -30,6 +33,10 @@ def DOCKER_ANSIBLE_IMAGE = 'jenkins-runner-ansible'
 // The only argument required for Docker commands should be the following,
 // which tells the new container how to reach the APIC.
 def DOCKER_ARGS = "--add-host ${APIC_HOST}:${APIC_IP}"
+//
+// END Variable definitions
+//
+
 
 // Start of the Pipeline declaration.
 pipeline{
