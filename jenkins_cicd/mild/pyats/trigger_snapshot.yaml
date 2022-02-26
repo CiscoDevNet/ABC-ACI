@@ -1,0 +1,80 @@
+---
+vars:
+  snapshot_filename: tenant.json
+
+tenant_snapshot:
+  groups:
+    - aci
+  source:
+    pkg: genie.libs.sdk
+    class: triggers.blitz.blitz.Blitz
+  test_sections:
+    - Take snapshot of tenants:
+        - api:
+            device: uut
+            function: apic_rest_get
+            arguments:
+              #
+              # Query the fvTenant class:
+              dn: /api/class/fvTenant.json
+              #
+              # Obtain the full subtree from the fvTenant class:
+              query_target: subtree
+              #
+              # Only respond with configurable attributes
+              rsp_prop_include: config-only
+              #
+              # Return the following classes:
+              # fvTenant (Tenants)
+              # fvBD (Bridge Domains)
+              # fvCtx (VRFs)
+              # fvSubnet (Subnets)
+              # vzBrCP (Contracts)
+              # vzFilter (Filters)
+              # fvAp (Application Profiles)
+              # fvAEPg (Application EPGs)
+              target_subtree_class: >-
+                fvTenant,fvBD,fvCtx,fvSubnet,vzBrCP,vzFilter,fvAp,fvAEPg
+            save:
+              - variable_name: testscript.apic_tenant_snapshot
+
+    - Save APIC snapshot:
+        - api:
+            device: uut
+            function: save_dict_to_json_file
+            arguments:
+              data:
+                - "%VARIABLES{testscript.apic_tenant_snapshot}"
+              filename: "%ENV{snapshot_path}/%{vars.snapshot_filename}"
+
+compare_snapshots:
+  groups:
+    - aci
+  source:
+    pkg: genie.libs.sdk
+    class: triggers.blitz.blitz.Blitz
+  test_sections:
+    - Read pre-change snapshot file:
+        - api:
+            device: uut
+            function: load_dict_from_json_file
+            arguments:
+              filename: "%ENV{pre_snapshot_path}/%{vars.snapshot_filename}"
+            save:
+              - variable_name: pre_snapshot_tenant
+
+    - Read post-change snapshot file:
+        - api:
+            device: uut
+            function: load_dict_from_json_file
+            arguments:
+              filename: "%ENV{post_snapshot_path}/%{vars.snapshot_filename}"
+            save:
+              - variable_name: post_snapshot_tenant
+
+    - Compare pre-change snapshot to post-change snapshot:
+        - diff:
+            device: uut
+            pre: "%VARIABLES{pre_snapshot_tenant}"
+            post: "%VARIABLES{post_snapshot_tenant}"
+            fail_different: false

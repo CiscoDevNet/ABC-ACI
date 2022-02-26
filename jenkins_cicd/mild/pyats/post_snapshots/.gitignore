@@ -1,0 +1,6 @@
+# Generic .gitignore to ensure this directory is added to the repository.
+#
+# Ignore everything
+.gitignore
+# Except .gitignore
+!.gitignore

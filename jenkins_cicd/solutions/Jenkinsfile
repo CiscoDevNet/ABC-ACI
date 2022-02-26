@@ -1,4 +1,10 @@
+def ANSIBLE_PLAYBOOK = 'main.yml'
 def ANSIBLE_VAULT_FILE = 'secrets.txt'
+def ANSIBLE_TEST_INVENTORY = 'inventory-test.yml'
+def ANSIBLE_PROD_INVENTORY = 'inventory-prod.yml'
+
+def DOCKER_PYATS_IMAGE = 'jenkins-runner-pyats'
+def DOCKER_ANSIBLE_IMAGE = 'jenkins-runner-ansible'
 def APIC_HOST = 'apic'
 def APIC_IP = '10.10.20.14'
 def DOCKER_ARGS = "--add-host ${APIC_HOST}:${APIC_IP}"
@@ -28,7 +34,7 @@ pipeline{
         stage('Pre-change APIC snapshot') {
             agent {
                 docker {
-                    image 'jenkins-runner-pyats'
+                    image "${DOCKER_PYATS_IMAGE}"
                     args "${DOCKER_ARGS}"
                     reuseNode true
                 }
@@ -46,7 +52,7 @@ pipeline{
         stage('Ansible') {
             agent {
                 docker {
-                    image 'jenkins-runner-ansible'
+                    image "${DOCKER_ANSIBLE_IMAGE}"
                     args "${DOCKER_ARGS}"
                     reuseNode true
                 }
@@ -81,10 +87,10 @@ pipeline{
                             }
 
                             echo "Linting Ansible playbook..."
-                            sh "ansible-lint main.yml"
+                            sh "ansible-lint ${ANSIBLE_PLAYBOOK}"
 
                             echo "Running Ansible playbook in check mode..."
-                            sh "ansible-playbook --check main.yml"
+                            sh "ansible-playbook --check ${ANSIBLE_PLAYBOOK}"
                         }
                     }
                 }
@@ -95,7 +101,7 @@ pipeline{
                         }
                         dir('ansible-testing') {
                             echo "Running Ansible playbook..."
-                            sh "ansible-playbook main.yml"
+                            sh "ansible-playbook ${ANSIBLE_PLAYBOOK}"
                         }
                     }
                 }
@@ -105,7 +111,7 @@ pipeline{
         stage('Post-change APIC snapshot and generate diff') {
             agent {
                 docker {
-                    image 'jenkins-runner-pyats'
+                    image "${DOCKER_PYATS_IMAGE}"
                     args "${DOCKER_ARGS}"
                     reuseNode true
                 }
