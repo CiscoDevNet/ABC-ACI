@@ -24,7 +24,9 @@ def ANSIBLE_TEST_INVENTORY = 'inventory-test.yml'
 def APIC_HOST = 'apic'
 def APIC_IP = '10.10.20.14'
 
-// DO NOT CHANGE
+// --------------------------------------------------------------------------
+// BEGIN - DO NOT CHANGE
+//
 // The DOCKER_PYATS_IMAGE and DOCKER_ANSIBLE_IMAGE refer to Docker containers
 // which have been pre-built for the lab environment
 def DOCKER_PYATS_IMAGE = 'jenkins-runner-pyats'
@@ -33,6 +35,10 @@ def DOCKER_ANSIBLE_IMAGE = 'jenkins-runner-ansible'
 // The only argument required for Docker commands should be the following,
 // which tells the new container how to reach the APIC.
 def DOCKER_ARGS = "--add-host ${APIC_HOST}:${APIC_IP}"
+//
+// END - DO NOT CHANGE
+// --------------------------------------------------------------------------
+
 //
 // END Variable definitions
 //
