@@ -17,7 +17,7 @@ tenant_info:
 
   contract_info:
     filters:
-      - name: app1
+      - name: app
         description: App server filter
         filter_entries:
           - name: tcp_8443
