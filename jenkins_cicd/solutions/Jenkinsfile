@@ -1,24 +1,57 @@
+// Variable definitions.  Any variable here may be used in the Jenkinsfile
+//
+// Define the name of the Ansible playbook to run
 def ANSIBLE_PLAYBOOK = 'main.yml'
-def ANSIBLE_VAULT_FILE = 'secrets.txt'
-def ANSIBLE_TEST_INVENTORY = 'inventory-test.yml'
-def ANSIBLE_PROD_INVENTORY = 'inventory-prod.yml'
 
-def DOCKER_PYATS_IMAGE = 'jenkins-runner-pyats'
-def DOCKER_ANSIBLE_IMAGE = 'jenkins-runner-ansible'
+// Define the name of a file to create which contains the secret used to
+// decrypt the Ansible Vault.  This file will be removed upon termination
+// of the Ansible container.
+def ANSIBLE_VAULT_FILE = 'secrets.txt'
+
+// The TEST environment inventory file.  For this lab, the ansible.cfg
+// is configured to use the Production inventory file - this inventory
+// will be overridden during the test stages by providing this filename
+// as an argument to Ansible's -i <inventory> parameter.
+def ANSIBLE_TEST_INVENTORY = 'inventory-test.yml'
+
+// CHANGE SHOULD NOT BE REQUIRED
+// The APIC Host and IP Addresses have been configured during lab setup
+// and should match these values.  If the IP address for host 'apic' does
+// not match, the value may need to be updated.
 def APIC_HOST = 'apic'
 def APIC_IP = '10.10.20.14'
+
+// DO NOT CHANGE
+// The DOCKER_PYATS_IMAGE and DOCKER_ANSIBLE_IMAGE refer to Docker containers
+// which have been pre-built for the lab environment
+def DOCKER_PYATS_IMAGE = 'jenkins-runner-pyats'
+def DOCKER_ANSIBLE_IMAGE = 'jenkins-runner-ansible'
+
+// The only argument required for Docker commands should be the following,
+// which tells the new container how to reach the APIC.
 def DOCKER_ARGS = "--add-host ${APIC_HOST}:${APIC_IP}"
 
+// Start of the Pipeline declaration.
 pipeline{
+    // This pipeline may run on any Jenkins agent.  In this lab,
+    // there is only one node - so it will be used.  In a production
+    // environment, there may be many Jenkins nodes available for scalable
+    // testing.
     agent any
 
+    // Set options for this pipeline.
     options {
-        // Required for initial workspace cleanup - do not immediately
-        // grab code from the repository when launched.
+        // Do not immediately grab code from the repository when launched.
+        // This is required for the initial workspace cleanup task - otherwise,
+        // Jenkins will checkout the code from GitLab and subsequently delete
+        // it.
         skipDefaultCheckout(true)
     }
 
     stages {
+        // Stage: Tell GitLab that the build is pending.  Also clean any old
+        // files from previous builds and checkout a fresh copy of code from
+        // the remote repository.
         stage('Prepare workspace and pull code') {
             steps {
                 echo "Updating GitLab commit status..."
@@ -31,6 +64,9 @@ pipeline{
                 checkout scm
             }
         }
+        // Stage: Tell GitLab that the build is now running.  Afterward,
+        // Create a new pyATS Docker container and use pyATS Blitz to save a
+        // snapshot of the APIC as it is currently configured.
         stage('Pre-change APIC snapshot') {
             agent {
                 docker {
@@ -49,6 +85,8 @@ pipeline{
                 }
             }
         }
+        // Stage: Create an Ansible container, set environment variables, and
+        // begin the testing process.
         stage('Ansible') {
             agent {
                 docker {
@@ -58,10 +96,20 @@ pipeline{
                 }
             }
             environment {
+                // Ansible should not interactively prompt for the Vault
+                // password as this is an automated process.
+                // Also, Jenkins will create a file with the Vault decryption
+                // secret which Ansible can read.  Specify the name of that
+                // file in the ANSIBLE_VAULT_PASSWORD_FILE environment
+                // variable.
                 ANSIBLE_ASK_VAULT_PASS = 'false'
                 ANSIBLE_VAULT_PASSWORD_FILE = "${ANSIBLE_VAULT_FILE}"
             }
+            // A new set of stages to perform within the Ansible container.
             stages {
+                // Stage: Install any Ansible Galaxy roles or collections
+                // such as the Cisco.Aci collection.  Also install any required
+                // Python packages if there is a requirements.txt file present.
                 stage('Build') {
                     steps {
                         dir('ansible-testing') {
@@ -78,6 +126,11 @@ pipeline{
                         }
                     }
                 }
+                // Stage: Create the Ansible vault password file which contains
+                // the secret for decryption.  Afterward, run ansible-lint to
+                // validate the Playbook syntax and run the play in
+                // 'check mode' to see what Ansible will actually try to
+                // perform.
                 stage('Test') {
                     steps {
                         dir('ansible-testing') {
@@ -94,6 +147,12 @@ pipeline{
                         }
                     }
                 }
+                // Stage: If the job has made it this far, all tests have
+                // passed.  Prompt to proceed or abort the deploy to production
+                // In an actual environment, we would set the inventory to the
+                // production inventory file (or omit if ansible.cfg specifies
+                // the correct production inventory file).  This stage will
+                // execute the playbook and change configuration in the APIC.
                 stage('Deploy') {
                     steps {
                         timeout(time: 10, unit: 'MINUTES') {
@@ -107,7 +166,10 @@ pipeline{
                 }
             }
         }
-
+        // Stage: The Ansible playbook has been deployed to production.
+        // Now create another pyATS container, take a snapshot of the
+        // post-change APIC configuration, and compare it via 'pyats diff'
+        // to the pre-change snapshot taken earlier.
         stage('Post-change APIC snapshot and generate diff') {
             agent {
                 docker {
@@ -132,18 +194,30 @@ pipeline{
             echo "Job execution complete."
         }
         success {
+            // If everything was successful, update the GitLab commit status
+            // to indicate the test success.  Also grab any files generated
+            // during the "pyats diff" command and save those as artifacts.
+            // If no configuration was changed, there may be no artifacts -
+            // so "allowEmptyArchive: true" is required to ensure this does
+            // not generate a failure.
             echo "Updating GitLab commit status..."
             updateGitlabCommitStatus(name: 'build', state: 'success')
             echo "Archiving artifacts..."
             archiveArtifacts(artifacts : 'pyats/snapshot_diff/*.json', allowEmptyArchive: true)
         }
         unsuccessful {
+            // There was a failure along the way.  Tell GitLab that the
+            // pipeline failed and generate some useful messages.
             echo "Updating GitLab commit status..."
             updateGitlabCommitStatus(name: 'build', state: 'failed')
             echo "Job execution status is failed, please check error logs"
         }
         cleanup {
-            // Cleanup workspace
+            // Cleanup the workspace after the build.  If the build did not
+            // succeed or failed, leave all files in place so you may
+            // investigate.  Note that re-running this job will perform the
+            // initial cleanup task, which may or may not be desirable
+            // depending on your use case!
             echo "Performing post-job cleanup..."
             cleanWs(cleanWhenNotBuilt: false,
                     cleanWhenFailure: false,
