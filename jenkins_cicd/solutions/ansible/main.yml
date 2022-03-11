@@ -1,0 +1,56 @@
+---
+- name: Example Ansible playbook for CICD Pipeline
+  hosts: apic
+  gather_facts: false
+  environment:
+    ACI_HOST: "{{ ansible_host }}"
+    ACI_USERNAME: "{{ vault_ansible_user }}"
+    ACI_PASSWORD: "{{ vault_ansible_password }}"
+    ACI_VALIDATE_CERTS: false
+  vars:
+    global_object_state: absent
+
+  tasks:
+    #
+    # TODO: add a new Ansible task to create vrf "pipeline" inside the
+    # "Operations" tenant in APIC
+    #
+    - name: Add a new VRF inside an existing tenant
+      cisco.aci.aci_vrf:
+        tenant: Operations
+        vrf: pipeline
+        state: "{{ global_object_state }}"
+
+    - name: Perform the following tasks using variables in a block statement
+      block:
+        - name: Create the tenant
+          cisco.aci.aci_tenant:
+            tenant: "{{ tenant_name }}"
+            state: "{{ global_object_state }}"
+
+        - name: Create a VRF
+          cisco.aci.aci_vrf:
+            tenant: "{{ tenant_name }}"
+            vrf: "{{ vrf_name }}"
+            state: "{{ global_object_state }}"
+
+        - name: Create a bridge domain
+          cisco.aci.aci_bd:
+            tenant: "{{ tenant_name }}"
+            vrf: "{{ vrf_name }}"
+            bd: "{{ bd_name }}"
+            state: "{{ global_object_state }}"
+
+        - name: Create subnets
+          cisco.aci.aci_bd_subnet:
+            tenant: "{{ tenant_name }}"
+            bd: "{{ bd_name }}"
+            gateway: "{{ tenant_subnet | ansible.netcommon.ipaddr('ip') }}"
+            mask: "{{ tenant_subnet | ansible.netcommon.ipaddr('prefix') }}"
+            state: "{{ global_object_state }}"
+      vars:
+        tenant_name: pipeline_tenant
+        vrf_name: pipeline_vrf
+        bd_name: pipeline_hosts
+        tenant_subnet: 172.31.100.1/24
+

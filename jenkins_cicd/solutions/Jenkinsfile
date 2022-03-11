@@ -1,31 +1,5 @@
-//
-// BEGIN Variable definitions
-// Any variable here may be used in the Jenkinsfile using the syntax
-// ${VARIABLE_NAME}
-//
-// Define the name of the Ansible playbook to run
-def ANSIBLE_PLAYBOOK = 'main.yml'
-
-// Define the name of a file to create which contains the secret used to
-// decrypt the Ansible Vault.  This file will be removed upon termination
-// of the Ansible container.
-def ANSIBLE_VAULT_FILE = 'secrets.txt'
-
-// The TEST environment inventory file.  For this lab, the ansible.cfg
-// is configured to use the Production inventory file - this inventory
-// will be overridden during the test stages by providing this filename
-// as an argument to Ansible's -i <inventory> parameter.
-def ANSIBLE_TEST_INVENTORY = 'inventory-test.yml'
-
-// CHANGE SHOULD NOT BE REQUIRED
-// The APIC Host and IP Addresses have been configured during lab setup
-// and should match these values.  If the IP address for host 'apic' does
-// not match, the value may need to be updated.
-def APIC_HOST = 'apic'
-def APIC_IP = '10.10.20.14'
-
 // --------------------------------------------------------------------------
-// BEGIN - DO NOT CHANGE
+// BEGIN VARIABLE DEFINITIONS - DO NOT CHANGE
 //
 // The DOCKER_PYATS_IMAGE and DOCKER_ANSIBLE_IMAGE refer to Docker containers
 // which have been pre-built for the lab environment
@@ -34,14 +8,10 @@ def DOCKER_ANSIBLE_IMAGE = 'jenkins-runner-ansible'
 
 // The only argument required for Docker commands should be the following,
 // which tells the new container how to reach the APIC.
-def DOCKER_ARGS = "--add-host ${APIC_HOST}:${APIC_IP}"
+def DOCKER_ARGS = "--add-host apic:10.10.20.14"
 //
-// END - DO NOT CHANGE
+// END VARIABLE DEFINITIONS - DO NOT CHANGE
 // --------------------------------------------------------------------------
-
-//
-// END Variable definitions
-//
 
 
 // Start of the Pipeline declaration.
@@ -116,16 +86,27 @@ pipeline{
                 // file in the ANSIBLE_VAULT_PASSWORD_FILE environment
                 // variable.
                 ANSIBLE_ASK_VAULT_PASS = 'false'
-                ANSIBLE_VAULT_PASSWORD_FILE = "${ANSIBLE_VAULT_FILE}"
+                ANSIBLE_VAULT_PASSWORD_FILE = 'secrets.txt'
+
+                // Define the name of the Ansible playbook to run
+                ANSIBLE_PLAYBOOK = 'main.yml'
+
+                // The TEST environment inventory file.  For this lab, the ansible.cfg
+                // is configured to use the Production inventory file - this inventory
+                // will be overridden during the test stages by providing this filename
+                // as an argument to Ansible's -i <inventory> parameter.
+                ANSIBLE_TEST_INVENTORY = 'inventory-test.yml'
+
             }
             // A new set of stages to perform within the Ansible container.
             stages {
                 // Stage: Install any Ansible Galaxy roles or collections
-                // such as the Cisco.Aci collection.  Also install any required
-                // Python packages if there is a requirements.txt file present.
+                // such as the Cisco.Aci collection if a requirements.yml file
+                // is present.  Also install any required Python packages if
+                // there is a requirements.txt file present.
                 stage('Build') {
                     steps {
-                        dir('ansible-testing') {
+                        dir('ansible') {
                             script {
                                 if (fileExists('requirements.yml')) {
                                     echo "Installing Ansible roles and modules..."
@@ -136,6 +117,12 @@ pipeline{
                                     sh "pip install -r requirements.txt"
                                 }
                             }
+
+                            echo "Creating Ansible vault secret file..."
+                            withCredentials([string(credentialsId: 'ANSIBLE_VAULT_PASSWORD', variable: 'VAULT_CREDS')]) {
+                                writeFile (file: ANSIBLE_VAULT_PASSWORD_FILE, text: env.VAULT_CREDS)
+                            }
+
                         }
                     }
                 }
@@ -146,12 +133,9 @@ pipeline{
                 // perform.
                 stage('Test') {
                     steps {
-                        dir('ansible-testing') {
-                            echo "Creating Ansible vault secret file..."
-                            withCredentials([string(credentialsId: 'ANSIBLE_VAULT_PASSWORD', variable: 'VAULT_CREDS')]) {
-                                writeFile (file: ANSIBLE_VAULT_FILE, text: env.VAULT_CREDS)
-                            }
-
+                        dir('ansible') {
+//
+// TODO: Add a step to run ansible-lint against the playbook before dry run
                             echo "Linting Ansible playbook..."
                             sh "ansible-lint ${ANSIBLE_PLAYBOOK}"
 
@@ -168,11 +152,18 @@ pipeline{
                 // execute the playbook and change configuration in the APIC.
                 stage('Deploy') {
                     steps {
-                        timeout(time: 10, unit: 'MINUTES') {
-                            input(message: "All tests successful.  Proceed with deployment?")
-                        }
-                        dir('ansible-testing') {
+
+// TODO: Add an input step to allow deploy or abort after testing
+                        // Optional example using a timeout before automatic failure
+                        // timeout(time: 10, unit: 'MINUTES') {
+                            // input(message: "All tests successful.  Proceed with deployment?")
+                        // }
+
+                        input(message: "All tests successful.  Proceed with deployment?")
+
+                        dir('ansible') {
                             echo "Running Ansible playbook..."
+// TODO: Add the step to execute the Ansible playbook
                             sh "ansible-playbook ${ANSIBLE_PLAYBOOK}"
                         }
                     }
@@ -217,6 +208,9 @@ pipeline{
             updateGitlabCommitStatus(name: 'build', state: 'success')
             echo "Archiving artifacts..."
             archiveArtifacts(artifacts : 'pyats/snapshot_diff/*.json', allowEmptyArchive: true)
+// TODO: Collect pre_snapshot and post_snapshot tenant.json files as artifacts
+            archiveArtifacts(artifacts : 'pyats/pre_snapshots/tenant.json', allowEmptyArchive: true)
+            archiveArtifacts(artifacts : 'pyats/post_snapshots/tenant.json', allowEmptyArchive: true)
         }
         unsuccessful {
             // There was a failure along the way.  Tell GitLab that the
