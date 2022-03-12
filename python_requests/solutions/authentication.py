@@ -22,7 +22,7 @@ def get_token():
     payload = json.dumps({
         "aaaUser": {
             "attributes": {
-            "name": "admin",
+            "name": "developer",
             "pwd": "C1sco12345"
             }
         }

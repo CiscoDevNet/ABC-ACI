@@ -48,7 +48,7 @@ if __name__ == "__main__":
     
     # URL and credentials information:
     URL = "https://apic"
-    USERNAME = "admin"
+    USERNAME = "developer"
     PASSWORD = "C1sco12345"
 
     print_tenants(URL, USERNAME,PASSWORD)
