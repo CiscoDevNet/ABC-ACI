@@ -1,9 +1,0 @@
-.DS_Store
-.vscode
-aci-ansible/collections/ansible_collections/
-__pycache__
-pydme/
-acitoolkit/
-arya/
-webarya/
-venv/
