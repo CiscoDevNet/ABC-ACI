@@ -8,7 +8,7 @@ def DOCKER_ANSIBLE_IMAGE = 'jenkins-runner-ansible'
 
 // The only argument required for Docker commands should be the following,
 // which tells the new container how to reach the APIC.
-def DOCKER_ARGS = "--add-host apic:10.10.20.14"
+def DOCKER_ARGS = "--add-host apic:192.168.10.104"
 //
 // END VARIABLE DEFINITIONS - DO NOT CHANGE
 // --------------------------------------------------------------------------
