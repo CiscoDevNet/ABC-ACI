@@ -23,7 +23,7 @@ def get_token():
         "aaaUser": {
             "attributes": {
             "name": "developer",
-            "pwd": "C1sco12345"
+            "pwd": "1234QWer"
             }
         }
     })

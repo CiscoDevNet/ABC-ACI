@@ -1,3 +1,3 @@
 LOGIN    = "developer"
-PASSWORD = "C1sco12345"
+PASSWORD = "1234QWer"
 URL      = "https://apic"

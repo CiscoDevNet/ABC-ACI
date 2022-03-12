@@ -70,7 +70,7 @@ if __name__ == "__main__":
     # URL and credentials information:
     URL = "https://apic"
     USERNAME = "developer"
-    PASSWORD = "C1sco12345"
+    PASSWORD = "1234QWer"
 
     # the top level object on which operations will be made
     POL_UNI = pol.Uni('')
