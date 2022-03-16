@@ -31,17 +31,9 @@ from apic_helpers import (
 )
 
 # Create the logger
+LOGLEVEL = logging.INFO
 logger = logging.getLogger(__name__)
-
-# Set logger options
-CONSOLE_LOGLEVEL = logging.INFO
-LOG_FORMAT = logging.Formatter("%(levelname)s: %(message)s")
-
-# Initialize logging
-logger.setLevel(CONSOLE_LOGLEVEL)
-logging_stdout_handler = logging.StreamHandler()
-logging_stdout_handler.setFormatter(LOG_FORMAT)
-logger.addHandler(logging_stdout_handler)
+logging.basicConfig(level=LOGLEVEL, format="%(levelname)s: %(message)s")
 
 # Determine path of this script
 script_basepath = os.path.dirname(__file__)
