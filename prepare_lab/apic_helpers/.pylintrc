@@ -1,0 +1,12 @@
+[TYPECHECK]
+# List of module names for which member attributes should not be checked
+# (useful for modules/projects where namespaces are manipulated during runtime
+# and thus existing member attributes cannot be deduced by static analysis. It
+# supports qualified module names, as well as Unix pattern matching.
+ignored-modules=cobra
+
+# [DESIGN]
+# Maximum number of locals inside a function or method.  Given some functions
+# require a large number of defaults to be set based on **kwargs or similar,
+# increase from the default of 15
+max-locals=20

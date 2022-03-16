@@ -1,0 +1,45 @@
+# Example lab_setup.yml file.  This will be used as the default if no filename
+# is specified to prepare_lab.py using the -c parameter.
+---
+tenants:
+  - tenant:
+      name: Sales
+    vrfs:
+      - name: Presales_VRF
+    bridge_domains:
+      - name: Presales_BD
+        vrf: Presales_VRF
+        subnets:
+          - ip: 10.0.1.254/24
+      - name: DB_BD
+        vrf: Presales_VRF
+        subnets:
+          - ip: 10.0.2.254/24
+    application_profiles:
+      - name: eCommerce
+        app_epg:
+          - name: Web_EPG
+            consumed_contracts:
+              - BasicServices_Ct
+          - name: App_EPG
+            provided_contracts:
+              - BasicServices_Ct
+          - name: DB_EPG
+    contract_filters:
+      - name: Basic_Fltr
+        filter_entries:
+          - name: ICMP
+            ether_type: ip
+            proto: icmp
+          - name: TCP22
+            ether_type: ip
+            proto: tcp
+            dest_port_from: ssh
+            dest_port_to: ssh
+            stateful: true
+    contracts:
+      - name: BasicServices_Ct
+        subjects:
+          - name: BasicServices_Subj
+            filters:
+              - Basic_Fltr

@@ -1,0 +1,11 @@
+---
+tenants:
+  - tenant:
+      name: Sales
+    vrfs:
+      - name: Presales_VRF
+    bridge_domains:
+      - name: Presales_BD
+        vrf: Presales_VRF
+        subnets:
+          - ip: 10.0.1.254/24

@@ -1,0 +1,109 @@
+---
+tenants:
+  - tenant:
+      name: Sales
+    vrfs:
+      - name: Presales_VRF
+    bridge_domains:
+      - name: Presales_BD
+        vrf: Presales_VRF
+        subnets:
+          - ip: 10.0.1.254/24
+      - name: DB_BD
+        vrf: Presales_VRF
+        subnets:
+          - ip: 10.0.2.254/24
+    application_profiles:
+      - name: eCommerce
+        app_epg:
+          - name: Web_EPG
+            consumed_contracts:
+              - BasicServices_Ct
+          - name: App_EPG
+            provided_contracts:
+              - BasicServices_Ct
+          - name: DB_EPG
+    contract_filters:
+      - name: Basic_Fltr
+        filter_entries:
+          - name: ICMP
+            ether_type: ip
+            proto: icmp
+          - name: TCP22
+            ether_type: ip
+            proto: tcp
+            dest_port_from: ssh
+            dest_port_to: ssh
+            stateful: true
+    contracts:
+      - name: BasicServices_Ct
+        subjects:
+          - name: BasicServices_Subj
+            filters:
+              - Basic_Fltr
+  - tenant:
+      name: Development
+    vrfs:
+      - name: dev
+    bridge_domains:
+      - name: dev_hosts
+        vrf: dev
+        subnets:
+          - ip: 192.168.16.1/24
+          - ip: 192.168.17.1/24
+    application_profiles:
+      - name: my_custom_app
+        description: Development custom application
+        app_epg:
+          - name: web_servers
+            description: Custom application web servers
+            consumed_contracts:
+              - app
+          - name: app_servers
+            description: Custom application app servers
+            provided_contracts:
+              - app
+    contract_filters:
+      - name: app
+        description: App server filter
+        filter_entries:
+          - name: tcp_8443
+            description: App server port
+            ether_type: ip
+            proto: tcp
+            dest_port_from: http
+            dest_port_to: http
+          - name: udp_19703
+            description: App server streaming data
+            ether_type: ip
+            proto: udp
+            dest_port_from: 19703
+            dest_port_to: 19703
+      - name: web
+        description: Web server filter
+        filter_entries:
+          - name: tcp_443
+            description: HTTPS
+            ether_type: ip
+            proto: tcp
+            dest_port_from: https
+            dest_port_to: https
+          - name: tcp_80
+            description: HTTP
+            ether_type: ip
+            proto: tcp
+            dest_port_from: http
+            dest_port_to: http
+    contracts:
+      - name: web
+        description: Web server contract
+        subjects:
+          - name: dev_web
+            filters:
+              - web
+      - name: app
+        description: App server contract
+        subjects:
+          - name: dev_app
+            filters:
+              - app
