@@ -3,6 +3,7 @@ aci_applications.py
 
 ACI Application helper functions for lab preparation script
 """
+from typing import List
 import logging
 import cobra.model.fv
 from .ApicTypeHints import AciTenantApplicationProfile, AciApplicationEpg
@@ -106,7 +107,7 @@ def create_epg_consumed_contract(
 
 def build_applications(
     tenant_mo: cobra.model.fv.Tenant,
-    application_profiles: list[AciTenantApplicationProfile],
+    application_profiles: List[AciTenantApplicationProfile],
 ) -> None:
     """
     Wrapper procedure to build application profiles, EPGs, and contract

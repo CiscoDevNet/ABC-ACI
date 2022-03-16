@@ -3,6 +3,7 @@ aci_contracts.py
 
 ACI Contract helper functions for lab preparation
 """
+from typing import List
 import logging
 import cobra.model.fv
 import cobra.model.vz
@@ -186,7 +187,7 @@ def associate_contract_subject_to_filter(
 
 
 def build_contract_filters(
-    tenant_mo: cobra.model.fv.Tenant, contract_filters: list[AciContractFilter]
+    tenant_mo: cobra.model.fv.Tenant, contract_filters: List[AciContractFilter]
 ) -> None:
     """
     Wrapper procedure to build contract filters and associated filter entries.
@@ -230,7 +231,7 @@ def build_contract_filters(
 
 
 def build_contracts(
-    tenant_mo: cobra.model.fv.Tenant, contracts: list[AciContract]
+    tenant_mo: cobra.model.fv.Tenant, contracts: List[AciContract]
 ) -> None:
     """
     Wrapper procedure to build contracts, contract subjects, and associate

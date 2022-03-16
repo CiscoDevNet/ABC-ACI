@@ -3,6 +3,7 @@ aci_tenants.py
 
 ACI Tenant helper functions for lab preparation
 """
+from typing import List
 import logging
 import cobra.model.pol
 import cobra.model.fv
@@ -137,7 +138,7 @@ def create_bd_subnet(
     return new_subnet
 
 
-def build_vrfs(tenant_mo: cobra.model.fv.Tenant, vrfs: list[AciTenantVrf]) -> None:
+def build_vrfs(tenant_mo: cobra.model.fv.Tenant, vrfs: List[AciTenantVrf]) -> None:
     """
     Wrapper procedure to create VRFs.  Example expected input from config
     file is a list in the format:
@@ -157,7 +158,7 @@ def build_vrfs(tenant_mo: cobra.model.fv.Tenant, vrfs: list[AciTenantVrf]) -> No
 
 
 def build_bridge_domains(
-    tenant_mo: cobra.model.fv.Tenant, bridge_domains: list[AciTenantBridgeDomain]
+    tenant_mo: cobra.model.fv.Tenant, bridge_domains: List[AciTenantBridgeDomain]
 ) -> None:
     """
     Wrapper procedure to create bridge domains, VRFs, subnets, and associate

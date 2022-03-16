@@ -1,0 +1,1 @@
+../prepare_lab/prepare_lab.sh
