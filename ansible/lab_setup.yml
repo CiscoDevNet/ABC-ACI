@@ -17,12 +17,15 @@ tenants:
       - name: eCommerce
         app_epg:
           - name: Web_EPG
+            bridge_domain: Presales_BD
             consumed_contracts:
               - BasicServices_Ct
           - name: App_EPG
+            bridge_domain: Presales_BD
             provided_contracts:
               - BasicServices_Ct
           - name: DB_EPG
+            bridge_domain: DB_BD
     contract_filters:
       - name: Basic_Fltr
         filter_entries:

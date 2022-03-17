@@ -13,5 +13,6 @@ tenants:
       - name: eCommerce
         app_epg:
           - name: Web_EPG
+            bridge_domain: Presales_BD
           - name: App_EPG
-
+            bridge_domain: Presales_BD

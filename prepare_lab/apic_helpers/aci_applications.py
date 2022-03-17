@@ -71,6 +71,21 @@ def create_app_epg(
     return new_epg
 
 
+def associate_epg_to_bridge_domain(
+    epg_mo: cobra.model.fv.AEPg, bd_name: str
+) -> cobra.model.fv.RsBd:
+    """
+    Associate an Application EPG with a bridge domain
+
+    :param epg_mo: Cobra SDK Application EPG object reference
+    :param bd_name: Name of the bridge domain to be associated
+    :return: Cobra object representing the new EPG/BD association
+    """
+    logger.info("Associating EPG '%s' to bridge domain '%s'...", epg_mo.name, bd_name)
+    epg_association = cobra.model.fv.RsBd(epg_mo, tnFvBDName=bd_name)
+    return epg_association
+
+
 def create_epg_provided_contract(
     epg_mo: cobra.model.fv.AEPg, contract_name: str
 ) -> object:
@@ -151,6 +166,9 @@ def build_applications(
             # Catch KeyError if no Application EPGs are defined
             for epg in application_profile["app_epg"]:
                 new_epg = create_app_epg(app_profile_mo=new_app, epg_data=epg)
+                associate_epg_to_bridge_domain(
+                    epg_mo=new_epg, bd_name=epg["bridge_domain"]
+                )
                 try:
                     # Catch KeyError if no consumed contracts are defined
                     for consumed_contract in epg["consumed_contracts"]:

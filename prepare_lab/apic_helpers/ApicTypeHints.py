@@ -60,6 +60,7 @@ class AciApplicationEpg(AciCommonAttributes):
     """
 
     name: str
+    bridge_domain: str
     provider_label_match: Literal[
         "All", "AtleastOne", "AtmostOne", "None", "defaultValue", None
     ]
