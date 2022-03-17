@@ -94,11 +94,11 @@ pipeline{
                             script {
                                 if (fileExists('requirements.yml')) {
                                     echo "Installing Ansible roles and modules..."
-                                    sh "ansible-galaxy install -r requirements.yml"
+                                    // sh "ansible-galaxy install -r requirements.yml"
                                 }
                                 if (fileExists('requirements.txt')) {
                                     echo "Installing additional Python packages..."
-                                    sh "pip install -r requirements.txt"
+                                    // sh "pip install -r requirements.txt"
                                 }
                             }
                             echo "Creating Ansible vault secret file..."
