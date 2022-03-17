@@ -38,7 +38,7 @@ pipeline{
             agent {
                 docker {
                     image "jenkins-runner-pyats"
-                    args "--add-host apic:10.10.20.14"
+                    args "--add-host apic:192.168.10.104"
                     reuseNode true
                 }
             }
@@ -58,7 +58,7 @@ pipeline{
             agent {
                 docker {
                     image "jenkins-runner-ansible"
-                    args "--add-host apic:10.10.20.14"
+                    args "--add-host apic:192.168.10.104"
                     reuseNode true
                 }
             }
@@ -156,7 +156,7 @@ pipeline{
             agent {
                 docker {
                     image "jenkins-runner-pyats"
-                    args "--add-host apic:10.10.20.14"
+                    args "--add-host apic:192.168.10.104"
                     reuseNode true
                 }
             }
