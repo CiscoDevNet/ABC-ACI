@@ -9,21 +9,44 @@
 
 # Obtain the true location of this script
 SCRIPT_TRUEPATH="$( readlink -f $0 )"
+
 # Extract the path of this script from the true path
 SCRIPT_BASEPATH="$( dirname ${SCRIPT_TRUEPATH} )"
+
 # Get the path for the called script (not the true script path)
-CALLED_SCRIPT_PATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+LAB_PATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+
 # Python interpreter
 PYTHON_BIN=~student/py3venv/bin/python
-# Name of the script to run
-PYTHON_SCRIPTNAME=prepare_lab.py
+
+# Full path and name of the script to run
+PYTHON_SCRIPT="${SCRIPT_BASEPATH}/prepare_lab.py"
+
 # Expected config file (called script path and filename)
-LAB_CONFIG="${CALLED_SCRIPT_PATH}/lab_setup.yml"
-# Full path and name of the Python script to execute
-PYTHON_SCRIPT="${SCRIPT_BASEPATH}/${PYTHON_SCRIPTNAME}"
+LAB_CONFIG="${LAB_PATH}/lab_setup.yml"
+
 # Generate the commandline
 CMD="${PYTHON_BIN} ${PYTHON_SCRIPT} -c ${LAB_CONFIG}"
 
+LOCAL_SETUP_SCRIPT="${LAB_PATH}/localsetup/local_setup.sh"
+
 # And execute the script...
-echo "Running lab setup script..."
+echo
+echo "******************************************************************************"
+echo "Beginning lab preparation tasks..."
+echo "******************************************************************************"
+echo
+
 ${CMD}
+
+
+# If there's a lab-local setup script, source it
+if [ -f ${LOCAL_SETUP_SCRIPT} ]; then
+  . ${LOCAL_SETUP_SCRIPT}
+fi
+
+echo
+echo "******************************************************************************"
+echo "Lab preparation tasks complete!"
+echo "******************************************************************************"
+echo

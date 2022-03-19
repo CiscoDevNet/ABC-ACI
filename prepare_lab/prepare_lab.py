@@ -73,6 +73,8 @@ if __name__ == "__main__":
         logger.critical("Error encountered in lab setup script:\n\t%s", err)
         sys.exit(255)
 
+    logger.info("\n%s\nBeginning APIC configuration.\n%s", "*" * 78, "*" * 78)
+
     # Create the Cobra session
     ls = cobra.mit.session.LoginSession(APIC_URL, APIC_USERNAME, APIC_PASSWORD)
     md = cobra.mit.access.MoDirectory(ls)
@@ -126,4 +128,4 @@ if __name__ == "__main__":
     # Commit all changes to pol:Uni
     commit_config(mo_directory=md, managed_object=polUni)
 
-    logger.info("\n%s\nLab setup complete.\n%s", "*" * 78, "*" * 78)
+    logger.info("\n%s\nAPIC configuration complete.\n%s", "*" * 78, "*" * 78)
