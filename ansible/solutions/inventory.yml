@@ -4,3 +4,4 @@ all:
     apic:
       ansible_host: apic
       ansible_connection: local
+      apic_tls_verify: false

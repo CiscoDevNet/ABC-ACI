@@ -1,17 +1,16 @@
 ---
-
 - name: Build contracts
   cisco.aci.aci_contract:
     tenant: "{{ tenant_info.name }}"
-    description: "{{ current_contract.description | default(omit) }}"
+    description: "{{ current_contract.description | default() }}"  # <TODO> Omit this parameter if no description is present
     contract: "{{ current_contract.name }}"
     state: "{{ global_object_state }}"
 
 - name: Create contract subjects for filters
   cisco.aci.aci_contract_subject:
     tenant: "{{ tenant_info.name }}"
-    description: "{{ item.description | default(omit) }}"
-    contract: "{{ current_contract.name }}"
+    description: "{{ item.description }}"  # <TODO> Omit this parameter if no description is present
+    contract: # <TODO> Use a variable to populate the contract name
     subject: "{{ current_contract.subject }}"
     state: "{{ global_object_state }}"
 
@@ -20,7 +19,7 @@
     tenant: "{{ tenant_info.name }}"
     subject: "{{ current_contract.subject }}"
     contract: "{{ current_contract.name }}"
-    filter: "{{ current_contract.filter }}"
+    filter: # <TODO> Use a variable to populate the contract filter name
     state: "{{ global_object_state }}"
 
 - name: Associate EPGs with contracts
@@ -28,7 +27,7 @@
     tenant: "{{ tenant_info.name }}"
     ap: "{{ current_contract.app_profile }}"
     contract: "{{ current_contract.name }}"
-    epg: "{{ item.epg_name }}"
+    epg: # <TODO> Use a loop variable to populate the name of the EPG to associate
     contract_type: "{{ item.direction }}"
     state: "{{ global_object_state }}"
   loop: "{{ current_contract.contract_to_epg | default([]) }}"

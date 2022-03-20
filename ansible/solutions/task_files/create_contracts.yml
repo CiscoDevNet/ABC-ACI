@@ -1,5 +1,4 @@
 ---
-
 - name: Build contracts
   cisco.aci.aci_contract:
     tenant: "{{ tenant_info.name }}"

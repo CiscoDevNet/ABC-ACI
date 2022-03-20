@@ -9,13 +9,13 @@
     ACI_VALIDATE_CERTS: false
   tasks:
     - name: Create contract filters
-      include_tasks: "task_files/create_contract_filters.yml"
-      loop: "{{ tenant_info.contract_info.filters }}"
+      include_tasks: # <TODO> Specify the task file to include from the task_files directory
+      loop: "{{ tenant_info. }}"  # <TODO> Specify the list inside tenant_info to iterate
       loop_control:
-        loop_var: current_filter
+        loop_var: # <TODO> Specify the name of the loop variable to be created instead of "item"
 
     - name: Create contracts
-      include_tasks: "task_files/create_contracts.yml"
+      include_tasks: # <TODO> Specify the task file to include from the task_files directory
       loop: "{{ tenant_info.contract_info.contracts }}"
       loop_control:
-        loop_var: current_contract
+        loop_var: # <TODO> Specify the name of the loop variable to be created instead of "item"

@@ -4,14 +4,14 @@
   gather_facts: false
   environment:
     ACI_HOST: "{{ ansible_host }}"
-    ACI_USERNAME: "{{ vault_ansible_user }}"
-    ACI_PASSWORD: "{{ vault_ansible_password }}"
-    ACI_VALIDATE_CERTS: false
+    ACI_USERNAME: # <TODO> Use a variable to populate the APIC API username from the vault
+    ACI_PASSWORD: # <TODO> Use a variable to populate the APIC API password from the vault
+    ACI_VALIDATE_CERTS: # <TODO> Use a variable to specify TLS validation behavior
   tasks:
     - name: Build application profiles
       cisco.aci.aci_ap:
-        ap: "{{ item.name }}"
-        description: "{{ item.description }}"
+        ap: # <TODO> Use a loop variable for the app profile name
+        description: # <TODO> Use a loop variable for the app profile description
         tenant: "{{ tenant_info.name }}"
         state: "{{ global_object_state }}"
       loop: "{{ tenant_info.applications }}"
@@ -23,6 +23,6 @@
         bd: "{{ tenant_info.bd_name }}"
         ap: "{{ item.0.name }}"
         epg: "{{ item.1.name }}"
-        description: "{{ item.1.description }}"
+        description: # <TODO> Use a subelement loop variable for the EPG description
         state: "{{ global_object_state }}"
       loop: "{{ tenant_info.applications | subelements('app_epg') }}"

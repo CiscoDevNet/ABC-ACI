@@ -1,6 +1,3 @@
 ---
 all:
-  # <TODO>: Add hosts: definition
-    # <TODO> Add apic host
-      # <TODO> Add ansible_host variable and value
-      # <TODO> Add ansible_connection variable and method used for connection
+  # <TODO>: Build inventory structure for APIC with required variables

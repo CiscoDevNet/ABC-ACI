@@ -4,3 +4,4 @@ all:
     # <TODO> Add apic host
       # <TODO> Add ansible_host variable and value
       # <TODO> Add ansible_connection variable and method used for connection
+      # <TODO> Add apic_tls_verify variable and value

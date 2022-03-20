@@ -6,42 +6,42 @@
     - name: Create Tenant
       cisco.aci.aci_tenant:
         tenant: "{{ tenant_info.name }}"
-        state: "{{ global_object_state }}"  # <TODO> Use a variable to set the tenant state
+        state:  # <TODO> Use a variable to set the tenant state
         host: "{{ ansible_host }}"
         username: "{{ vault_ansible_user }}"
         password: "{{ vault_ansible_password }}"
-        validate_certs: false
+        validate_certs:  # <TODO> Use a variable to specify TLS validation
 
     - name: Create VRF
       cisco.aci.aci_vrf:
-        tenant: "{{ tenant_info.name }}"
-        vrf: "{{ tenant_info.vrf_name }}"  # <TODO> Use a variable to set the VRF name
+        tenant:  # <TODO> Use a variable to set the tenant name
+        vrf:  # <TODO> Use a variable to set the VRF name
         state: "{{ global_object_state }}"
         host: "{{ ansible_host }}"
         username: "{{ vault_ansible_user }}"
         password: "{{ vault_ansible_password }}"
-        validate_certs: false
+        validate_certs:  # <TODO> Use a variable to specify TLS validation
 
     - name: Create Bridge Domain
       cisco.aci.aci_bd:
-        tenant: "{{ tenant_info.name }}"
-        vrf: "{{ tenant_info.vrf_name }}"
+        tenant:  # <TODO> Use a variable to set the tenant name
+        vrf:  # <TODO> Use a variable to set the VRF name
         bd: "{{ tenant_info.bd_name }}"
-        state: "{{ global_object_state }}"
+        # <TODO> Use a parameter and variable to set the bridge domain state
         host: "{{ ansible_host }}"
         username: "{{ vault_ansible_user }}"
         password: "{{ vault_ansible_password }}"
-        validate_certs: false
+        validate_certs:  # <TODO> Use a variable to specify TLS validation
 
     - name: Create subnets
       cisco.aci.aci_bd_subnet:
-        tenant: "{{ tenant_info.name }}"
-        bd: "{{ tenant_info.bd_name }}"
-        gateway: "{{ item | ansible.netcommon.ipaddr('ip') }}"
-        mask: "{{ item | ansible.netcommon.ipaddr('prefix') }}"
+        tenant:  # <TODO> Use a variable to set the tenant name
+        bd:  # <TODO> Use a variable to set the bridge domain name
+        gateway: "{{ item | ansible.utils.ipaddr('') }}"  # <TODO> Use the ip parameter for subnet IP address
+        mask: "{{ item | ansible.utils }}"  # <TODO> Use a filter to generate the subnet prefix length
         state: "{{ global_object_state }}"
         host: "{{ ansible_host }}"
         username: "{{ vault_ansible_user }}"
         password: "{{ vault_ansible_password }}"
-        validate_certs: false
+        validate_certs:  # <TODO> Use a variable to specify TLS validation
       loop: "{{ tenant_info.subnets }}"

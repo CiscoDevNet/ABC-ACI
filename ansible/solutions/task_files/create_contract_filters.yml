@@ -2,7 +2,7 @@
 - name: Create filters
   cisco.aci.aci_filter:
     filter: "{{ current_filter.name }}"
-    description: "{{ current_filter.description }}"
+    description: "{{ current_filter.description | default(omit) }}"
     tenant: "{{ tenant_info.name }}"
     state: "{{ global_object_state }}"
 

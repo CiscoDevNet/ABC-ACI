@@ -10,7 +10,7 @@
         host: "{{ ansible_host }}"
         username: "{{ vault_ansible_user }}"
         password: "{{ vault_ansible_password }}"
-        validate_certs: false
+        validate_certs: "{{ apic_tls_verify }}"
 
     - name: Create a VRF
       cisco.aci.aci_vrf:
@@ -20,7 +20,7 @@
         host: "{{ ansible_host }}"
         username: "{{ vault_ansible_user }}"
         password: "{{ vault_ansible_password }}"
-        validate_certs: false
+        validate_certs: "{{ apic_tls_verify }}"
 
     - name: Create a bridge domain
       cisco.aci.aci_bd:
@@ -31,7 +31,7 @@
         host: "{{ ansible_host }}"
         username: "{{ vault_ansible_user }}"
         password: "{{ vault_ansible_password }}"
-        validate_certs: false
+        validate_certs: "{{ apic_tls_verify }}"
 
     - name: Create subnets
       cisco.aci.aci_bd_subnet:
@@ -43,5 +43,5 @@
         host: "{{ ansible_host }}"
         username: "{{ vault_ansible_user }}"
         password: "{{ vault_ansible_password }}"
-        validate_certs: false
+        validate_certs: "{{ apic_tls_verify }}"
       loop: "{{ tenant_info.subnets }}"
