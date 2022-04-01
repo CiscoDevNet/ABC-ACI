@@ -3,26 +3,10 @@
   hosts: apic
   gather_facts: false
   environment:
-    ACI_HOST: "{{ ansible_host }}"
-    ACI_USERNAME: "{{ vault_ansible_user }}"
-    ACI_PASSWORD: "{{ vault_ansible_password }}"
-    ACI_VALIDATE_CERTS: false
+    # <TODO> Set environment variables for APIC connectivity
   tasks:
-    - name: Build application profiles
-      cisco.aci.aci_ap:
-        ap: "{{ item.name }}"
-        description: "{{ item.description }}"
-        tenant: "{{ tenant_info.name }}"
-        state: "{{ global_object_state }}"
-      loop: "{{ tenant_info.applications }}"
-
-    # Loop over the list of App Profiles and nested EPG definitions
-    - name: Create Endpoint Groups
-      cisco.aci.aci_epg:
-        tenant: "{{ tenant_info.name }}"
-        bd: "{{ tenant_info.bd_name }}"
-        ap: "{{ item.0.name }}"
-        epg: "{{ item.1.name }}"
-        description: "{{ item.1.description }}"
-        state: "{{ global_object_state }}"
-      loop: "{{ tenant_info.applications | subelements('app_epg') }}"
+    - name: Create applications
+      include_tasks:  # <TODO> Include correct task file
+      # <TODO> Loop over tenant applications
+      loop_control:
+        # <TODO> Set loop control parameters

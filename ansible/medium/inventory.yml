@@ -3,3 +3,4 @@ all:
   hosts:
     # <TODO> Add apic host
       # <TODO> Add ansible_connection variable and method used for connection
+      # <TODO> Add credentials using vault variables

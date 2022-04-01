@@ -3,19 +3,16 @@
   hosts: apic
   gather_facts: false
   environment:
-    ACI_HOST: "{{ ansible_host }}"
-    ACI_USERNAME: "{{ vault_ansible_user }}"
-    ACI_PASSWORD: "{{ vault_ansible_password }}"
-    ACI_VALIDATE_CERTS: false
+    # <TODO> Set environment variables for APIC connectivity
   tasks:
     - name: Create contract filters
-      include_tasks: "task_files/create_contract_filters.yml"
+      include_tasks:  # <TODO> Include the correct task file
       loop: "{{ tenant_info.contract_info.filters }}"
       loop_control:
-        loop_var: current_filter
+        loop_var:  # <TODO> Set the name of the loop variable
 
     - name: Create contracts
-      include_tasks: "task_files/create_contracts.yml"
-      loop: "{{ tenant_info.contract_info.contracts }}"
+      include_tasks:  # <TODO> Include the correct task file
+      loop:  # <TODO> Loop over tenant contracts
       loop_control:
-        loop_var: current_contract
+        loop_var:  # <TODO> Set the name of the loop variable

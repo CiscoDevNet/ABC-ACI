@@ -14,9 +14,9 @@
     epg: "{{ item.name }}"
     description: "{{ item.description }}"
     state: "{{ global_object_state }}"
-  loop: "{{ current_application.app_epg }}"
+  loop:  # <TODO> Use a variable to specify the list to iterate
   loop_control:
-    label: "{{ item.name }}"
+    label:  # <TODO> Set the loop output using a key from the 'item' variable
 
 - name: Create EPG consumed contracts
   cisco.aci.aci_epg_to_contract:
@@ -26,7 +26,7 @@
     epg: "{{ item.0.name }}"
     contract_type: consumer
     state: "{{ global_object_state }}"
-  loop: "{{ current_application.app_epg | subelements('consumed_contracts', {'skip_missing': True}) }}"
+  loop: "{{ current_application.app_epg | subelements('') }}"  # <TODO> Specify list for subelements and skip if list is missing
   loop_control:
     label: "EPG: '{{ item.0.name }}' consuming contract '{{ item.1 }}'"
 
@@ -38,6 +38,6 @@
     epg: "{{ item.0.name }}"
     contract_type: provider
     state: "{{ global_object_state }}"
-  loop: "{{ current_application.app_epg | subelements('provided_contracts', {'skip_missing': True}) }}"
+  loop: "{{ current_application.app_epg | subelements('') }}"  # <TODO> Specify list for subelements and skip if list is missing
   loop_control:
-    label: "EPG: '{{ item.0.name }}' providing contract '{{ item.1 }}'"
+    label:  # <TODO> Change the default loop output using variables

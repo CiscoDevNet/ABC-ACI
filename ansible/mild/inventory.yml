@@ -1,5 +1,7 @@
 ---
 all:
   hosts:
-    # <TODO> Add apic host
-      # <TODO> Add ansible_connection variable and method used for connection
+    apic:
+      ansible_connection:  # <TODO> Add connection method
+      ansible_user:  # <TODO> Use vault variable to set API username
+      ansible_password:  # <TODO> Use vault variable to set API password
