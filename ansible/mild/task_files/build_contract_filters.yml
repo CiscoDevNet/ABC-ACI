@@ -1,8 +1,8 @@
 ---
 - name: Create filters
   cisco.aci.aci_filter:
-    filter: "{{ current_filter.name }}"
-    description: "{{ current_filter.description }}"
+    filter:  # <TODO> Use a variable to set the name of the filter
+    description:  "{{ current_filter.description | default() }}"  # <TODO> Omit this parameter if no description defined
     tenant: "{{ tenant_info.name }}"
     state: "{{ global_object_state }}"
 

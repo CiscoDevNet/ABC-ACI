@@ -3,45 +3,47 @@
   hosts: apic
   gather_facts: false
   tasks:
-    - name: Create the tenant
+    - name: Create tenant
       cisco.aci.aci_tenant:
         tenant: "{{ tenant_info.name }}"
         state: "{{ global_object_state }}"
         host: "{{ ansible_host }}"
-        username: "{{ vault_ansible_user }}"
-        password: "{{ vault_ansible_password }}"
-        validate_certs: false
+        username: "{{ ansible_user }}"
+        password: "{{ ansible_password }}"
+        validate_certs: "{{ apic_tls_verify }}"
 
-    - name: Create a VRF
+    - name: Create VRFs
       cisco.aci.aci_vrf:
         tenant: "{{ tenant_info.name }}"
-        vrf: "{{ tenant_info.vrf_name }}"
+        vrf: "{{ item.name }}"
         state: "{{ global_object_state }}"
         host: "{{ ansible_host }}"
-        username: "{{ vault_ansible_user }}"
-        password: "{{ vault_ansible_password }}"
-        validate_certs: false
+        username: "{{ ansible_user }}"
+        password: "{{ ansible_password }}"
+        validate_certs: "{{ apic_tls_verify }}"
+      loop: "{{ tenant_info.vrfs }}"
 
-    - name: Create a bridge domain
+    - name: Create bridge domains
       cisco.aci.aci_bd:
         tenant: "{{ tenant_info.name }}"
-        vrf: "{{ tenant_info.vrf_name }}"
-        bd: "{{ tenant_info.bd_name }}"
+        vrf: "{{ item.vrf }}"
+        bd: "{{ item.name }}"
         state: "{{ global_object_state }}"
         host: "{{ ansible_host }}"
         username: "{{ vault_ansible_user }}"
         password: "{{ vault_ansible_password }}"
-        validate_certs: false
+        validate_certs: "{{ apic_tls_verify }}"
+      loop: "{{ tenant_info.bridge_domains }}"
 
     - name: Create subnets
       cisco.aci.aci_bd_subnet:
         tenant: "{{ tenant_info.name }}"
-        bd: "{{ tenant_info.bd_name }}"
-        gateway: "{{ item | ansible.netcommon.ipaddr('ip') }}"
-        mask: "{{ item | ansible.netcommon.ipaddr('prefix') }}"
+        bd: "{{ item.0.name }}"
+        gateway: "{{ item.1.ip | ansible.utils.ipaddr('ip') }}"
+        mask: "{{ item.1.ip | ansible.utils.ipaddr('prefix') }}"
         state: "{{ global_object_state }}"
         host: "{{ ansible_host }}"
-        username: "{{ vault_ansible_user }}"
-        password: "{{ vault_ansible_password }}"
-        validate_certs: false
-      loop: "{{ tenant_info.subnets }}"
+        username: "{{ ansible_user }}"
+        password: "{{ ansible_password }}"
+        validate_certs: "{{ apic_tls_verify }}"
+      loop: "{{ tenant_info.bridge_domains | subelements('subnets') }}"
