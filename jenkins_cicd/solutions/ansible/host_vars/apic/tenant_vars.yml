@@ -1,0 +1,148 @@
+---
+tenant_info:
+  name: Development
+  vrfs:
+    - name: Server_VRF
+  bridge_domains:
+    - name: Birch_Private_Servers
+      vrf: Server_VRF
+      subnets:
+        - ip: 192.168.16.1/24
+    - name: Birch_Public_Servers
+      vrf: Server_VRF
+      subnets:
+        - ip: 192.168.18.1/24
+
+    - name: Maple_Servers
+      vrf: Server_VRF
+      subnets:
+        - ip: 192.168.32.1/24
+
+  applications:
+    - name: Birch_App
+      description: Project Birch Application Profile
+      app_epg:
+        - name: Birch_Web_Servers
+          description: Project Birch Web Servers
+          bridge_domain: Birch_Public_Servers
+          consumed_contracts:
+            - Birch_App_Services
+          provided_contracts:
+            - Birch_Web_Services
+        - name: Birch_App_Servers
+          description: Project Birch Application Servers
+          bridge_domain: Birch_Private_Servers
+          provided_contracts:
+            - Birch_App_Services
+
+    - name: Maple_App
+      description: Project Maple Application Profile
+      app_epg:
+        - name: Maple_Web_Servers
+          description: Project Maple Web Servers
+          bridge_domain: Maple_Servers
+          consumed_contracts:
+            - Maple_App_Services
+          provided_contracts:
+            - Maple_Web_Services
+        - name: Maple_App_Servers
+          description: Project Maple Web Servers
+          bridge_domain: Maple_Servers
+          consumed_contracts:
+            - Maple_DB_Services
+          provided_contracts:
+            - Maple_App_Services
+        - name: Maple_DB_Servers
+          description: Project Maple Database Servers
+          bridge_domain: Maple_Servers
+          provided_contracts:
+            - Maple_DB_Services
+
+  contract_filters:
+    - name: Birch_App
+      description: Project Birch application services
+      filter_entries:
+        - name: tcp_8443
+          description: App server port
+          eth_type: ip
+          ip_proto: tcp
+          dest_port: 80
+        - name: udp_19703
+          description: App server streaming data
+          eth_type: ip
+          ip_proto: udp
+          dest_port: 19703
+    - name: Birch_Web
+      description: Project Birch web services
+      filter_entries:
+        - name: tcp_443
+          description: HTTPS
+          eth_type: ip
+          ip_proto: tcp
+          dest_port: https
+        - name: tcp_80
+          description: HTTP
+          eth_type: ip
+          ip_proto: tcp
+          dest_port: 80
+    - name: Maple_App
+      description: Project Maple application services
+      filter_entries:
+        - name: tcp_443
+          description: Maple app API over HTTPS
+          eth_type: ip
+          ip_proto: tcp
+          dest_port: 443
+    - name: Maple_Web
+      description: Project Maple Web services
+      filter_entries:
+        - name: tcp_80
+          description: HTTP
+          eth_type: ip
+          ip_proto: tcp
+          dest_port: 80
+        - name: tcp_443
+          description: HTTPS
+          eth_type: ip
+          ip_proto: tcp
+          dest_port: 443
+    - name: Maple_DB
+      description: Project Maple Database services
+      filter_entries:
+        - name: tcp_5432
+          description: TCP database services
+          eth_type: ip
+          ip_proto: tcp
+          dest_port: 5432
+
+  contracts:
+    - name: Birch_Web_Services
+      description: Project Birch Web server contract
+      subjects:
+        - name: Birch_Web
+          filters:
+            - Birch_Web
+    - name: Birch_App_Services
+      description: Project Birch App server contract
+      subjects:
+        - name: Birch_App
+          filters:
+            - Birch_App
+    - name: Maple_Web_Services
+      description: Project Maple Web server contract
+      subjects:
+        - name: Maple_Web
+          filters:
+            - Maple_Web
+    - name: Maple_App_Services
+      description: Project Maple application server contract
+      subjects:
+        - name: Maple_App
+          filters:
+            - Maple_App
+    - name: Maple_DB_Services
+      description: Project Maple database server contract
+      subjects:
+        - name: Maple_DB
+          filters:
+            - Maple_DB
