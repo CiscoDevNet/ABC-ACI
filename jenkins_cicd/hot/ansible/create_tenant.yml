@@ -1,0 +1,41 @@
+---
+- name: Create a tenant using Ansible
+  hosts: apic
+  gather_facts: false
+  environment:
+    # <TODO> Add environment variables for APIC API connection
+  tasks:
+    - name: Create the tenant
+      cisco.aci.aci_tenant:
+        tenant: "{{ tenant_info.name }}"
+        state: {{ global_object_state }}
+
+    - name: Create VRFs
+      cisco.aci.aci_vrf:
+        tenant: "{{ tenant_info.name }}"
+        vrf: "{{ item.name }}"
+        state: "{{ global_object_state }}"
+      loop: "{{ tenant_info.vrfs }}"
+      loop_control:
+        label: "{{ item.name }}"
+
+    - name: Create bridge domains
+      cisco.aci.aci_bd:
+        tenant: "{{ tenant_info.name }}"
+        vrf: "{{ item.vrf }}"
+        bd: "{{ item.name }}"
+        state: "{{ global_object_state }}"
+      loop: "{{ tenant_info.bridge_domains }}"
+      loop_control:
+        label: "{{ item.name }}"
+
+    - name: Create subnets
+      cisco.aci.aci_bd_subnet:
+        tenant: "{{ tenant_info.name }}"
+        bd: "{{ item.0.name }}"
+        gateway: "{{ item.1.ip | ansible.utils.ipaddr('ip') }}"
+        mask: "{{ item.1.ip | ansible.utils.ipaddr('prefix') }}"
+        state: "{{ global_object_state }}"
+      loop: "{{ tenant_info.bridge_domains | subelements('subnets') }}"
+      loop_control:
+        label: "{{ item.1.ip }} in bridge domain '{{ item.0.name }}'"

@@ -1,0 +1,187 @@
+// --------------------------------------------------------------------------
+// BEGIN VARIABLE DEFINITIONS - DO NOT CHANGE
+//
+// The DOCKER_PYATS_IMAGE and DOCKER_ANSIBLE_IMAGE refer to Docker images
+// which have been pre-built for the lab environment
+def DOCKER_PYATS_IMAGE = 'jenkins-runner-pyats'
+def DOCKER_ANSIBLE_IMAGE = 'jenkins-runner-ansible'
+
+// The only argument required for Docker commands should be the following,
+// which tells the new container how to reach the APIC.
+def DOCKER_ARGS = "--add-host apic:192.168.10.104"
+//
+// END VARIABLE DEFINITIONS - DO NOT CHANGE
+// --------------------------------------------------------------------------
+
+pipeline {
+    agent any
+
+    options {
+        /*
+        ** Do not immediately grab code from the repository when launched.
+        ** This is required for the initial workspace cleanup task - otherwise,
+        ** Jenkins will checkout the code from GitLab and subsequently delete
+        ** it.
+        */
+        skipDefaultCheckout(true)
+    }
+
+    environment {
+        // Set common environment variables
+        ANSIBLE_ASK_VAULT_PASS = 'false'
+        ANSIBLE_VAULT_PASSWORD_FILE = 'secrets.txt'
+        ANSIBLE_PLAYBOOK = 'main.yml'
+        ANSIBLE_TEST_INVENTORY = 'inventory-test.yml'
+    }
+
+
+    stages {
+        stage('Prepare Workspace') {
+            steps {
+                echo "Updating GitLab build status to 'pending'..."
+                updateGitlabCommitStatus(name: 'build', state: 'pending')
+
+                echo "Cleaning workspace files..."
+                cleanWs()
+
+                echo "Checking project out from GitLab..."
+                checkout scm
+            }
+        }
+
+        stage('Build') {
+            agent {
+                docker {
+                    image "${DOCKER_ANSIBLE_IMAGE}"
+                    args "${DOCKER_ARGS}"
+                    reuseNode true
+                }
+            }
+            steps {
+                dir('ansible') {
+                    script {
+                        if (fileExists('requirements.txt')) {
+                            echo "Installing additional Python packages..."
+                            // This step unused for lab activities
+                            // sh "pip install -r requirements.txt"
+                        }
+
+                        if (fileExists('requirements.yml')) {
+                            echo "Installing Ansible roles and modules..."
+                            // This step unused for lab activities
+                            // sh "ansible-galaxy install -r requirements.yml"
+                        }
+                    }
+
+                    echo "Creating Ansible vault secret file..."
+                    withCredentials([string(credentialsId: 'ANSIBLE_VAULT_SECRET', variable: 'VAULT_CREDS')]) {
+                        writeFile (file: ANSIBLE_VAULT_PASSWORD_FILE, text: env.VAULT_CREDS)
+                    }
+                }
+            }
+        }
+
+        stage('Test') {
+            agent {
+                docker {
+                    image "${DOCKER_ANSIBLE_IMAGE}"
+                    args "${DOCKER_ARGS}"
+                    reuseNode true
+                }
+            }
+            steps {
+                echo "Updating GitLab build status to 'running'..."
+                updateGitlabCommitStatus(name: 'build', state: 'running')
+
+                dir('ansible') {
+                    echo "Linting Ansible playbook..."
+                    // TODO - Add step to lint the playbook
+
+                    echo "Running Ansible playbook in check mode..."
+                    // TODO - Add step run run ansible-playbook in check mode
+                }
+
+            // TODO - Add input step to prompt for deployment
+            }
+        }
+
+
+        stage('Pre-change snapshot') {
+            agent {
+                docker {
+                    image "${DOCKER_PYATS_IMAGE}"
+                    args "${DOCKER_ARGS}"
+                    reuseNode true
+                }
+            }
+            steps {
+                dir('pyats') {
+                    echo "Taking pre-change snapshot of APIC..."
+                    sh 'pyats run job job.py --testbed-file testbed.yaml --html-logs pre_snapshots --no-archive'
+                }
+            }
+        }
+
+        stage('Deploy') {
+            agent {
+                docker {
+                    image "${DOCKER_ANSIBLE_IMAGE}"
+                    args "${DOCKER_ARGS}"
+                    reuseNode true
+                }
+            }
+            steps {
+                dir('ansible') {
+                    echo "Running Ansible playbook..."
+                    // TODO - Add step to execute the Ansible playbook
+                }
+            }
+        }
+
+        stage('Post-change snapshot') {
+            agent {
+                docker {
+                    image "${DOCKER_PYATS_IMAGE}"
+                    args "${DOCKER_ARGS}"
+                    reuseNode true
+                }
+            }
+            steps {
+                dir('pyats') {
+                    echo "Taking post-change snapshot of APIC..."
+                    sh 'pyats run job job.py --testbed-file testbed.yaml --html-logs post_snapshots --after --no-archive'
+
+                    echo "Generating diff of pre-change and post-change APIC snapshots..."
+                    sh 'pyats diff pre_snapshots/tenant.json post_snapshots/tenant.json --output snapshot_diff/'
+                }
+            }
+        }
+    }
+
+    post {
+        always{
+            echo "Job execution complete."
+        }
+        success {
+            echo "Updating GitLab build status to 'success'..."
+            updateGitlabCommitStatus(name: 'build', state: 'success')
+
+            echo "Archiving artifacts..."
+            // TODO - Specify artifacts to archive
+        }
+        unsuccessful {
+            echo "Updating GitLab commit status to 'failed'..."
+            updateGitlabCommitStatus(name: 'build', state: 'failed')
+
+            echo "Job execution status is failed, please check error logs"
+        }
+        cleanup {
+            echo "Performing post-job cleanup..."
+            cleanWs(cleanWhenNotBuilt: false,
+                    cleanWhenFailure: false,
+                    deleteDirs: true,
+                    disableDeferredWipeout: true,
+                    notFailBuild: true)
+        }
+    }
+}
