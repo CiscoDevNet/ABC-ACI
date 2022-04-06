@@ -168,7 +168,7 @@ pipeline {
 
             echo "Archiving artifacts..."
             // TODO - Add more artifacts to be archived
-            archiveArtifacts(artifacts : 'pyats/snapshot_diff/*.json', allowEmptyArchive: true)
+            archiveArtifacts(artifacts: 'pyats/snapshot_diff/*.json', allowEmptyArchive: true)
         }
         unsuccessful {
             echo "Updating GitLab commit status to 'failed'..."

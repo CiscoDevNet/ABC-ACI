@@ -62,13 +62,13 @@ pipeline {
                     script {
                         if (fileExists('requirements.txt')) {
                             echo "Installing additional Python packages..."
-                            // Uncomment for production use...
+                            // This step unused for lab activities
                             // sh "pip install -r requirements.txt"
                         }
 
                         if (fileExists('requirements.yml')) {
                             echo "Installing Ansible roles and modules..."
-                            // Uncomment for production use...
+                            // This step unused for lab activities
                             // sh "ansible-galaxy install -r requirements.yml"
                         }
                     }
@@ -95,13 +95,13 @@ pipeline {
 
                 dir('ansible') {
                     echo "Linting Ansible playbook..."
-                    sh "ansible-lint ${ANSIBLE_PLAYBOOK}"
+                    // TODO - Add step to lint the playbook
 
                     echo "Running Ansible playbook in check mode..."
                     sh "ansible-playbook --check ${ANSIBLE_PLAYBOOK}"
                 }
 
-            input(message: "All tests successful.  Proceed with deployment?")
+            // TODO - Add input step to prompt for deployment
             }
         }
 
@@ -133,7 +133,7 @@ pipeline {
             steps {
                 dir('ansible') {
                     echo "Running Ansible playbook..."
-                    sh "ansible-playbook ${ANSIBLE_PLAYBOOK}"
+                    // TODO - Add step to execute the Ansible playbook
                 }
             }
         }
@@ -167,7 +167,8 @@ pipeline {
             updateGitlabCommitStatus(name: 'build', state: 'success')
 
             echo "Archiving artifacts..."
-            archiveArtifacts(artifacts: 'pyats/snapshot_diff/*.json, pyats/pre_snapshots/*, pyats/post_snapshots/*', allowEmptyArchive: true)
+            // TODO - Specify artifacts to archive
+            // archiveArtifacts(artifacts: '', allowEmptyArchive: true)
         }
         unsuccessful {
             echo "Updating GitLab commit status to 'failed'..."

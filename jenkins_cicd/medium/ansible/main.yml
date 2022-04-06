@@ -1,0 +1,9 @@
+---
+- name: Import playbook to create a tenant
+  import_playbook: create_tenant.yml
+
+- name: Import playbook to create contracts
+   import_playbook: create_contracts.yml
+
+- name: Import playbook to create application profiles and EPGs
+  import_playbook: create_applications.yml

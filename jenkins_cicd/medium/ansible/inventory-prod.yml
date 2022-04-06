@@ -2,5 +2,6 @@
 all:
   hosts:
     apic:
-      ansible_host: apic
       ansible_connection: local
+      ansible_user: "{{ vault_ansible_user }}"
+      ansible_password: "{{ vault_ansible_password }}"
