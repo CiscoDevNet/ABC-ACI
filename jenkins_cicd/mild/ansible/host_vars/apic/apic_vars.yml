@@ -1,0 +1,3 @@
+---
+global_object_state: present
+apic_tls_verify: false

@@ -1,0 +1,16 @@
+---
+- name: Create applications in an ACI tenant
+  hosts: apic
+  gather_facts: false
+  environment:
+    ACI_HOST: "{{ ansible_host }}"
+    ACI_USERNAME: "{{ ansible_user }}"
+    ACI_PASSWORD: "{{ ansible_password }}"
+    ACI_VALIDATE_CERTS: "{{ apic_tls_verify }}"
+  tasks:
+    - name: Create applications
+      include_tasks: task_files/build_applications.yml
+      loop: "{{ tenant_info.applications }}"
+      loop_control:
+        loop_var: current_application
+        label: "{{ current_application.name }}"

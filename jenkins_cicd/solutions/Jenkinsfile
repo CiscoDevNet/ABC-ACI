@@ -36,7 +36,7 @@ pipeline {
 
 
     stages {
-        stage('Build') {
+        stage('Prepare Workspace') {
             steps {
                 echo "Updating GitLab build status to 'pending'..."
                 updateGitlabCommitStatus(name: 'build', state: 'pending')
@@ -46,9 +46,38 @@ pipeline {
 
                 echo "Checking project out from GitLab..."
                 checkout scm
+            }
+        }
 
-                echo "Updating GitLab build status to 'running'..."
-                updateGitlabCommitStatus(name: 'build', state: 'running')
+        stage('Build') {
+            agent {
+                docker {
+                    image "${DOCKER_ANSIBLE_IMAGE}"
+                    args "${DOCKER_ARGS}"
+                    reuseNode true
+                }
+            }
+            steps {
+                dir('ansible') {
+                    script {
+                        if (fileExists('requirements.txt')) {
+                            echo "Installing additional Python packages..."
+                            // Uncomment for production use...
+                            // sh "pip install -r requirements.txt"
+                        }
+
+                        if (fileExists('requirements.yml')) {
+                            echo "Installing Ansible roles and modules..."
+                            // Uncomment for production use...
+                            // sh "ansible-galaxy install -r requirements.yml"
+                        }
+                    }
+
+                    echo "Creating Ansible vault secret file..."
+                    withCredentials([string(credentialsId: 'ANSIBLE_VAULT_SECRET', variable: 'VAULT_CREDS')]) {
+                        writeFile (file: ANSIBLE_VAULT_PASSWORD_FILE, text: env.VAULT_CREDS)
+                    }
+                }
             }
         }
 
@@ -61,25 +90,10 @@ pipeline {
                 }
             }
             steps {
+                echo "Updating GitLab build status to 'running'..."
+                updateGitlabCommitStatus(name: 'build', state: 'running')
+
                 dir('ansible') {
-                    script {
-                        if (fileExists('requirements.yml')) {
-                            echo "Installing Ansible roles and modules..."
-                            // Uncomment for production use...
-                            // sh "ansible-galaxy install -r requirements.yml"
-                        }
-                        if (fileExists('requirements.txt')) {
-                            echo "Installing additional Python packages..."
-                            // Uncomment for production use...
-                            // sh "pip install -r requirements.txt"
-                        }
-                    }
-
-                    echo "Creating Ansible vault secret file..."
-                    withCredentials([string(credentialsId: 'ANSIBLE_VAULT_SECRET', variable: 'VAULT_CREDS')]) {
-                        writeFile (file: ANSIBLE_VAULT_PASSWORD_FILE, text: env.VAULT_CREDS)
-                    }
-
                     echo "Linting Ansible playbook..."
                     sh "ansible-lint ${ANSIBLE_PLAYBOOK}"
 
@@ -90,6 +104,7 @@ pipeline {
             input(message: "All tests successful.  Proceed with deployment?")
             }
         }
+
 
         stage('Pre-change snapshot') {
             agent {
