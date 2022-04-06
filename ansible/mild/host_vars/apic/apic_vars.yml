@@ -1,3 +1,3 @@
 ---
 global_object_state:  # <TODO> Add value for global object state
-global_debug_enabled:  # <TODO> Add value for global debug state
+apic_tls_verify:  # <TODO> Add value for TLS validation

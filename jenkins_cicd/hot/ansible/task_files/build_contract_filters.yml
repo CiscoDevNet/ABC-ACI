@@ -23,3 +23,5 @@
     stateful: "{{ item.is_stateful | default('no') }}"
     state: "{{ global_object_state }}"
   loop: "{{ current_filter.filter_entries }}"
+  loop_control:
+    label: "{{ item.name }} in filter {{ current_filter.name }}"

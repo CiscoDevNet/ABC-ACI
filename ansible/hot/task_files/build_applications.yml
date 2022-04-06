@@ -1,0 +1,43 @@
+---
+- name: Build application profiles
+  cisco.aci.aci_ap:
+    ap: "{{ current_application.name }}"
+    description: "{{ current_application.description }}"
+    tenant: "{{ tenant_info.name }}"
+    state: "{{ global_object_state }}"
+
+- name: Create Endpoint Groups
+  cisco.aci.aci_epg:
+    tenant: "{{ tenant_info.name }}"
+    bd: "{{ item.bridge_domain }}"
+    ap: "{{ current_application.name }}"
+    epg: "{{ item.name }}"
+    description: "{{ item.description }}"
+    state: "{{ global_object_state }}"
+  loop:  # <TODO> Use a variable to specify the list to iterate
+  loop_control:
+    label:  # <TODO> Use a variable to change the default loop output
+
+- name: Create EPG consumed contracts
+  cisco.aci.aci_epg_to_contract:
+    tenant: "{{ tenant_info.name }}"
+    ap: "{{ current_application.name }}"
+    contract:  # <TODO> Set the contract name using a variable
+    epg:  # <TODO> Set the EPG name using a variable
+    contract_type: consumer
+    state: "{{ global_object_state }}"
+  loop: "{{ current_application.app_epg | }}"  # <TODO> Use subelements for consumed contracts and skip if list is missing
+  loop_control:
+    label:  # <TODO> Change default loop output to show EPG and contract names
+
+- name: Create EPG provided contracts
+  cisco.aci.aci_epg_to_contract:
+    tenant: "{{ tenant_info.name }}"
+    ap: "{{ current_application.name }}"
+    contract:  # <TODO> Set the contract name using a variable
+    epg:  # <TODO> Set the EPG name using a variable
+    contract_type: provider
+    state: "{{ global_object_state }}"
+  loop: "{{ current_application.app_epg | }}"  # <TODO> Use subelements for provided contracts and skip if list is missing
+  loop_control:
+    # <TODO> Change the default loop output using variables

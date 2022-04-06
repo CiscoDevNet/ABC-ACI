@@ -1,0 +1,25 @@
+---
+- name: Create filters
+  cisco.aci.aci_filter:
+    filter:  # <TODO> Use a variable to set the name of the filter
+    description:  # <TODO> Set the filter description or omit if not defined
+    tenant:  # <TODO> Use a variable to specify the tenant name
+    state: "{{ global_object_state }}"
+
+- name: Create filter entries for contracts
+  cisco.aci.aci_filter_entry:
+    tenant: "{{ tenant_info.name }}"
+    filter: "{{ current_filter.name }}"
+    entry: "{{ item.name }}"
+    description: "{{ item.description | default(omit) }}"
+    arp_flag: "{{ item.arp_flag | default('unspecified') }}"
+    dst_port: "{{ item.dest_port | default(omit) }}"
+    dst_port_start: "{{ item.dest_port_start | default(omit) }}"
+    dst_port_end: "{{ item.dest_port_end | default(omit) }}"
+    ether_type: "{{ item.eth_type | default('unspecified') }}"
+    icmp6_msg_type: "{{ item.icmp6_msg_type | default('unspecified') }}"
+    icmp_msg_type: "{{ item.icmp.msg_type | default('unspecified') }}"
+    ip_protocol: "{{ item.ip_proto | default('unspecified') }}"
+    stateful: "{{ item.is_stateful | default('no') }}"
+    state: "{{ global_object_state }}"
+  loop: "{{ current_filter.filter_entries }}"

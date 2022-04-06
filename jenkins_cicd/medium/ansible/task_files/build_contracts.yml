@@ -1,0 +1,29 @@
+---
+- name: Build contracts
+  cisco.aci.aci_contract:
+    tenant: "{{ tenant_info.name }}"
+    description: "{{ current_contract.description | default(omit) }}"
+    contract: "{{ current_contract.name }}"
+    state: "{{ global_object_state }}"
+
+- name: Create contract subjects for filters
+  cisco.aci.aci_contract_subject:
+    tenant: "{{ tenant_info.name }}"
+    description: "{{ item.description | default(omit) }}"
+    contract: "{{ current_contract.name }}"
+    subject: "{{ item.name }}"
+    state: "{{ global_object_state }}"
+  loop: "{{ current_contract.subjects }}"
+  loop_control:
+    label: "{{ item.name }} for contract '{{ current_contract.name }}'"
+
+- name: Add filters to contract subjects
+  cisco.aci.aci_contract_subject_to_filter:
+    tenant: "{{ tenant_info.name }}"
+    subject: "{{ item.0.name }}"
+    contract: "{{ current_contract.name }}"
+    filter: "{{ item.1 }}"
+    state: "{{ global_object_state }}"
+  loop: "{{ current_contract.subjects | subelements('filters') }}"
+  loop_control:
+    label: "{{ item.1 }} to subject '{{ item.0.name }}'"

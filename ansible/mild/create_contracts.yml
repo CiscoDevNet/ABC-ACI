@@ -3,19 +3,19 @@
   hosts: apic
   gather_facts: false
   environment:
-    ACI_HOST: "{{ ansible_host }}"
-    ACI_USERNAME: "{{ vault_ansible_user }}"
-    ACI_PASSWORD: "{{ vault_ansible_password }}"
-    ACI_VALIDATE_CERTS: false
+    ACI_HOST:  # <TODO> Use a variable to set the API host
+    ACI_USERNAME:  # <TODO> Use a variable to set the API username
+    ACI_PASSWORD:  # <TODO> Use a variable to set the API password
+    ACI_VALIDATE_CERTS:  # <TODO> Use a variable to set TLS validation
   tasks:
     - name: Create contract filters
-      include_tasks: # <TODO> Specify the task file to include from the task_files directory
-      loop: "{{ tenant_info.contract_info. }}"  # <TODO> Specify the list inside tenant_info.contract_info to iterate
+      include_tasks:  # <TODO> Include the correct task file
+      loop: "{{ tenant_info.contract_info.filters }}"
       loop_control:
-        loop_var: # <TODO> Specify the name of the loop variable to be created instead of "item"
+        loop_var:  # <TODO> Set the name of the loop variable
 
     - name: Create contracts
-      include_tasks: # <TODO> Specify the task file to include from the task_files directory
+      include_tasks: task_files/build_contracts.yml
       loop: "{{ tenant_info.contract_info.contracts }}"
       loop_control:
-        loop_var: # <TODO> Specify the name of the loop variable to be created instead of "item"
+        loop_var:  # <TODO> Set the name of the loop variable

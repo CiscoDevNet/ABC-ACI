@@ -1,65 +1,73 @@
 ---
 tenant_info:
   name:  # <TODO> Set tenant name
-  bd_name:  # <TODO> Set bridge domain name
-  vrf_name: dev
-  subnets:
-    - 192.168.16.1/24
-    - 192.168.17.1/24
-  applications:
-    - name:  # <TODO> Set application profile name
-      description: Development custom application
-      app_epg:
-        - name:  # <TODO> Set name of web server EPG
-          description: Custom application web servers
-        - name:  # <TODO> Set name of app server EPG
-          description: Custom application app servers
+  vrfs:
+    - name:  # <TODO> Set VRF Name
+  bridge_domains:
+    - name: Birch_Private_Servers
+      vrf: Server_VRF
+      subnets:
+        - ip: 192.168.16.1/24
+    - name:  # <TODO> Create Public Server BD
+      vrf:  # <TODO> Set VRF for Public Server BD
+      subnets:
+        - ip: # <TODO> Create subnet for Public Server BD
 
-  contract_info:
-    filters:
-      - name: app1
-        description: App server filter
-        filter_entries:
-          - name: tcp_8443
-            target_filter: app
-            description: App server port
-            eth_type: ip
-            ip_proto: tcp
-            dest_port: 80
-          - name: udp_19703
-            target_filter: app
-            description: App server streaming data
-            eth_type: ip
-            ip_proto: udp
-            dest_port: 19703
-      - name: web
-        description: Web server filter
-        filter_entries:
-          - name: tcp_443
-            target_filter: web
-            description: HTTPS
-            eth_type: ip
-            ip_proto: tcp
-            dest_port: https
-          - name: tcp_80
-            target_filter: web
-            description: HTTP
-            eth_type: ip
-            ip_proto: tcp
-            dest_port: 80
-    contracts:
-      - name: web
-        app_profile: my_custom_app
-        description: Web server contract
-        subject: dev_web
-        filter: web
-      - name: app
-        app_profile: my_custom_app
-        description: App server contract
-        subject: dev_app
-        filter: app
-        contract_to_epg:
-          - epg_name: app_servers
-            direction:  # <TODO> Set provider or consumer state for this EPG
-          - epg_name: web_servers
-            direction:  # <TODO> Set provider or consumer state for this EPG
+  applications:
+    - name: Birch_App
+      description: Project Birch Application Profile
+      app_epg:
+        - name: Birch_Web_Servers
+          description: Project Birch Web Servers
+          bridge_domain: Birch_Public_Servers
+          consumed_contracts:
+            - Birch_App_Services
+          provided_contracts:
+            -  # <TODO> Set provided contract for Web Servers
+        - name: Birch_App_Servers
+          description: Project Birch App Servers
+          bridge_domain:  # <TODO> Set bridge domain for App Servers
+          provided_contracts:
+            - # <TODO> Set provided contract for App Servers
+
+  contract_filters:
+    - name: Birch_App
+      description: Project Birch application services
+      filter_entries:
+        - name: tcp_8443
+          description: App server port
+          eth_type: ip
+          ip_proto: tcp
+          dest_port: 80
+        - name: udp_19703
+          description: App server streaming data
+          eth_type: ip
+          ip_proto: udp
+          dest_port: 19703
+    - name: Birch_Web
+      description: Project Birch web services
+      filter_entries:
+        - name: tcp_443
+          description: HTTPS
+          eth_type: ip
+          ip_proto: tcp
+          dest_port: https
+        - name: tcp_80
+          description: HTTP
+          eth_type: ip
+          ip_proto: tcp
+          dest_port: 80
+
+  contracts:
+    - name: Birch_Web_Services
+      description: Project Birch Web server contract
+      subjects:
+        - name: Birch_Web
+          filters:
+            - Birch_Web
+    - name: Birch_App_Services
+      description: Project Birch App server contract
+      subjects:
+        - name: Birch_App
+          filters:
+            - Birch_App

@@ -1,0 +1,23 @@
+---
+- name: Create contracts in an ACI tenant
+  hosts: apic
+  gather_facts: false
+  environment:
+    ACI_HOST: "{{ ansible_host }}"
+    ACI_USERNAME: "{{ ansible_user }}"
+    ACI_PASSWORD: "{{ ansible_password }}"
+    ACI_VALIDATE_CERTS: "{{ apic_tls_verify }}"
+  tasks:
+    - name: Create contract filters
+      include_tasks: task_files/build_contract_filters.yml
+      loop: "{{ tenant_info.contract_filters }}"
+      loop_control:
+        loop_var: current_filter
+        label: "{{ current_filter.name }}"
+
+    - name: Create contracts
+      include_tasks: task_files/build_contracts.yml
+      loop: "{{ tenant_info.contracts }}"
+      loop_control:
+        loop_var: current_contract
+        label: "{{ current_contract.name }}"
