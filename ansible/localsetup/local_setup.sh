@@ -30,6 +30,7 @@ ansible.cfg"
 
 for FILE in ${FILES_TO_COPY}; do
   echo "Copying ${FILE}..."
+  mkdir -p ${LAB_WORKING_PATH}/$( dirname ${FILE} )
   cp -fp "${LAB_PATH}/solutions/${FILE}" "${LAB_WORKING_PATH}/${FILE}"
 done
 
