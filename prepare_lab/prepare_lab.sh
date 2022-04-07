@@ -17,13 +17,19 @@ SCRIPT_BASEPATH="$( dirname ${SCRIPT_TRUEPATH} )"
 LAB_PATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
 # Python interpreter
-PYTHON_BIN=~student/py3venv/bin/python
+PYTHON_VENV=~student/py3venv
+PYTHON_BIN=${PYTHON_VENV}/bin/python
+PYTHON_PIP_BIN=${PYTHON_VENV}/bin/pip
 
 # Full path and name of the script to run
 PYTHON_SCRIPT="${SCRIPT_BASEPATH}/prepare_lab.py"
 
 # Expected config file (called script path and filename)
 LAB_CONFIG="${LAB_PATH}/lab_setup.yml"
+
+# Expected lab requirements.txt file
+REPO_PIP_REQUIREMENTS=${SCRIPT_BASEPATH}/lab-requirements.txt
+LAB_PIP_REQUIREMENTS=${LAB_PATH}/requirements.txt
 
 # Generate the commandline
 CMD="${PYTHON_BIN} ${PYTHON_SCRIPT} -c ${LAB_CONFIG}"
@@ -36,6 +42,17 @@ echo "**************************************************************************
 echo "Beginning lab preparation tasks..."
 echo "******************************************************************************"
 echo
+
+
+echo
+echo "******************************************************************************"
+echo "Installing additional Python packages..."
+echo "******************************************************************************"
+echo
+
+[ -e ${REPO_PIP_REQUIREMENTS} ] && ${PYTHON_PIP_BIN} install -r ${REPO_PIP_REQUIREMENTS} 2>&1 > /dev/null
+
+[ -e ${LAB_PIP_REQUIREMENTS} ] && ${PYTHON_PIP_BIN} install -r ${LAB_PIP_REQUIREMENTS} 2>&1 > /dev/null
 
 ${CMD}
 
