@@ -55,7 +55,7 @@ tenants:
         vrf: Server_VRF
         subnets:
           - ip: 192.168.18.1/24
-    applications:
+    application_profiles:
       - name: Birch_App
         description: Project Birch Application Profile
         app_epg:
