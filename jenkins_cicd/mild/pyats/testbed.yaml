@@ -10,7 +10,6 @@ devices:
       rest:
         class: rest.connector.Rest
         host: apic
-        ip: 10.10.20.14
         port: 443
         credentials:
           rest:
