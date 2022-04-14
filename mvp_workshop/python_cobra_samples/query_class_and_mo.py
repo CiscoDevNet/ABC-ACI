@@ -29,7 +29,7 @@ def get_class(classname, apic, username, password):
 
 def get_mo(mo_dn, apic, username, password):
     '''GET a specified ACI Managed Object (MO)'''
-    
+
     # Login into a session with APIC
     session = LoginSession(apic, username, password)
     mo_dir = MoDirectory(session)

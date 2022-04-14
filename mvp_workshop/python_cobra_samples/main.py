@@ -29,9 +29,9 @@ if __name__ == "__main__":
     new_tenant = input("\nName of your new tenant: ")
 
     print(f"\nCreating a new tenant {new_tenant}")
-    pol_uni = modify_tenant.create_tenant(new_tenant, 
-                                        f"{new_tenant}_VRF", 
-                                        f"{new_tenant}_BD", 
+    pol_uni = modify_tenant.create_tenant(new_tenant,
+                                        f"{new_tenant}_VRF",
+                                        f"{new_tenant}_BD",
                                         "10.10.10.1/24")
     modify_tenant.commit_changes_to_apic(apic, username, password, pol_uni)
 
