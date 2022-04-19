@@ -1,0 +1,22 @@
+---
+devices:
+  apic:
+    os: apic
+    alias: uut
+    type: apic
+    connections:
+      defaults:
+        via: rest
+      rest:
+        class: rest.connector.Rest
+        host: apic
+        port: 443
+        credentials:
+          rest:
+            username: admin
+            password: C1sco12345
+    custom:
+      abstractions:
+        order:
+          - os
+          - series

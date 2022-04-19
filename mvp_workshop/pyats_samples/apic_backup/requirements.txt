@@ -1,0 +1,6 @@
+# Sample requirements.txt file
+# To install requirements, execute
+# pip install -r requirements.txt
+pyats[full]
+rest.connector
+yang.connector
