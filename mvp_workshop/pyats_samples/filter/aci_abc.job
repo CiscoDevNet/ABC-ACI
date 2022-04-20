@@ -12,5 +12,5 @@ def main():
     gRun(
         trigger_datafile = test_path+'/trigger_datafile.yaml',
         subsection_datafile = test_path+'/subsection_datafile.yaml',
-        trigger_groups = And('tenant'),
+        trigger_groups = And('filter'),
     )

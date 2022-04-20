@@ -15,7 +15,7 @@ pyats run job aci_abc.job --testbed-file testbed.yaml
 Via pyATS run Genie command (without the job.py file)
 
 ```console
-pyats run genie --testbed-file testbed.yaml --trigger-datafile trigger_datafile.yaml --trigger-groups "And('tenant') --subsection-datafile subsection_datafile.yaml
+pyats run genie --testbed-file testbed.yaml --trigger-datafile trigger_datafile.yaml --trigger-groups "And('filter') --subsection-datafile subsection_datafile.yaml
 ```
 
 # Customize
