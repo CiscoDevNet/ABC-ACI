@@ -10,12 +10,12 @@
   tasks:
     - name: Create contract filters
       include_tasks:  # <TODO> Include the correct task file
-      loop: "{{ tenant_info.contract_info.filters }}"
+      loop: "{{ tenant_info.contract_filters }}"
       loop_control:
         loop_var:  # <TODO> Set the name of the loop variable
 
     - name: Create contracts
       include_tasks: task_files/build_contracts.yml
-      loop: "{{ tenant_info.contract_info.contracts }}"
+      loop: "{{ tenant_info.contracts }}"
       loop_control:
         loop_var:  # <TODO> Set the name of the loop variable
