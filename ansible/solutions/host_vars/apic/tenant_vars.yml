@@ -62,12 +62,12 @@ tenant_info:
     - name: Birch_Web_Services
       description: Project Birch Web server contract
       subjects:
-        - name: Birch_Web
+        - subject: Birch_Web
           filters:
             - Birch_Web
     - name: Birch_App_Services
       description: Project Birch App server contract
       subjects:
-        - name: Birch_App
+        - subject: Birch_App
           filters:
             - Birch_App

@@ -11,14 +11,14 @@
     tenant: "{{ tenant_info.name }}"
     description: "{{ item.description | default(omit) }}"
     contract: "{{ current_contract.name }}"
-    subject: "{{ item.name }}"
+    subject: "{{ item.subject }}"
     state: "{{ global_object_state }}"
   loop: "{{ current_contract.subjects }}"
 
 - name: Add filters to contract subjects
   cisco.aci.aci_contract_subject_to_filter:
     tenant: "{{ tenant_info.name }}"
-    subject: "{{ item.0.name }}"
+    subject: "{{ item.0.subject }}"
     contract: "{{ current_contract.name }}"
     filter: "{{ item.1 }}"
     state: "{{ global_object_state }}"
